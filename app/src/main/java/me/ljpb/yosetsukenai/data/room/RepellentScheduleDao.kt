@@ -7,7 +7,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
-import java.time.LocalDate
 
 @Dao
 interface RepellentScheduleDao {
@@ -25,11 +24,11 @@ interface RepellentScheduleDao {
 
     // 現在有効な虫除けの一覧を開始日と終了日の昇順で取得
     @Query("select * from repellent_schedule where :currentDate between startDate and finishDate order by finishDate asc")
-    fun getEnabledItems(currentDate: LocalDate): Flow<List<RepellentScheduleEntity>>
+    fun getEnabledItems(currentDate: String): Flow<List<RepellentScheduleEntity>>
 
     // 対応が必要な虫除けの一覧を取得
     @Query("select * from repellent_schedule where :currentDate > finishDate and `ignore` = false order by finishDate asc")
-    fun getExpiredItems(currentDate: LocalDate): Flow<List<RepellentScheduleEntity>>
+    fun getExpiredItems(currentDate: String): Flow<List<RepellentScheduleEntity>>
 
     @Query("select * from repellent_schedule order by startDate asc, finishDate asc limit :limit offset :offset")
     fun getPagedItems(limit: Int, offset: Int): Flow<List<RepellentScheduleEntity>>

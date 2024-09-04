@@ -19,6 +19,7 @@ import java.time.LocalDate
 class RepellentScheduleDaoTest {
     private lateinit var dao: RepellentScheduleDao
     private lateinit var database: AppDatabase
+    private lateinit var converter: TableConverter
 
     private val validityItem1 = RepellentScheduleEntity(
         id = 1,
@@ -76,6 +77,7 @@ class RepellentScheduleDaoTest {
             .allowMainThreadQueries()
             .build()
         dao = database.repellentScheduleDao()
+        converter = TableConverter()
         runBlocking {
             dao.insert(validityItem1)
             dao.insert(validityItem2)
@@ -94,14 +96,14 @@ class RepellentScheduleDaoTest {
     @Test
     @Throws(Exception::class)
     fun getEnabledItemsTestInValidityPeriod() = runBlocking {
-        val items = dao.getEnabledItems(LocalDate.of(2024, 9, 5)).first()
+        val items = dao.getEnabledItems(converter.fromLocalDateToString(LocalDate.of(2024, 9, 5))).first()
         assertEquals(items, validityItemsList)
     }
 
     @Test
     @Throws(Exception::class)
     fun getExpiredItemsTest() = runBlocking {
-        val items = dao.getExpiredItems(LocalDate.of(2024, 9, 5)).first()
+        val items = dao.getExpiredItems(converter.fromLocalDateToString(LocalDate.of(2024, 9, 5))).first()
         assertEquals(items, listOf(expiredItem))
     }
     
