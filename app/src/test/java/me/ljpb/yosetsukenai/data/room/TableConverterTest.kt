@@ -3,9 +3,9 @@ package me.ljpb.yosetsukenai.data.room
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class RepellentScheduleTableConverterTest {
+class TableConverterTest {
     private val expectPlaces = listOf("aaa", "bbb", "ccc")
-    private var converter: RepellentScheduleTableConverter = RepellentScheduleTableConverter()
+    private var converter: TableConverter = TableConverter()
     
     @Test
     fun fromStringToStringListTest() {
