@@ -14,6 +14,7 @@ import androidx.room.TypeConverters
 @TypeConverters(TableConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun repellentScheduleDao(): RepellentScheduleDao
+    abstract fun insectEncounterDao(): InsectEncounterDao
     
     companion object {
         @Volatile
