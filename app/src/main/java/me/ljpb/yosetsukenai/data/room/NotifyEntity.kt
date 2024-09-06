@@ -21,6 +21,6 @@ data class NotifyEntity(
     val eventId: Long,
     val jobId: UUID,
     val notifyId: Int,
-    val triggerTime: Long,
+    val triggerTimeSeconds: Long,
     val schedule: SimplePeriod
 )
