@@ -12,7 +12,7 @@ import java.util.UUID
     foreignKeys = [ForeignKey(
         entity = RepellentScheduleEntity::class,
         parentColumns = ["id"],
-        childColumns = ["eventId"],
+        childColumns = ["repellentScheduleId"],
         onDelete = ForeignKey.CASCADE
     )]
 )
