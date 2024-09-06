@@ -19,7 +19,7 @@ import java.util.UUID
 data class NotifyEntity(
     @PrimaryKey
     val id: Long,
-    val eventId: Long,
+    val repellentScheduleId: Long,
     val jobId: UUID,
     val notifyId: Int,
     val triggerTimeSeconds: Long,
