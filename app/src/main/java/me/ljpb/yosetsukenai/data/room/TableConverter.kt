@@ -4,6 +4,7 @@ import androidx.room.TypeConverter
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import me.ljpb.yosetsukenai.data.SimplePeriod
+import me.ljpb.yosetsukenai.data.SimpleTime
 import java.time.LocalDate
 import java.util.UUID
 
@@ -36,4 +37,11 @@ class TableConverter {
 
     @TypeConverter
     fun fromUuidToString(uuid: UUID): String = uuid.toString()
+    
+    // SimpleTime
+    @TypeConverter
+    fun fromStringToSimpleTime(string: String): SimpleTime = SimpleTime.fromString(string)
+    
+    @TypeConverter
+    fun fromSimpleTimeToString(time: SimpleTime): String = time.toString()
 }
