@@ -8,40 +8,40 @@ import me.ljpb.yosetsukenai.data.SimpleTime
 import java.time.LocalDate
 import java.util.UUID
 
-class TableConverter {
+class TableConverter : AppDatabaseConverter {
     // SimplePeriod
     @TypeConverter
-    fun fromStringToSimplePeriod(string: String): SimplePeriod = SimplePeriod.fromString(string)
+    override fun fromStringToSimplePeriod(string: String): SimplePeriod = SimplePeriod.fromString(string)
 
     @TypeConverter
-    fun fromSimplePeriodToString(period: SimplePeriod): String = period.toString()
+    override fun fromSimplePeriodToString(period: SimplePeriod): String = period.toString()
 
     // LocalDate
     @TypeConverter
-    fun fromStringToLocalDate(string: String): LocalDate = LocalDate.parse(string)
+    override fun fromStringToLocalDate(string: String): LocalDate = LocalDate.parse(string)
 
     @TypeConverter
-    fun fromLocalDateToString(localDate: LocalDate): String = localDate.toString()
+    override fun fromLocalDateToString(localDate: LocalDate): String = localDate.toString()
 
     // List<String>
     @TypeConverter
-    fun fromStringToStringList(string: String): List<String> =
+    override fun fromStringToStringList(string: String): List<String> =
         Json.decodeFromString<List<String>>(string)
 
     @TypeConverter
-    fun fromStringListToString(stringList: List<String>): String = Json.encodeToString(stringList)
+    override fun fromStringListToString(stringList: List<String>): String = Json.encodeToString(stringList)
 
     // UUID
     @TypeConverter
-    fun fromStringToUuid(string: String): UUID = UUID.fromString(string)
+    override fun fromStringToUuid(string: String): UUID = UUID.fromString(string)
 
     @TypeConverter
-    fun fromUuidToString(uuid: UUID): String = uuid.toString()
+    override fun fromUuidToString(uuid: UUID): String = uuid.toString()
     
     // SimpleTime
     @TypeConverter
-    fun fromStringToSimpleTime(string: String): SimpleTime = SimpleTime.fromString(string)
+    override fun fromStringToSimpleTime(string: String): SimpleTime = SimpleTime.fromString(string)
     
     @TypeConverter
-    fun fromSimpleTimeToString(time: SimpleTime): String = time.toString()
+    override fun fromSimpleTimeToString(time: SimpleTime): String = time.toString()
 }
