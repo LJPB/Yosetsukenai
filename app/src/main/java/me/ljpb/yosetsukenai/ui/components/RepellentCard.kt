@@ -16,6 +16,43 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
+fun ValidRepellentProgress(
+    modifier: Modifier = Modifier,
+    progress: Float,
+    startText: String,
+    middleText: String,
+    endText: String,
+) {
+    RepellentProgress(
+        modifier = modifier,
+        progress = progress,
+        barColor = MaterialTheme.colorScheme.primary,
+        trackColor = MaterialTheme.colorScheme.primaryContainer,
+        startText = startText,
+        middleText = middleText,
+        endText = endText,
+    )
+}
+
+@Composable
+fun ExpiredRepellentProgress(
+    modifier: Modifier = Modifier,
+    startText: String,
+    middleText: String,
+    endText: String,
+) {
+    RepellentProgress(
+        modifier = modifier,
+        progress = 1f,
+        barColor = MaterialTheme.colorScheme.error,
+        trackColor = MaterialTheme.colorScheme.primaryContainer,
+        startText = startText,
+        middleText = middleText,
+        endText = endText,
+    )
+}
+
+@Composable
 private fun RepellentProgress(
     modifier: Modifier = Modifier,
     progress: Float,
@@ -62,43 +99,6 @@ private fun RepellentProgress(
             strokeCap = StrokeCap.Round
         )
     }
-}
-
-@Composable
-fun ValidRepellentProgress(
-    modifier: Modifier = Modifier,
-    progress: Float,
-    startText: String,
-    middleText: String,
-    endText: String,
-) {
-    RepellentProgress(
-        modifier = modifier,
-        progress = progress,
-        barColor = MaterialTheme.colorScheme.primary,
-        trackColor = MaterialTheme.colorScheme.primaryContainer,
-        startText = startText,
-        middleText = middleText,
-        endText = endText,
-    )
-}
-
-@Composable
-fun ExpiredRepellentProgress(
-    modifier: Modifier = Modifier,
-    startText: String,
-    middleText: String,
-    endText: String,
-) {
-    RepellentProgress(
-        modifier = modifier,
-        progress = 1f,
-        barColor = MaterialTheme.colorScheme.error,
-        trackColor = MaterialTheme.colorScheme.primaryContainer,
-        startText = startText,
-        middleText = middleText,
-        endText = endText,
-    )
 }
 
 @Preview(showBackground = true)
