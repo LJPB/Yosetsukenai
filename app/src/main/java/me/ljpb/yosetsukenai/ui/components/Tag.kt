@@ -1,10 +1,13 @@
 package me.ljpb.yosetsukenai.ui.components
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,20 +24,26 @@ private fun Tag(
         color = color,
         shape = MaterialTheme.shapes.small,
     ) {
-        Text(
-            modifier = Modifier.padding(
-                vertical = 4.dp,
-                horizontal = 8.dp
-            ),
-            text = text,
-            style = MaterialTheme.typography.labelLarge
-        )
+        Box(
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .padding(
+                        vertical = 4.dp,
+                        horizontal = 8.dp
+                    ),
+                text = text,
+                style = MaterialTheme.typography.labelLarge,
+            )
+        }
     }
 }
 
 @Composable
 fun PlaceTag(
-    modifier: Modifier = Modifier, 
+    modifier: Modifier = Modifier,
     text: String
 ) {
     Tag(
@@ -46,7 +55,7 @@ fun PlaceTag(
 
 @Composable
 fun InsectTag(
-    modifier: Modifier = Modifier, 
+    modifier: Modifier = Modifier,
     text: String
 ) {
     Tag(
@@ -64,6 +73,7 @@ private fun PlaceTagPreview() {
         text = "aaa"
     )
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun InsectTagPreview() {
