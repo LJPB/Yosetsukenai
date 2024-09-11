@@ -1,0 +1,167 @@
+package me.ljpb.yosetsukenai.ui.components
+
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import me.ljpb.yosetsukenai.R
+
+@Composable
+fun DetailRow(
+    modifier: Modifier = Modifier,
+    leadingIcon: ImageVector,
+    itemName: String,
+    item: @Composable () -> Unit
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+    ) {
+        // 親RowにAlignment.CenterVerticallyを適用すると，渡されたitemのheightがdetail_row_heightを超えた場合に
+        // IconとTextがDetailRowの中央に来てしまうが，これらはDetailRowの上部に置きたい
+        // 一方，親RowにAlignment.Topを適用すると，IconがTextに対して中央に位置せずバランスが悪い(-_ ←こんな感じ。-- ←こうしたい)
+        // そこで，IconとTextをRowでひとまとめにすることで，渡されたitemのheightに関わらず，IconとTextがDetailRowの上部に並び
+        // IconはTextに対して中央に位置する。さらに，渡されたitemの開始Y座標が子Rowに揃うことでバランスが良くなる
+        Row(
+            modifier = Modifier.height(dimensionResource(id = R.dimen.detail_row_height)),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = leadingIcon,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(
+                text = itemName,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
+        Spacer(modifier = Modifier.weight(1f))
+        item()
+    }
+}
+
+@Composable
+fun DetailRowWithText(
+    modifier: Modifier = Modifier,
+    leadingIcon: ImageVector,
+    itemName: String,
+    text: String,
+    textOnClick: (() -> Unit)? = null
+) {
+    DetailRowWithOneItem(
+        modifier = modifier,
+        leadingIcon = leadingIcon,
+        itemName = itemName,
+        item = {
+            Text(
+                text = text,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = MaterialTheme.typography.titleMedium
+            )
+        },
+        itemOnClick = textOnClick
+    )
+}
+
+@Composable
+fun DetailRowWithOneItem(
+    modifier: Modifier = Modifier,
+    leadingIcon: ImageVector,
+    itemName: String,
+    item: @Composable () -> Unit,
+    itemOnClick: (() -> Unit)? = null
+) {
+    val boxModifier = Modifier.height(dimensionResource(id = R.dimen.detail_row_height))
+    DetailRow(
+        modifier = modifier,
+        leadingIcon = leadingIcon,
+        itemName = itemName,
+        item = {
+            Box(
+                modifier = if (itemOnClick != null) {
+                    boxModifier.clickable { itemOnClick() }
+                } else {
+                    boxModifier
+                },
+                contentAlignment = Alignment.Center
+            ) {
+                item()
+            }
+        }
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DetailRowWithTextPreview() {
+    DetailRowWithText(
+        leadingIcon = Icons.Default.CalendarMonth,
+        itemName = "itemName",
+        text = "text"
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DetailRowWithOneItemPreview() {
+    DetailRowWithOneItem(
+        leadingIcon = Icons.Default.CalendarMonth,
+        itemName = "itemName",
+        item = {
+            PlaceTag(text = "item")
+        }
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DetailRowPreview() {
+    DetailRow(
+        leadingIcon = Icons.Default.CalendarMonth,
+        itemName = "itemName",
+        item = {
+            Column {
+                PlaceTag(
+                    modifier = Modifier
+                        .height(dimensionResource(id = R.dimen.detail_row_height))
+                        .width(64.dp)
+                        .padding(vertical = 8.dp),
+                    text = "item"
+                )
+                PlaceTag(
+                    modifier = Modifier
+                        .height(dimensionResource(id = R.dimen.detail_row_height))
+                        .width(64.dp)
+                        .padding(vertical = 8.dp),
+                    text = "item"
+                )
+                PlaceTag(
+                    modifier = Modifier
+                        .height(dimensionResource(id = R.dimen.detail_row_height))
+                        .width(64.dp)
+                        .padding(vertical = 8.dp),
+                    text = "item"
+                )
+            }
+        }
+    )
+}

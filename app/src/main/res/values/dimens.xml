@@ -2,4 +2,5 @@
 <resources>
     <dimen name="repellent_card_content_horizontal_padding">16dp</dimen>
     <dimen name="repellent_card_content_vertical_padding">8dp</dimen>
+    <dimen name="detail_row_height">48dp</dimen>
 </resources>
