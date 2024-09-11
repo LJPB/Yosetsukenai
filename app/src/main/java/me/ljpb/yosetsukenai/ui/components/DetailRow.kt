@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import me.ljpb.yosetsukenai.R
@@ -54,6 +55,8 @@ fun DetailRow(
                 style = MaterialTheme.typography.titleMedium
             )
         }
+        // itemが残りの全ての幅を埋め尽くして2つ目のSpacerのwidthが0となる場合に最低でも確保するpadding
+        Spacer(modifier = Modifier.width(8.dp))
         Spacer(modifier = Modifier.weight(1f))
         item()
     }
@@ -75,7 +78,9 @@ fun DetailRowWithText(
             Text(
                 text = text,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         },
         itemOnClick = textOnClick
