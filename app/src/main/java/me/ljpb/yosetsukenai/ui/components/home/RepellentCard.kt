@@ -1,4 +1,4 @@
-package me.ljpb.yosetsukenai.ui.components
+package me.ljpb.yosetsukenai.ui.components.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import me.ljpb.yosetsukenai.R
+import me.ljpb.yosetsukenai.ui.components.PlaceTag
 import java.time.LocalDate
 
 @Composable
