@@ -15,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import me.ljpb.yosetsukenai.R
-import me.ljpb.yosetsukenai.ui.components.ConstIcon
+import me.ljpb.yosetsukenai.ui.ConstIcon
 import me.ljpb.yosetsukenai.ui.components.InsectTag
 import me.ljpb.yosetsukenai.ui.components.PlaceTag
 import me.ljpb.yosetsukenai.ui.components.RowItem

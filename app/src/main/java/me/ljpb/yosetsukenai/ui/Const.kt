@@ -1,4 +1,4 @@
-package me.ljpb.yosetsukenai.ui.components
+package me.ljpb.yosetsukenai.ui
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
