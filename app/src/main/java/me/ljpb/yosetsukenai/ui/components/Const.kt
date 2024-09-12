@@ -1,6 +1,7 @@
 package me.ljpb.yosetsukenai.ui.components
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.BugReport
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Notifications
@@ -16,4 +17,6 @@ object ConstIcon {
     val INSECT = Icons.Outlined.BugReport
     val PLACE = Icons.Outlined.PinDrop
     val NOTIFY = Icons.Outlined.Notifications
+    
+    val BACK = Icons.AutoMirrored.Default.ArrowBack
 }
