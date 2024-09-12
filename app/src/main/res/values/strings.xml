@@ -7,4 +7,12 @@
     <string name="validity_period_text">有効期間：%1$s</string>
     <string name="skip">スキップ</string>
     <string name="reset_repellent">今日の日付で再設定</string>
+    
+    <string name="repellent_name">商品名</string>
+    <string name="repellent_start_date">開始日</string>
+    <string name="repellent_end_date">終了日</string>
+    <string name="repellent_validity_period">有効期間</string>
+    <string name="repellent_place">場所</string>
+    <string name="repellent_insect">有効期間内に発見した虫</string>
+    <string name="repellent_notify">通知</string>
 </resources>
