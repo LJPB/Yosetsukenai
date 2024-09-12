@@ -32,7 +32,8 @@ fun TextOnlyField(
     textColor: Color,
     placeholder: @Composable (() -> Unit)? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    keyboardActions: KeyboardActions = KeyboardActions.Default
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    visualTransformation: VisualTransformation = VisualTransformation.None
 ) {
     BasicTextField(
         value = value,
@@ -41,11 +42,12 @@ fun TextOnlyField(
         onValueChange = onValueChange,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
+        visualTransformation = visualTransformation,
         singleLine = true,
         decorationBox = @Composable { innerTextField ->
             TextFieldDefaults.DecorationBox(
                 value = value,
-                visualTransformation = VisualTransformation.None,
+                visualTransformation = visualTransformation,
                 innerTextField = innerTextField,
                 placeholder = placeholder,
                 singleLine = true,
