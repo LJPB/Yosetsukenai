@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import me.ljpb.yosetsukenai.R
 
 @Composable
-fun DetailRow(
+fun RowItem(
     modifier: Modifier = Modifier,
     leadingIcon: ImageVector,
     itemName: String,
@@ -40,7 +40,7 @@ fun DetailRow(
         // そこで，IconとTextをRowでひとまとめにすることで，渡されたitemのheightに関わらず，IconとTextがDetailRowの上部に並び
         // IconはTextに対して中央に位置する。さらに，渡されたitemの開始Y座標が子Rowに揃うことでバランスが良くなる
         Row(
-            modifier = Modifier.height(dimensionResource(id = R.dimen.detail_row_height)),
+            modifier = Modifier.height(dimensionResource(id = R.dimen.row_item_height)),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
@@ -63,14 +63,14 @@ fun DetailRow(
 }
 
 @Composable
-fun DetailRowWithText(
+fun RowItemWithText(
     modifier: Modifier = Modifier,
     leadingIcon: ImageVector,
     itemName: String,
     text: String,
     textOnClick: (() -> Unit)? = null
 ) {
-    DetailRowWithOneItem(
+    RowItemWithOneItem(
         modifier = modifier,
         leadingIcon = leadingIcon,
         itemName = itemName,
@@ -88,15 +88,15 @@ fun DetailRowWithText(
 }
 
 @Composable
-fun DetailRowWithOneItem(
+fun RowItemWithOneItem(
     modifier: Modifier = Modifier,
     leadingIcon: ImageVector,
     itemName: String,
     item: @Composable () -> Unit,
     itemOnClick: (() -> Unit)? = null
 ) {
-    val boxModifier = Modifier.height(dimensionResource(id = R.dimen.detail_row_height))
-    DetailRow(
+    val boxModifier = Modifier.height(dimensionResource(id = R.dimen.row_item_height))
+    RowItem(
         modifier = modifier,
         leadingIcon = leadingIcon,
         itemName = itemName,
@@ -117,8 +117,8 @@ fun DetailRowWithOneItem(
 
 @Preview(showBackground = true)
 @Composable
-private fun DetailRowWithTextPreview() {
-    DetailRowWithText(
+private fun RowItemWithTextPreview() {
+    RowItemWithText(
         leadingIcon = Icons.Default.CalendarMonth,
         itemName = "itemName",
         text = "text"
@@ -127,8 +127,8 @@ private fun DetailRowWithTextPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun DetailRowWithOneItemPreview() {
-    DetailRowWithOneItem(
+private fun RowItemWithOneItemPreview() {
+    RowItemWithOneItem(
         leadingIcon = Icons.Default.CalendarMonth,
         itemName = "itemName",
         item = {
@@ -139,29 +139,29 @@ private fun DetailRowWithOneItemPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun DetailRowPreview() {
-    DetailRow(
+private fun RowItemPreview() {
+    RowItem(
         leadingIcon = Icons.Default.CalendarMonth,
         itemName = "itemName",
         item = {
             Column {
                 PlaceTag(
                     modifier = Modifier
-                        .height(dimensionResource(id = R.dimen.detail_row_height))
+                        .height(dimensionResource(id = R.dimen.row_item_height))
                         .width(64.dp)
                         .padding(vertical = 8.dp),
                     text = "item"
                 )
                 PlaceTag(
                     modifier = Modifier
-                        .height(dimensionResource(id = R.dimen.detail_row_height))
+                        .height(dimensionResource(id = R.dimen.row_item_height))
                         .width(64.dp)
                         .padding(vertical = 8.dp),
                     text = "item"
                 )
                 PlaceTag(
                     modifier = Modifier
-                        .height(dimensionResource(id = R.dimen.detail_row_height))
+                        .height(dimensionResource(id = R.dimen.row_item_height))
                         .width(64.dp)
                         .padding(vertical = 8.dp),
                     text = "item"
