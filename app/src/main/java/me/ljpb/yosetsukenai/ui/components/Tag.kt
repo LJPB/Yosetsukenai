@@ -1,13 +1,11 @@
 package me.ljpb.yosetsukenai.ui.components
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material3.InputChip
+import androidx.compose.material3.InputChipDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
@@ -17,31 +15,35 @@ import androidx.compose.ui.unit.dp
 @Composable
 private fun Tag(
     modifier: Modifier = Modifier,
-    color: Color,
+    containerColor: Color,
+    textColor: Color,
     text: String
 ) {
-    Surface(
+    InputChip(
         modifier = modifier,
-        color = color,
-        shape = MaterialTheme.shapes.small,
-    ) {
-        Box(
-            contentAlignment = Alignment.Center
-        ) {
+        selected = true, 
+        onClick = { /*TODO*/ },
+        label = {
             Text(
                 modifier = Modifier
-                    .wrapContentSize()
                     .padding(
                         vertical = 4.dp,
                         horizontal = 8.dp
                     ),
                 text = text,
                 style = MaterialTheme.typography.labelLarge,
+                color = textColor,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-        }
-    }
+        },
+        colors = InputChipDefaults.inputChipColors(
+            containerColor = containerColor,
+            disabledContainerColor = containerColor,
+            selectedContainerColor = containerColor,
+            disabledSelectedContainerColor = containerColor,
+        )
+    )
 }
 
 @Composable
@@ -51,8 +53,9 @@ fun PlaceTag(
 ) {
     Tag(
         modifier = modifier,
-        color = MaterialTheme.colorScheme.secondaryContainer,
-        text = text
+        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+        text = text,
+        textColor = MaterialTheme.colorScheme.onSecondaryContainer
     )
 }
 
@@ -63,8 +66,9 @@ fun InsectTag(
 ) {
     Tag(
         modifier = modifier,
-        color = MaterialTheme.colorScheme.tertiaryContainer,
-        text = text
+        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+        text = text,
+        textColor = MaterialTheme.colorScheme.onTertiaryContainer
     )
 }
 
