@@ -4,6 +4,10 @@
     <string name="expired">期限切れ</string>
     <string name="until">残り%1$02d日</string>
     <string name="formated_date">%1$d年%2$02d月%3$02d日</string>
+    <string name="validity_period_day">%1$d日間</string>
+    <string name="validity_period_week">%1$d週間</string>
+    <string name="validity_period_month">%1$dヶ月</string>
+    <string name="validity_period_year">%1$d年間</string>
     <string name="validity_period_text">有効期間：%1$s</string>
     <string name="skip">スキップ</string>
     <string name="reset_repellent">今日の日付で再設定</string>

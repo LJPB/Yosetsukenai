@@ -24,56 +24,50 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import me.ljpb.yosetsukenai.R
+import me.ljpb.yosetsukenai.data.SimplePeriod
+import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
 import me.ljpb.yosetsukenai.ui.components.PlaceTag
+import me.ljpb.yosetsukenai.ui.getTextOfLocalDate
+import me.ljpb.yosetsukenai.ui.getTextOfSimplePeriod
 import java.time.LocalDate
 
 @Composable
 fun ValidRepellentCard(
     modifier: Modifier = Modifier,
-    startDate: LocalDate,
-    endDate: LocalDate,
+    repellent: RepellentScheduleEntity,
     currentDate: LocalDate,
-    name: String,
-    validityPeriodText: String,
-    places: List<String>,
     resetOnClick: () -> Unit,
     cardOnClick: () -> Unit,
 ) {
     // 虫除けが有効な日数
-    val validityPeriodDays = endDate.toEpochDay() - startDate.toEpochDay()
+    val validityPeriodDays = repellent.finishDate.toEpochDay() - repellent.startDate.toEpochDay()
     // 開始からの経過日数
-    val elapsedDays = currentDate.toEpochDay() - startDate.toEpochDay()
+    val elapsedDays = currentDate.toEpochDay() - repellent.startDate.toEpochDay()
     // 経過の割合
     val progressPercentage = elapsedDays / validityPeriodDays.toFloat()
+
+    val context = LocalContext.current
+
     RepellentCardContent(
         modifier = modifier,
-        name = name,
-        validityPeriodText = validityPeriodText,
-        places = places,
+        name = repellent.name,
+        validityPeriodText = getTextOfSimplePeriod(repellent.validityPeriod, context),
+        places = repellent.places,
         progress = {
             ValidRepellentProgress(
                 progress = progressPercentage,
-                startText = stringResource(
-                    id = R.string.formated_date,
-                    startDate.year,
-                    startDate.monthValue,
-                    startDate.dayOfMonth,
-                ),
+                startText = getTextOfLocalDate(repellent.startDate, context),
                 middleText = stringResource(
                     id = R.string.until,
-                    endDate.toEpochDay() - currentDate.toEpochDay()
+                    repellent.finishDate.toEpochDay() - currentDate.toEpochDay()
                 ),
-                endText = stringResource(
-                    id = R.string.formated_date,
-                    endDate.year,
-                    endDate.monthValue,
-                    endDate.dayOfMonth,
-                )
+                endText = getTextOfLocalDate(repellent.finishDate, context)
             )
         },
         footerEndOnClick = resetOnClick
@@ -85,36 +79,24 @@ fun ValidRepellentCard(
 @Composable
 fun ExpiredRepellentCard(
     modifier: Modifier = Modifier,
-    startDate: LocalDate,
-    endDate: LocalDate,
-    name: String,
-    validityPeriodText: String,
-    places: List<String>,
+    repellent: RepellentScheduleEntity,
     skipOnClick: () -> Unit,
     resetOnClick: () -> Unit,
     cardOnClick: () -> Unit,
 ) {
+    val context = LocalContext.current
+
     RepellentCardContent(
         modifier = modifier,
-        name = name,
+        name = repellent.name,
         icon = Icons.Default.Warning,
-        validityPeriodText = validityPeriodText,
-        places = places,
+        validityPeriodText = getTextOfSimplePeriod(repellent.validityPeriod, context),
+        places = repellent.places,
         progress = {
             ExpiredRepellentProgress(
-                startText = stringResource(
-                    id = R.string.formated_date,
-                    startDate.year,
-                    startDate.monthValue,
-                    startDate.dayOfMonth,
-                ),
+                startText = getTextOfLocalDate(repellent.startDate, context),
                 middleText = stringResource(R.string.expired),
-                endText = stringResource(
-                    id = R.string.formated_date,
-                    endDate.year,
-                    endDate.monthValue,
-                    endDate.dayOfMonth,
-                )
+                endText = getTextOfLocalDate(repellent.finishDate, context)
             )
         },
         footerStartOnClick = skipOnClick,
@@ -313,28 +295,34 @@ private fun RepellentProgress(
 @Composable
 private fun ValidRepellentCardPreview() {
     ValidRepellentCard(
-        startDate = LocalDate.of(2024, 9, 1),
-        endDate = LocalDate.of(2024, 10, 1),
+        repellent = RepellentScheduleEntity(
+            startDate = LocalDate.of(2024, 9, 1),
+            finishDate = LocalDate.of(2024, 10, 1),
+            name = "商品名",
+            validityPeriod = SimplePeriod.ofDays(3),
+            places = listOf("場所1", "場所2", "場所3"),
+            ignore = false,
+        ),
         currentDate = LocalDate.of(2024, 9, 10),
-        name = "商品名",
-        validityPeriodText = "30日間",
-        places = listOf("場所1", "場所2", "場所3"),
-        resetOnClick = { /*TODO*/ }) {
-    }
+        resetOnClick = { /*TODO*/ }
+    ) {}
 }
 
 @Preview
 @Composable
 private fun ExpiredRepellentCardPreview() {
     ExpiredRepellentCard(
-        startDate = LocalDate.of(2024, 9, 1),
-        endDate = LocalDate.of(2024, 10, 1),
-        name = "商品名",
-        validityPeriodText = "30日間",
-        places = listOf("場所1", "場所2", "場所3"),
+        repellent = RepellentScheduleEntity(
+            startDate = LocalDate.of(2024, 9, 1),
+            finishDate = LocalDate.of(2024, 10, 1),
+            name = "商品名",
+            validityPeriod = SimplePeriod.ofDays(3),
+            places = listOf("場所1", "場所2", "場所3"),
+            ignore = false,
+        ),
         skipOnClick = {},
-        resetOnClick = { /*TODO*/ }) {
-    }
+        resetOnClick = { /*TODO*/ }
+    ) {}
 }
 
 @Preview(showBackground = true)
