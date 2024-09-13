@@ -25,11 +25,6 @@ private fun Tag(
         onClick = { /*TODO*/ },
         label = {
             Text(
-                modifier = Modifier
-                    .padding(
-                        vertical = 4.dp,
-                        horizontal = 8.dp
-                    ),
                 text = text,
                 style = MaterialTheme.typography.labelLarge,
                 color = textColor,
