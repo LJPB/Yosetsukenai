@@ -22,6 +22,7 @@ private fun Tag(
     InputChip(
         modifier = modifier,
         selected = true, 
+        enabled = false,
         onClick = { /*TODO*/ },
         label = {
             Text(
