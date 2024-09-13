@@ -39,7 +39,6 @@ fun RepellentDetailContent(
     ) {
         // 商品名
         RowItemWithText(
-            modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.detail_content_horizontal_padding)),
             leadingIcon = ConstIcon.PRODUCT_NAME,
             itemName = stringResource(id = R.string.repellent_name),
             text = name
@@ -47,7 +46,6 @@ fun RepellentDetailContent(
         HorizontalDivider()
         // 開始日
         RowItemWithText(
-            modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.detail_content_horizontal_padding)),
             leadingIcon = ConstIcon.START_DATE,
             itemName = stringResource(id = R.string.repellent_start_date),
             text = stringResource(
@@ -60,7 +58,6 @@ fun RepellentDetailContent(
         HorizontalDivider()
         // 終了日
         RowItemWithText(
-            modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.detail_content_horizontal_padding)),
             leadingIcon = ConstIcon.END_DATE,
             itemName = stringResource(id = R.string.repellent_end_date),
             text = stringResource(
@@ -73,7 +70,6 @@ fun RepellentDetailContent(
         HorizontalDivider()
         // 有効期間
         RowItemWithText(
-            modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.detail_content_horizontal_padding)),
             leadingIcon = ConstIcon.VALIDITY_PERIOD,
             itemName = stringResource(id = R.string.repellent_validity_period),
             text = validityPeriodText
@@ -81,7 +77,6 @@ fun RepellentDetailContent(
         HorizontalDivider()
         // 発見した虫の一覧
         RowItem(
-            modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.detail_content_horizontal_padding)),
             leadingIcon = ConstIcon.INSECT,
             itemName = stringResource(id = R.string.repellent_insect)
         ) {
@@ -101,7 +96,6 @@ fun RepellentDetailContent(
         HorizontalDivider()
         // 場所
         RowItem(
-            modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.detail_content_horizontal_padding)),
             leadingIcon = ConstIcon.PLACE,
             itemName = stringResource(id = R.string.repellent_place)
         ) {
@@ -121,7 +115,6 @@ fun RepellentDetailContent(
         HorizontalDivider()
         // 通知
         RowItem(
-            modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.detail_content_horizontal_padding)),
             leadingIcon = ConstIcon.NOTIFY,
             itemName = stringResource(id = R.string.repellent_notify)
         ) {

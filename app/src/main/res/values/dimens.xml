@@ -3,6 +3,6 @@
     <dimen name="repellent_card_content_horizontal_padding">16dp</dimen>
     <dimen name="repellent_card_content_vertical_padding">8dp</dimen>
     <dimen name="row_item_height">48dp</dimen>
-    <dimen name="detail_content_horizontal_padding">16dp</dimen>
+    <dimen name="row_item_horizontal_padding">16dp</dimen>
     <dimen name="detail_content_vertical_padding">4dp</dimen>
 </resources>

@@ -32,7 +32,9 @@ fun RowItem(
     item: @Composable () -> Unit
 ) {
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = dimensionResource(id = R.dimen.row_item_horizontal_padding))
     ) {
         // 親RowにAlignment.CenterVerticallyを適用すると，渡されたitemのheightがdetail_row_heightを超えた場合に
         // IconとTextがDetailRowの中央に来てしまうが，これらはDetailRowの上部に置きたい
@@ -48,7 +50,7 @@ fun RowItem(
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurface
             )
-            Spacer(modifier = Modifier.width(4.dp))
+            Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = itemName,
                 color = MaterialTheme.colorScheme.onSurface,
