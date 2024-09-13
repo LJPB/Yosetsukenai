@@ -155,7 +155,7 @@ fun RepellentEditContent(
 }
 
 @Composable
-fun SimplePeriodInputField(
+private fun SimplePeriodInputField(
     modifier: Modifier = Modifier,
     defaultValue: SimplePeriod,
     onNumberChanged: (Int) -> Unit,
