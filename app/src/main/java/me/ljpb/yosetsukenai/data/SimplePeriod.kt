@@ -15,7 +15,7 @@ enum class PeriodUnit {
  * @param number 日数や週数など期間の長さ
  * @param periodUnit 日や週など期間の単位
  */
-class SimplePeriod private constructor(val number: Int, val periodUnit: PeriodUnit) {
+class SimplePeriod private constructor(var number: Int, var periodUnit: PeriodUnit) {
     override fun toString(): String {
         return "$number$SEPARATE_CHARACTER${periodUnit.name}"
     }
