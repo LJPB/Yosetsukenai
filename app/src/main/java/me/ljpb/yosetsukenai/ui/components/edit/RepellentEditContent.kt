@@ -343,17 +343,17 @@ private fun TextDropDownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
-            items.forEach { text ->
+            items.forEach { item ->
                 DropdownMenuItem(
                     text = {
                         Text(
-                            text = text,
+                            text = item,
                             style = textStyle,
                             color = textColor
                         )
                     },
                     onClick = {
-                        onValueChanged(text)
+                        onValueChanged(item)
                         expanded = false
                     }
                 )
