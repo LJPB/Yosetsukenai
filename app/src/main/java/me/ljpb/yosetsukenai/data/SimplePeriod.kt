@@ -37,6 +37,8 @@ class SimplePeriod private constructor(var number: Int, var periodUnit: PeriodUn
         result = 31 * result + periodUnit.hashCode()
         return result
     }
+    
+    fun copy(number: Int = this.number, periodUnit: PeriodUnit = this.periodUnit): SimplePeriod = of(number, periodUnit)
 
     companion object {
         const val SEPARATE_CHARACTER = "@"
