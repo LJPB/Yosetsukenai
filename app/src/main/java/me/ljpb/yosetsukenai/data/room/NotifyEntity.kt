@@ -18,7 +18,7 @@ import java.util.UUID
 )
 data class NotifyEntity(
     @PrimaryKey
-    val id: Long,
+    val id: Long = 0L,
     val repellentScheduleId: Long,
     val jobId: UUID,
     val notifyId: Int,

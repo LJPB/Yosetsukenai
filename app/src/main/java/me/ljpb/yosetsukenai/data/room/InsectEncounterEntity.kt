@@ -7,7 +7,7 @@ import java.time.LocalDate
 @Entity(tableName = "insect_encounter")
 data class InsectEncounterEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Long,
+    val id: Long = 0L,
     val name: String,
     val date: LocalDate,
     val size: String,

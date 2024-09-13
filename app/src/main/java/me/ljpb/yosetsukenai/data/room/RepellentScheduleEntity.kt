@@ -8,7 +8,7 @@ import java.time.LocalDate
 @Entity(tableName = "repellent_schedule")
 data class RepellentScheduleEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Long,
+    val id: Long = 0L,
     val name: String,
     val validityPeriod: SimplePeriod,
     val startDate: LocalDate,
