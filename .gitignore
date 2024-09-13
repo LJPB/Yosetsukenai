@@ -55,3 +55,6 @@ proguard/
 
 # 追加
 *.jks
+
+.idea/deploymentTargetSelector.xml
+.idea/vcs.xml
