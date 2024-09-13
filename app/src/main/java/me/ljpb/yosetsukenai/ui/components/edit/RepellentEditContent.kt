@@ -1,15 +1,16 @@
 package me.ljpb.yosetsukenai.ui.components.edit
 
 import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,8 +24,10 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -44,6 +47,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
@@ -53,22 +57,27 @@ import me.ljpb.yosetsukenai.data.SimplePeriod
 import me.ljpb.yosetsukenai.data.room.NotifyEntity
 import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
 import me.ljpb.yosetsukenai.ui.ConstIcon
+import me.ljpb.yosetsukenai.ui.components.RowItem
 import me.ljpb.yosetsukenai.ui.components.RowItemWithOneItem
 import me.ljpb.yosetsukenai.ui.components.RowItemWithText
 import me.ljpb.yosetsukenai.ui.components.SimpleTextField
 import me.ljpb.yosetsukenai.ui.getTextOfLocalDate
+import me.ljpb.yosetsukenai.ui.getTextOfNotify
 import java.time.LocalDate
 
 @Composable
 fun RepellentEditContent(
     modifier: Modifier = Modifier,
     repellent: RepellentScheduleEntity?,
-    notifies: List<NotifyEntity> = emptyList()
+    notifies: List<NotifyEntity> = emptyList(),
 ) {
+    // 表示するrepellentのプロパティの初期化
+    // 渡されたrepellentがnullの場合 : 新規追加だから初期値で表示
+    // 渡されたrepellentが非nullの場合 : 編集だから渡されたrepellentの値を初期値として表示
     var name by remember { mutableStateOf("") }
     var startDate by remember { mutableStateOf(LocalDate.now()) }
     var validityPeriod by remember { mutableStateOf(SimplePeriod.ofDays(30)) }
-    var places = emptyList<String>()
+    var places by remember { mutableStateOf(emptyList<String>()) }
 
     if (repellent != null) {
         name = repellent.name
@@ -76,11 +85,13 @@ fun RepellentEditContent(
         validityPeriod = repellent.validityPeriod
         places = repellent.places
     }
-    
-    // 順番に注意
+
+    val notifyList by remember { mutableStateOf(notifies) }
+
+    // 順番に注意：validityPeriodの初期化後に書く
     var validityNumber by remember { mutableIntStateOf(validityPeriod.number) }
     var validityPeriodUnit by remember { mutableStateOf(validityPeriod.periodUnit) }
-    
+
     val textStyle = MaterialTheme.typography.titleMedium
     val textColor = MaterialTheme.colorScheme.onSurface
     val context = LocalContext.current
@@ -88,7 +99,7 @@ fun RepellentEditContent(
 
     Column(
         modifier = modifier
-            .clickable(
+            .clickable( // TextFieldの外をタップした時にフォーカスを外すためのもの
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
             ) {
@@ -120,19 +131,15 @@ fun RepellentEditContent(
                 )
             }
         )
+
         // 開始日
         HorizontalDivider()
         RowItemWithText(
             leadingIcon = ConstIcon.START_DATE,
             itemName = stringResource(id = R.string.repellent_start_date),
             text = getTextOfLocalDate(startDate, context)
-        ) {
-            Toast.makeText(
-                context,
-                "日付入力ダイアログの表示",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+        ) { /* TODO 日付入力ダイアログの表示 */ }
+
         // 有効期間
         HorizontalDivider()
         RowItemWithOneItem(
@@ -148,11 +155,70 @@ fun RepellentEditContent(
                 )
             }
         )
+
         // 場所
         HorizontalDivider()
+        RowItem(
+            leadingIcon = ConstIcon.PLACE,
+            itemName = stringResource(id = R.string.repellent_place),
+            item = {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                    horizontalAlignment = Alignment.End
+                ) {
+                    places.forEach { place ->
+                        ItemTag(
+                            text = place,
+                            deleteOnClick = {
+                                /* TODO 削除処理を書く */
+                            }
+                        )
+                    }
+                    // 追加ボタン
+                    TextButton(
+                        modifier = Modifier.height(dimensionResource(id = R.dimen.row_item_height)),
+                        onClick = { /* TODO 追加ダイアログの表示 */ }
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.add),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+            }
+        )
+
         // 通知
-    }
-}
+        HorizontalDivider()
+        RowItem(
+            leadingIcon = ConstIcon.NOTIFY,
+            itemName = stringResource(id = R.string.repellent_notify),
+            item = {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                    horizontalAlignment = Alignment.End
+                ) {
+                    notifyList.forEach { notify ->
+                        ItemTag(
+                            text = getTextOfNotify(notify, context),
+                            deleteOnClick = { /* TODO 削除処理を書く */ }
+                        )
+                    }
+                    // 追加ボタン
+                    TextButton(
+                        modifier = Modifier.height(dimensionResource(id = R.dimen.row_item_height)),
+                        onClick = { /* TODO 追加ダイアログの表示 */ }
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.add),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+            }
+        )
+    } // Column
+} // function
 
 @Composable
 private fun SimplePeriodInputField(
@@ -312,6 +378,44 @@ private fun String.toPeriodUnit(context: Context): PeriodUnit =
         else -> PeriodUnit.Year
     }
 
+@Composable
+private fun ItemTag(
+    modifier: Modifier = Modifier,
+    text: String,
+    deleteOnClick: () -> Unit = {},
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.End
+    ) {
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 4.dp),
+            contentAlignment = Alignment.CenterEnd
+        ) {
+            Text(
+                text = text,
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                textAlign = TextAlign.End
+            )
+        }
+        IconButton(
+            onClick = deleteOnClick
+        ) {
+            Icon(
+                imageVector = ConstIcon.CLOSE,
+                contentDescription = stringResource(id = R.string.delete),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun TextDropMenuPreview() {
@@ -334,6 +438,14 @@ private fun SimplePeriodInputFieldPreview() {
         onPeriodUniteChanged = { simplePeriod.periodUnit = it },
         textStyle = MaterialTheme.typography.titleMedium,
         textColor = MaterialTheme.colorScheme.onSurface,
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ItemTagPreview() {
+    ItemTag(
+        text = "aaa",
     )
 }
 

@@ -26,7 +26,17 @@
     
     <string name="back">戻る</string>
     <string name="edit">編集</string>
+    <string name="delete">削除</string>
+    <string name="add">追加</string>
 
     <string name="edit_repellent_name">商品名を入力</string>
+    
+    <string name="notify_text_on_the_day">当日(%1$s)</string>
+    <string name="notify_text_before_day">%1$d日後(%2$s)</string>
+    <string name="notify_text_before_week">%1$d週間後(%2$s)</string>
+    <string name="notify_text_before_month">%1$dヶ月後(%2$s)</string>
+    <string name="notify_text_before_year">%1$d年後(%2$s)</string>
+    
+    <string name="simple_time_text">%1$02d:%2$02d</string>
     
 </resources>

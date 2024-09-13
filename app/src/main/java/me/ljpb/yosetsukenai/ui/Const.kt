@@ -2,6 +2,7 @@ package me.ljpb.yosetsukenai.ui
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.outlined.BugReport
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Notifications
@@ -19,4 +20,5 @@ object ConstIcon {
     val NOTIFY = Icons.Outlined.Notifications
     
     val BACK = Icons.AutoMirrored.Default.ArrowBack
+    val CLOSE = Icons.Default.Close
 }
