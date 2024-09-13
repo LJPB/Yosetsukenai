@@ -8,6 +8,10 @@
     <string name="validity_period_week">%1$d週間</string>
     <string name="validity_period_month">%1$dヶ月</string>
     <string name="validity_period_year">%1$d年間</string>
+    <string name="validity_period_day_unit">日間</string>
+    <string name="validity_period_week_unit">週間</string>
+    <string name="validity_period_month_unit">ヶ月</string>
+    <string name="validity_period_year_unit">年間</string>
     <string name="validity_period_text">有効期間：%1$s</string>
     <string name="skip">スキップ</string>
     <string name="reset_repellent">今日の日付で再設定</string>
@@ -22,4 +26,7 @@
     
     <string name="back">戻る</string>
     <string name="edit">編集</string>
+
+    <string name="edit_repellent_name">商品名を入力</string>
+    
 </resources>
