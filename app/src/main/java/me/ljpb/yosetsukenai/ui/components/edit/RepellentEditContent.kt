@@ -67,6 +67,7 @@ import me.ljpb.yosetsukenai.ui.components.RowItemWithOneItem
 import me.ljpb.yosetsukenai.ui.components.RowItemWithText
 import me.ljpb.yosetsukenai.ui.components.SimpleTextField
 import me.ljpb.yosetsukenai.ui.components.TextInputDialog
+import me.ljpb.yosetsukenai.ui.epochSecondToLocalDate
 import me.ljpb.yosetsukenai.ui.getTextOfLocalDate
 import me.ljpb.yosetsukenai.ui.getTextOfNotify
 import me.ljpb.yosetsukenai.ui.localDateToEpochSecond
@@ -137,8 +138,9 @@ fun RepellentEditContent(
             DialogType.DatePicker -> DatePickerModal(
                 datePickerState = datePickerState,
                 onDismiss = hiddenDialog,
-                onConfirm = {
-                    /* TODO */
+                onConfirm = { epochMillis ->
+                    startDate =
+                        epochSecondToLocalDate(epochMillis / 1000, zoneId)
                     hiddenDialog()
                 },
                 isLandscape = false
