@@ -150,7 +150,9 @@ fun RepellentEditContent(
                 defaultValue = "",
                 label = stringResource(id = R.string.edit_place),
                 onSave = { text ->
-                    places.add(text)
+                    if (text !in places) {
+                        places.add(text)
+                    }
                     hiddenDialog()
                 },
                 onDismiss = hiddenDialog,
@@ -159,7 +161,10 @@ fun RepellentEditContent(
 
             DialogType.Notify -> NotifyInputDialog(
                 onSave = { simplePeriod, simpleTime ->
-                    notifyList.add(Pair(simplePeriod, simpleTime))
+                    val pair = Pair(simplePeriod, simpleTime)
+                    if (pair !in notifyList) {
+                        notifyList.add(pair)
+                    }
                     hiddenDialog()
                 },
                 onDismiss = hiddenDialog,
