@@ -35,7 +35,7 @@ fun TextInputDialog(
                 enabled = if (allowEmpty) true else text.isNotEmpty(), // allowEmptyがfalseのとき，TextFieldが空ならボタンを押せない
                 onClick = { onSave(text) }
             ) {
-                Text(text = stringResource(id = R.string.save))
+                Text(text = stringResource(id = R.string.add))
             }
         },
         dismissButton = {
