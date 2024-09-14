@@ -17,13 +17,15 @@ private fun Tag(
     modifier: Modifier = Modifier,
     containerColor: Color,
     textColor: Color,
-    text: String
+    text: String,
+    enabled: Boolean = false,
+    onClick: () -> Unit = {}
 ) {
     InputChip(
         modifier = modifier,
         selected = true, 
-        enabled = false,
-        onClick = { /*TODO*/ },
+        enabled = enabled,
+        onClick = onClick,
         label = {
             Text(
                 text = text,
@@ -45,26 +47,34 @@ private fun Tag(
 @Composable
 fun PlaceTag(
     modifier: Modifier = Modifier,
-    text: String
+    text: String,
+    enabled: Boolean = false,
+    onClick: () -> Unit = {}
 ) {
     Tag(
         modifier = modifier,
         containerColor = MaterialTheme.colorScheme.secondaryContainer,
         text = text,
-        textColor = MaterialTheme.colorScheme.onSecondaryContainer
+        textColor = MaterialTheme.colorScheme.onSecondaryContainer,
+        enabled = enabled,
+        onClick = onClick
     )
 }
 
 @Composable
 fun InsectTag(
     modifier: Modifier = Modifier,
-    text: String
+    text: String,
+    enabled: Boolean = false,
+    onClick: () -> Unit = {}
 ) {
     Tag(
         modifier = modifier,
         containerColor = MaterialTheme.colorScheme.tertiaryContainer,
         text = text,
-        textColor = MaterialTheme.colorScheme.onTertiaryContainer
+        textColor = MaterialTheme.colorScheme.onTertiaryContainer,
+        enabled = enabled,
+        onClick = onClick
     )
 }
 
