@@ -10,29 +10,44 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import me.ljpb.yosetsukenai.R
+import me.ljpb.yosetsukenai.data.SimplePeriod
+import me.ljpb.yosetsukenai.data.SimpleTime
+import me.ljpb.yosetsukenai.data.room.InsectEncounterEntity
+import me.ljpb.yosetsukenai.data.room.NotifyEntity
+import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
 import me.ljpb.yosetsukenai.ui.ConstIcon
 import me.ljpb.yosetsukenai.ui.components.InsectTag
+import me.ljpb.yosetsukenai.ui.components.NotifyTag
 import me.ljpb.yosetsukenai.ui.components.PlaceTag
 import me.ljpb.yosetsukenai.ui.components.RowItem
 import me.ljpb.yosetsukenai.ui.components.RowItemWithText
+import me.ljpb.yosetsukenai.ui.getTextOfLocalDate
+import me.ljpb.yosetsukenai.ui.getTextOfNotify
+import me.ljpb.yosetsukenai.ui.getTextOfSimplePeriod
 import java.time.LocalDate
+import java.util.UUID
 
 @Composable
 fun RepellentDetailContent(
     modifier: Modifier = Modifier,
-    name: String,
-    startDate: LocalDate,
-    endDate: LocalDate,
-    validityPeriodText: String,
-    insects: List<String>,
-    places: List<String>,
-    notifies: List<String>
+    repellent: RepellentScheduleEntity,
+    insects: List<InsectEncounterEntity>,
+    notifies: List<NotifyEntity>,
+    insectOnClick: (InsectEncounterEntity) -> Unit,
 ) {
+    val context = LocalContext.current
+    val name = repellent.name
+    val startDate = repellent.startDate
+    val finishDate = repellent.finishDate
+    val validityPeriod = repellent.validityPeriod
+    val places = repellent.places
+
     Column(
         modifier = modifier.verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.detail_content_vertical_padding))
@@ -44,37 +59,34 @@ fun RepellentDetailContent(
             text = name
         )
         HorizontalDivider()
+
         // 開始日
         RowItemWithText(
             leadingIcon = ConstIcon.START_DATE,
             itemName = stringResource(id = R.string.repellent_start_date),
-            text = stringResource(
-                id = R.string.formated_date,
-                startDate.year,
-                startDate.monthValue,
-                startDate.dayOfMonth
-            )
+            text = getTextOfLocalDate(startDate, context)
         )
         HorizontalDivider()
+
         // 終了日
         RowItemWithText(
             leadingIcon = ConstIcon.END_DATE,
             itemName = stringResource(id = R.string.repellent_end_date),
-            text = stringResource(
-                id = R.string.formated_date,
-                endDate.year,
-                endDate.monthValue,
-                endDate.dayOfMonth
-            )
+            text = getTextOfLocalDate(finishDate, context)
         )
         HorizontalDivider()
+
         // 有効期間
         RowItemWithText(
             leadingIcon = ConstIcon.VALIDITY_PERIOD,
             itemName = stringResource(id = R.string.repellent_validity_period),
-            text = validityPeriodText
+            text = stringResource(
+                id = R.string.validity_period_text,
+                getTextOfSimplePeriod(validityPeriod, context)
+            )
         )
         HorizontalDivider()
+
         // 発見した虫の一覧
         RowItem(
             leadingIcon = ConstIcon.INSECT,
@@ -88,12 +100,16 @@ fun RepellentDetailContent(
                         modifier = Modifier
                             .height(dimensionResource(id = R.dimen.row_item_height))
                             .padding(vertical = 4.dp),
-                        text = insect
-                    )
+                        text = insect.name,
+                        enabled = true
+                    ) {
+                        insectOnClick(insect)
+                    }
                 }
             }
         }
         HorizontalDivider()
+
         // 場所
         RowItem(
             leadingIcon = ConstIcon.PLACE,
@@ -113,6 +129,7 @@ fun RepellentDetailContent(
             }
         }
         HorizontalDivider()
+
         // 通知
         RowItem(
             leadingIcon = ConstIcon.NOTIFY,
@@ -122,11 +139,11 @@ fun RepellentDetailContent(
                 horizontalAlignment = Alignment.End
             ) {
                 notifies.forEach { notify ->
-                    InsectTag(
+                    NotifyTag(
                         modifier = Modifier
                             .height(dimensionResource(id = R.dimen.row_item_height))
                             .padding(vertical = 4.dp),
-                        text = notify
+                        text = getTextOfNotify(notify, context)
                     )
                 }
             }
@@ -138,16 +155,63 @@ fun RepellentDetailContent(
 @Composable
 private fun RepellentDetailPreview() {
     RepellentDetailContent(
-        name = "商品名",
-        startDate = LocalDate.of(2024, 9, 1),
-        endDate = LocalDate.of(2024, 10, 1),
-        validityPeriodText = "30日間",
-        insects = emptyList(),
-        places = listOf(
-            "玄関",
-            "窓辺",
-            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        repellent = RepellentScheduleEntity(
+            name = "aaaaaaaa",
+            validityPeriod = SimplePeriod.ofDays(30),
+            startDate = LocalDate.of(2024, 9, 1),
+            finishDate = LocalDate.of(2024, 10, 1),
+//            places = listOf("aaa", "bbb", "ccc"),
+            places = listOf(),
+            ignore = false
         ),
-        notifies = listOf("当日(10:00)", "前日(12:00)")
-    )
+        insects = listOf(
+            InsectEncounterEntity(
+                name = "aaa",
+                date = LocalDate.of(2024, 9, 3),
+                size = "大きい",
+                condition = "瀕死",
+                place = "玄関"
+            ),
+            InsectEncounterEntity(
+                name = "aaa",
+                date = LocalDate.of(2024, 9, 3),
+                size = "大きい",
+                condition = "瀕死",
+                place = "玄関"
+            ),
+            InsectEncounterEntity(
+                name = "aaa",
+                date = LocalDate.of(2024, 9, 3),
+                size = "大きい",
+                condition = "瀕死",
+                place = "玄関"
+            ),
+        ),
+        notifies = listOf(
+            NotifyEntity(
+                repellentScheduleId = 1,
+                jobId = UUID.randomUUID(),
+                notifyId = 1,
+                triggerTimeSeconds = 1,
+                schedule = SimplePeriod.ofDays(3),
+                time = SimpleTime.of(1, 1)
+            ),
+            NotifyEntity(
+                repellentScheduleId = 1,
+                jobId = UUID.randomUUID(),
+                notifyId = 1,
+                triggerTimeSeconds = 1,
+                schedule = SimplePeriod.ofDays(3),
+                time = SimpleTime.of(1, 1)
+            ),
+            NotifyEntity(
+                repellentScheduleId = 1,
+                jobId = UUID.randomUUID(),
+                notifyId = 1,
+                triggerTimeSeconds = 1,
+                schedule = SimplePeriod.ofDays(3),
+                time = SimpleTime.of(1, 1)
+            ),
+        )
+    ) {}
 }
