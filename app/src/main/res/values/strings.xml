@@ -40,6 +40,13 @@
     <string name="notify_text_before_month">%1$dヶ月後(%2$s)</string>
     <string name="notify_text_before_year">%1$d年後(%2$s)</string>
     
+    <string name="notify_input_dialog_unit_day">日前</string>
+    <string name="notify_input_dialog_unit_week">週間前</string>
+    
+    <string name="notify_input_dialog_select_day">日数 (0で当日)</string>
+    <string name="notify_input_dialog_select_week">週数</string>
+    <string name="notify_input_dialog_select_time">通知する時間</string>
+    
     <string name="simple_time_text">%1$02d:%2$02d</string>
     
 </resources>
