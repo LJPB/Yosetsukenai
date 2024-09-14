@@ -6,6 +6,7 @@ import kotlinx.serialization.json.Json
 import me.ljpb.yosetsukenai.data.SimplePeriod
 import me.ljpb.yosetsukenai.data.SimpleTime
 import java.time.LocalDate
+import java.time.ZoneId
 import java.util.UUID
 
 class TableConverter : AppDatabaseConverter {
@@ -44,4 +45,11 @@ class TableConverter : AppDatabaseConverter {
     
     @TypeConverter
     override fun fromSimpleTimeToString(time: SimpleTime): String = time.toString()
+    
+    // ZoneId
+    @TypeConverter
+    override fun fromStringToZoneId(string: String): ZoneId = ZoneId.of(string)
+
+    @TypeConverter
+    override fun fromZoneIdToString(zoneId: ZoneId): String = zoneId.id
 }

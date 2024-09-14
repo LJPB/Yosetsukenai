@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import me.ljpb.yosetsukenai.data.SimplePeriod
 import java.time.LocalDate
+import java.time.ZoneId
 
 @Entity(tableName = "repellent_schedule")
 data class RepellentScheduleEntity(
@@ -14,5 +15,6 @@ data class RepellentScheduleEntity(
     val startDate: LocalDate,
     val finishDate: LocalDate,
     val places: List<String>,
-    val ignore: Boolean
+    val ignore: Boolean,
+    val zoneId: ZoneId
 )

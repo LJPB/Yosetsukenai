@@ -31,6 +31,7 @@ import me.ljpb.yosetsukenai.ui.getTextOfLocalDate
 import me.ljpb.yosetsukenai.ui.getTextOfNotify
 import me.ljpb.yosetsukenai.ui.getTextOfSimplePeriod
 import java.time.LocalDate
+import java.time.ZoneId
 import java.util.UUID
 
 @Composable
@@ -162,7 +163,8 @@ private fun RepellentDetailPreview() {
             finishDate = LocalDate.of(2024, 10, 1),
 //            places = listOf("aaa", "bbb", "ccc"),
             places = listOf(),
-            ignore = false
+            ignore = false,
+            zoneId = ZoneId.of("UTC")
         ),
         insects = listOf(
             InsectEncounterEntity(
@@ -170,21 +172,24 @@ private fun RepellentDetailPreview() {
                 date = LocalDate.of(2024, 9, 3),
                 size = "大きい",
                 condition = "瀕死",
-                place = "玄関"
+                place = "玄関",
+                zoneId = ZoneId.of("UTC")
             ),
             InsectEncounterEntity(
                 name = "aaa",
                 date = LocalDate.of(2024, 9, 3),
                 size = "大きい",
                 condition = "瀕死",
-                place = "玄関"
+                place = "玄関",
+                zoneId = ZoneId.of("UTC")
             ),
             InsectEncounterEntity(
                 name = "aaa",
                 date = LocalDate.of(2024, 9, 3),
                 size = "大きい",
                 condition = "瀕死",
-                place = "玄関"
+                place = "玄関",
+                zoneId = ZoneId.of("UTC")
             ),
         ),
         notifies = listOf(

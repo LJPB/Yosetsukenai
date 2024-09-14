@@ -38,6 +38,7 @@ import me.ljpb.yosetsukenai.ui.components.PlaceTag
 import me.ljpb.yosetsukenai.ui.getTextOfLocalDate
 import me.ljpb.yosetsukenai.ui.getTextOfSimplePeriod
 import java.time.LocalDate
+import java.time.ZoneId
 
 @Composable
 fun ValidRepellentCard(
@@ -307,6 +308,7 @@ private fun ValidRepellentCardPreview() {
             validityPeriod = SimplePeriod.ofDays(3),
             places = listOf("場所1", "場所2", "場所3"),
             ignore = false,
+            zoneId = ZoneId.of("UTC")
         ),
         currentDate = LocalDate.of(2024, 9, 10),
         resetOnClick = { /*TODO*/ }
@@ -324,6 +326,7 @@ private fun ExpiredRepellentCardPreview() {
             validityPeriod = SimplePeriod.ofDays(3),
             places = listOf("場所1", "場所2", "場所3"),
             ignore = false,
+            zoneId = ZoneId.of("UTC")
         ),
         skipOnClick = {},
         resetOnClick = { /*TODO*/ }
