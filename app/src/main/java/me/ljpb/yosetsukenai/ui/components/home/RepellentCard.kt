@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import me.ljpb.yosetsukenai.R
 import me.ljpb.yosetsukenai.data.SimplePeriod
 import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
-import me.ljpb.yosetsukenai.ui.components.PlaceTag
+import me.ljpb.yosetsukenai.ui.components.common.PlaceTag
 import me.ljpb.yosetsukenai.ui.getTextOfLocalDate
 import me.ljpb.yosetsukenai.ui.getTextOfSimplePeriod
 import java.time.LocalDate

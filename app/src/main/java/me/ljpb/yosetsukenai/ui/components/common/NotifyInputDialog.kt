@@ -1,4 +1,4 @@
-package me.ljpb.yosetsukenai.ui.components
+package me.ljpb.yosetsukenai.ui.components.common
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

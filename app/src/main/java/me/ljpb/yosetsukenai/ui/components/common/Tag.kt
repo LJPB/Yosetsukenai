@@ -1,4 +1,4 @@
-package me.ljpb.yosetsukenai.ui.components
+package me.ljpb.yosetsukenai.ui.components.common
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.InputChip

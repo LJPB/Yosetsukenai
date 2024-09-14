@@ -22,11 +22,11 @@ import me.ljpb.yosetsukenai.data.room.InsectEncounterEntity
 import me.ljpb.yosetsukenai.data.room.NotifyEntity
 import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
 import me.ljpb.yosetsukenai.ui.ConstIcon
-import me.ljpb.yosetsukenai.ui.components.InsectTag
-import me.ljpb.yosetsukenai.ui.components.NotifyTag
-import me.ljpb.yosetsukenai.ui.components.PlaceTag
-import me.ljpb.yosetsukenai.ui.components.RowItem
-import me.ljpb.yosetsukenai.ui.components.RowItemWithText
+import me.ljpb.yosetsukenai.ui.components.common.InsectTag
+import me.ljpb.yosetsukenai.ui.components.common.NotifyTag
+import me.ljpb.yosetsukenai.ui.components.common.PlaceTag
+import me.ljpb.yosetsukenai.ui.components.common.RowItem
+import me.ljpb.yosetsukenai.ui.components.common.RowItemWithText
 import me.ljpb.yosetsukenai.ui.getTextOfLocalDate
 import me.ljpb.yosetsukenai.ui.getTextOfNotify
 import me.ljpb.yosetsukenai.ui.getTextOfSimplePeriod
