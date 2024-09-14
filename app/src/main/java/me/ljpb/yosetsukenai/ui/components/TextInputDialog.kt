@@ -15,20 +15,27 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import me.ljpb.yosetsukenai.R
 
+/**
+ * @param allowEmpty 何も入力されていない時にconfirmButtonを押せるかどうか(空文字を許容するかどうか)
+ */
 @Composable
 fun TextInputDialog(
     modifier: Modifier = Modifier,
     defaultValue: String,
     label: String,
+    allowEmpty: Boolean = false,
     onSave: (String) -> Unit = {},
     onDismiss: () -> Unit = {}
 ) {
     var text by remember { mutableStateOf(defaultValue) }
     AlertDialog(
         modifier = modifier,
-        onDismissRequest = onDismiss, 
+        onDismissRequest = onDismiss,
         confirmButton = {
-            TextButton(onClick = { onSave(text) }) {
+            TextButton(
+                enabled = if (allowEmpty) true else text.isNotEmpty(), // allowEmptyがfalseのとき，TextFieldが空ならボタンを押せない
+                onClick = { onSave(text) }
+            ) {
                 Text(text = stringResource(id = R.string.save))
             }
         },
@@ -41,8 +48,11 @@ fun TextInputDialog(
             Column {
                 OutlinedTextField(
                     value = text,
-                    onValueChange = { text = it },
-                    label = { Text(text = label) }
+                    onValueChange = {
+                        text = it
+                    },
+                    label = { Text(text = label) },
+                    singleLine = true,
                 )
             }
         }
