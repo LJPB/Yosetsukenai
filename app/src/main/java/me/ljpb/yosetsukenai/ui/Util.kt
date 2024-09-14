@@ -6,7 +6,12 @@ import me.ljpb.yosetsukenai.data.PeriodUnit
 import me.ljpb.yosetsukenai.data.SimplePeriod
 import me.ljpb.yosetsukenai.data.SimpleTime
 import me.ljpb.yosetsukenai.data.room.NotifyEntity
+import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 fun getTextOfSimplePeriod(simplePeriod: SimplePeriod, context: Context): String =
     when (simplePeriod.periodUnit) {
@@ -64,3 +69,19 @@ fun getTextOfNotify(notify: NotifyEntity, context: Context): String {
 
 fun getTextOfSimpleTime(simpleTime: SimpleTime, context: Context): String =
     context.getString(R.string.simple_time_text, simpleTime.hour, simpleTime.minutes)
+
+fun localDateToEpochSecond(localDate: LocalDate, zoneId: ZoneId): Long {
+    val zonedDateTime = ZonedDateTime.of(
+        LocalDateTime.of(localDate, LocalTime.of(0, 0)),
+        zoneId
+    )
+    return zonedDateTime.toEpochSecond()
+}
+
+fun epochSecondToLocalDate(epochSecond: Long, zoneId: ZoneId): LocalDate {
+    val localDateTime = LocalDateTime.ofInstant(
+        Instant.ofEpochSecond(epochSecond),
+        zoneId
+    )
+    return localDateTime.toLocalDate()
+}

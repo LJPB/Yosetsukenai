@@ -22,17 +22,21 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,38 +61,54 @@ import me.ljpb.yosetsukenai.data.SimplePeriod
 import me.ljpb.yosetsukenai.data.room.NotifyEntity
 import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
 import me.ljpb.yosetsukenai.ui.ConstIcon
+import me.ljpb.yosetsukenai.ui.components.NotifyInputDialog
 import me.ljpb.yosetsukenai.ui.components.RowItem
 import me.ljpb.yosetsukenai.ui.components.RowItemWithOneItem
 import me.ljpb.yosetsukenai.ui.components.RowItemWithText
 import me.ljpb.yosetsukenai.ui.components.SimpleTextField
+import me.ljpb.yosetsukenai.ui.components.TextInputDialog
 import me.ljpb.yosetsukenai.ui.getTextOfLocalDate
 import me.ljpb.yosetsukenai.ui.getTextOfNotify
+import me.ljpb.yosetsukenai.ui.localDateToEpochSecond
 import java.time.LocalDate
+import java.time.ZoneId
 
+private enum class DialogType {
+    DatePicker,
+    Place,
+    Notify,
+    None // 初期値用
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RepellentEditContent(
     modifier: Modifier = Modifier,
     repellent: RepellentScheduleEntity?,
     notifies: List<NotifyEntity> = emptyList(),
 ) {
+    // TODO: 構成の変更への対応 
     // 表示するrepellentのプロパティの初期化
     // 渡されたrepellentがnullの場合 : 新規追加だから初期値で表示
     // 渡されたrepellentが非nullの場合 : 編集だから渡されたrepellentの値を初期値として表示
     var name by remember { mutableStateOf("") }
     var startDate by remember { mutableStateOf(LocalDate.now()) }
     var validityPeriod by remember { mutableStateOf(SimplePeriod.ofDays(30)) }
-    var places by remember { mutableStateOf(emptyList<String>()) }
+    var zoneId = ZoneId.systemDefault()
+    val places = remember { mutableStateListOf<String>() }
 
     if (repellent != null) {
         name = repellent.name
         startDate = repellent.startDate
         validityPeriod = repellent.validityPeriod
-        places = repellent.places
+        zoneId = repellent.zoneId
+        places.addAll(repellent.places)
     }
 
-    val notifyList by remember { mutableStateOf(notifies) }
+    val notifyList = remember { mutableStateListOf<NotifyEntity>() }
+    notifyList.addAll(notifyList)
 
-    // 順番に注意：validityPeriodの初期化後に書く
+    // 順番に注意：validityPeriodの初期化後に書く (repellentのnullチェック前に書くとこの二重に書かなくてはいけなくなる)
     var validityNumber by remember { mutableIntStateOf(validityPeriod.number) }
     var validityPeriodUnit by remember { mutableStateOf(validityPeriod.periodUnit) }
 
@@ -96,6 +116,58 @@ fun RepellentEditContent(
     val textColor = MaterialTheme.colorScheme.onSurface
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
+
+    // ============ ダイアログ関連 ============
+    var showDialog by rememberSaveable { mutableStateOf(false) }
+    var dialogType by rememberSaveable { mutableStateOf(DialogType.None) }
+    val showDialogOf = { type: DialogType ->
+        showDialog = true
+        dialogType = type
+    }
+    val hiddenDialog = {
+        showDialog = false
+    }
+
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = localDateToEpochSecond(startDate, zoneId) * 1000
+    )
+
+    if (showDialog) {
+        when (dialogType) {
+            DialogType.DatePicker -> DatePickerModal(
+                datePickerState = datePickerState,
+                onDismiss = hiddenDialog,
+                onConfirm = {
+                    /* TODO */
+                    hiddenDialog()
+                },
+                isLandscape = false
+            )
+
+            DialogType.Place -> TextInputDialog(
+                defaultValue = "",
+                label = stringResource(id = R.string.edit_place),
+                onSave = { text ->
+                    places.add(text)
+                    hiddenDialog()
+                },
+                onDismiss = hiddenDialog,
+                allowEmpty = false
+            )
+
+            DialogType.Notify -> NotifyInputDialog(
+                onSave = { simplePeriod, simpleTime ->
+                    /* TODO */
+                    hiddenDialog()
+                },
+                onDismiss = hiddenDialog,
+                isLandscape = false
+            )
+
+            else -> {}
+        }
+    }
+    // ============ ダイアログ関連 終了 ============
 
     Column(
         modifier = modifier
@@ -138,7 +210,7 @@ fun RepellentEditContent(
             leadingIcon = ConstIcon.START_DATE,
             itemName = stringResource(id = R.string.repellent_start_date),
             text = getTextOfLocalDate(startDate, context)
-        ) { /* TODO 日付入力ダイアログの表示 */ }
+        ) { showDialogOf(DialogType.DatePicker) }
 
         // 有効期間
         HorizontalDivider()
@@ -166,7 +238,7 @@ fun RepellentEditContent(
                     verticalArrangement = Arrangement.spacedBy(4.dp),
                     horizontalAlignment = Alignment.End
                 ) {
-                    places.forEach { place ->
+                    places.forEachIndexed { index, place ->
                         ItemTag(
                             text = place,
                             deleteOnClick = {
@@ -177,7 +249,7 @@ fun RepellentEditContent(
                     // 追加ボタン
                     TextButton(
                         modifier = Modifier.height(dimensionResource(id = R.dimen.row_item_height)),
-                        onClick = { /* TODO 追加ダイアログの表示 */ }
+                        onClick = { showDialogOf(DialogType.Place) }
                     ) {
                         Text(
                             text = stringResource(id = R.string.add),
@@ -207,7 +279,7 @@ fun RepellentEditContent(
                     // 追加ボタン
                     TextButton(
                         modifier = Modifier.height(dimensionResource(id = R.dimen.row_item_height)),
-                        onClick = { /* TODO 追加ダイアログの表示 */ }
+                        onClick = { showDialogOf(DialogType.Notify) }
                     ) {
                         Text(
                             text = stringResource(id = R.string.add),
