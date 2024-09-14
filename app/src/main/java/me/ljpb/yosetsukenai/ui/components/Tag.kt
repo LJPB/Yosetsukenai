@@ -78,6 +78,23 @@ fun InsectTag(
     )
 }
 
+@Composable
+fun NotifyTag(
+    modifier: Modifier = Modifier,
+    text: String,
+    enabled: Boolean = false,
+    onClick: () -> Unit = {}
+) {
+    Tag(
+        modifier = modifier,
+        containerColor = MaterialTheme.colorScheme.errorContainer,
+        text = text,
+        textColor = MaterialTheme.colorScheme.onErrorContainer,
+        enabled = enabled,
+        onClick = onClick
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun PlaceTagPreview() {
@@ -91,6 +108,15 @@ private fun PlaceTagPreview() {
 @Composable
 private fun InsectTagPreview() {
     InsectTag(
+        modifier = Modifier.padding(8.dp),
+        text = "aaa"
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun NotifyTagPreview() {
+    NotifyTag(
         modifier = Modifier.padding(8.dp),
         text = "aaa"
     )
