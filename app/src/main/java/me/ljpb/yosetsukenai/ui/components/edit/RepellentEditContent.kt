@@ -242,7 +242,21 @@ fun RepellentEditContent(
                         ItemTag(
                             text = place,
                             deleteOnClick = {
-                                /* TODO 削除処理を書く */
+                                // 完全に同時に削除(タップ)したのインデックスのズレ対策にtrt-catchで囲んでいる
+                                // 例えば[a, b]を同時に削除した時，aが先に削除されたらその時点でのリストは[b]となるが，
+                                // 削除リクエストとしてindex = 1となっていたらIndexOutOfBoundsExceptionとなる
+                                // また[a, b, c, d]でb, cを同時に削除した時，
+                                // index = 1(b)を削除して，index = 2(c)を削除するという順番で処理が行われた時
+                                // bが削除された時点でのリストが[a, c, d]となり，この場合のindex = 2はdとなり
+                                // 本来は削除しない要素が削除されてしまう
+                                // その対策として，list[index] == item という条件を加えている
+                                try {
+                                    if (places[index] == place) {
+                                        places.removeAt(index)
+                                    }
+                                } catch (_: IndexOutOfBoundsException) {
+
+                                }
                             }
                         )
                     }
@@ -270,10 +284,26 @@ fun RepellentEditContent(
                     verticalArrangement = Arrangement.spacedBy(4.dp),
                     horizontalAlignment = Alignment.End
                 ) {
-                    notifyList.forEach { notify ->
+                    notifyList.forEachIndexed { index, notify ->
                         ItemTag(
                             text = getTextOfNotify(notify, context),
-                            deleteOnClick = { /* TODO 削除処理を書く */ }
+                            deleteOnClick = {
+                                // 完全に同時に削除(タップ)したのインデックスのズレ対策にtrt-catchで囲んでいる
+                                // 例えば[a, b]を同時に削除した時，aが先に削除されたらその時点でのリストは[b]となるが，
+                                // 削除リクエストとしてindex = 1となっていたらIndexOutOfBoundsExceptionとなる
+                                // また[a, b, c, d]でb, cを同時に削除した時，
+                                // index = 1(b)を削除して，index = 2(c)を削除するという順番で処理が行われた時
+                                // bが削除された時点でのリストが[a, c, d]となり，この場合のindex = 2はdとなり
+                                // 本来は削除しない要素が削除されてしまう
+                                // その対策として，list[index] == item という条件を加えている
+                                try {
+                                    if (notifyList[index] == notify) {
+                                        notifyList.removeAt(index)
+                                    }
+                                } catch (_: IndexOutOfBoundsException) {
+
+                                }
+                            }
                         )
                     }
                     // 追加ボタン
