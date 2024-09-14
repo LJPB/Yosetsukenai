@@ -1,6 +1,5 @@
 package me.ljpb.yosetsukenai.ui.components
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -45,16 +44,14 @@ fun TextInputDialog(
             }
         },
         text = {
-            Column {
-                OutlinedTextField(
-                    value = text,
-                    onValueChange = {
-                        text = it
-                    },
-                    label = { Text(text = label) },
-                    singleLine = true,
-                )
-            }
+            OutlinedTextField(
+                value = text,
+                onValueChange = {
+                    text = it
+                },
+                label = { Text(text = label) },
+                singleLine = true,
+            )
         }
     )
 }
