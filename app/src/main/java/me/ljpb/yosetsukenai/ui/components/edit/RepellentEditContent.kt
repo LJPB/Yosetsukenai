@@ -107,7 +107,7 @@ fun RepellentEditContent(
     }
 
     val notifyList = remember { mutableStateListOf<Pair<SimplePeriod, SimpleTime>>() }
-    notifyList.addAll(notifyList)
+    notifyList.addAll(notifies)
 
     // 順番に注意：validityPeriodの初期化後に書く (repellentのnullチェック前に書くとこの二重に書かなくてはいけなくなる)
     var validityNumber by remember { mutableIntStateOf(validityPeriod.number) }
