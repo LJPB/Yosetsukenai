@@ -159,7 +159,7 @@ fun RepellentEditContent(
 
             DialogType.Notify -> NotifyInputDialog(
                 onSave = { simplePeriod, simpleTime ->
-                    /* TODO */
+                    notifyList.add(Pair(simplePeriod, simpleTime))
                     hiddenDialog()
                 },
                 onDismiss = hiddenDialog,
