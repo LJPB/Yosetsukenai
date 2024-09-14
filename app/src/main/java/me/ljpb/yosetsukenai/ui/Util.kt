@@ -29,38 +29,38 @@ fun getTextOfLocalDate(localDate: LocalDate, context: Context): String =
         localDate.dayOfMonth,
     )
 
-fun getTextOfNotify(notify: NotifyEntity, context: Context): String {
-    val schedule = notify.schedule
-    val time = notify.time
-    val timeText = getTextOfSimpleTime(time, context)
-    if (schedule.number == 0 && schedule.periodUnit == PeriodUnit.Day) { // 当日
+fun getTextOfNotify(notify: NotifyEntity, context: Context): String = getNotifyText(notify.schedule, notify.time, context)
+
+fun getNotifyText(simplePeriod: SimplePeriod, simpleTime: SimpleTime, context: Context): String {
+    val timeText = getTextOfSimpleTime(simpleTime, context)
+    if (simplePeriod.number == 0 && simplePeriod.periodUnit == PeriodUnit.Day) { // 当日
         return context.getString(
             R.string.notify_text_on_the_day,
             timeText
         )
     } else {
-        return when (schedule.periodUnit) {
+        return when (simplePeriod.periodUnit) {
             PeriodUnit.Day -> context.getString(
                 R.string.notify_text_before_day,
-                schedule.number,
+                simplePeriod.number,
                 timeText
             )
 
             PeriodUnit.Week -> context.getString(
                 R.string.notify_text_before_week,
-                schedule.number,
+                simplePeriod.number,
                 timeText
             )
 
             PeriodUnit.Month -> context.getString(
                 R.string.notify_text_before_month,
-                schedule.number,
+                simplePeriod.number,
                 timeText
             )
 
             PeriodUnit.Year -> context.getString(
                 R.string.notify_text_before_year,
-                schedule.number,
+                simplePeriod.number,
                 timeText
             )
         }

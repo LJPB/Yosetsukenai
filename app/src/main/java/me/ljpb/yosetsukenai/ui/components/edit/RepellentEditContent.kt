@@ -58,7 +58,7 @@ import androidx.core.text.isDigitsOnly
 import me.ljpb.yosetsukenai.R
 import me.ljpb.yosetsukenai.data.PeriodUnit
 import me.ljpb.yosetsukenai.data.SimplePeriod
-import me.ljpb.yosetsukenai.data.room.NotifyEntity
+import me.ljpb.yosetsukenai.data.SimpleTime
 import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
 import me.ljpb.yosetsukenai.ui.ConstIcon
 import me.ljpb.yosetsukenai.ui.components.NotifyInputDialog
@@ -68,8 +68,8 @@ import me.ljpb.yosetsukenai.ui.components.RowItemWithText
 import me.ljpb.yosetsukenai.ui.components.SimpleTextField
 import me.ljpb.yosetsukenai.ui.components.TextInputDialog
 import me.ljpb.yosetsukenai.ui.epochSecondToLocalDate
+import me.ljpb.yosetsukenai.ui.getNotifyText
 import me.ljpb.yosetsukenai.ui.getTextOfLocalDate
-import me.ljpb.yosetsukenai.ui.getTextOfNotify
 import me.ljpb.yosetsukenai.ui.localDateToEpochSecond
 import java.time.LocalDate
 import java.time.ZoneId
@@ -86,7 +86,7 @@ private enum class DialogType {
 fun RepellentEditContent(
     modifier: Modifier = Modifier,
     repellent: RepellentScheduleEntity?,
-    notifies: List<NotifyEntity> = emptyList(),
+    notifies: List<Pair<SimplePeriod, SimpleTime>> = emptyList(),
 ) {
     // TODO: 構成の変更への対応 
     // 表示するrepellentのプロパティの初期化
@@ -106,7 +106,7 @@ fun RepellentEditContent(
         places.addAll(repellent.places)
     }
 
-    val notifyList = remember { mutableStateListOf<NotifyEntity>() }
+    val notifyList = remember { mutableStateListOf<Pair<SimplePeriod, SimpleTime>>() }
     notifyList.addAll(notifyList)
 
     // 順番に注意：validityPeriodの初期化後に書く (repellentのnullチェック前に書くとこの二重に書かなくてはいけなくなる)
@@ -288,7 +288,7 @@ fun RepellentEditContent(
                 ) {
                     notifyList.forEachIndexed { index, notify ->
                         ItemTag(
-                            text = getTextOfNotify(notify, context),
+                            text = getNotifyText(notify.first, notify.second, context),
                             deleteOnClick = {
                                 // 完全に同時に削除(タップ)したのインデックスのズレ対策にtrt-catchで囲んでいる
                                 // 例えば[a, b]を同時に削除した時，aが先に削除されたらその時点でのリストは[b]となるが，
