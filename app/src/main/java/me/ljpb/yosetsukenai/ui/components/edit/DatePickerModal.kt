@@ -14,21 +14,28 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import me.ljpb.yosetsukenai.R
 
+/**
+ * @param onConfirm 引数で渡す値はエポックミリ秒
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePickerModal(
     modifier: Modifier = Modifier,
     datePickerState: DatePickerState,
     onDismiss: () -> Unit,
-    onConfirm: () -> Unit,
+    onConfirm: (Long) -> Unit,
     isLandscape: Boolean
 ) {
-    datePickerState.displayMode = if (isLandscape) DisplayMode.Input else datePickerState.displayMode
+    datePickerState.displayMode =
+        if (isLandscape) DisplayMode.Input else datePickerState.displayMode
     DatePickerDialog(
         modifier = modifier,
         onDismissRequest = onDismiss,
         confirmButton = {
-            TextButton(onClick = onConfirm) {
+            TextButton(
+                onClick = { onConfirm(datePickerState.selectedDateMillis ?: System.currentTimeMillis()) },
+                enabled = datePickerState.selectedDateMillis != null
+            ) {
                 Text(
                     text = stringResource(id = R.string.save)
                 )
