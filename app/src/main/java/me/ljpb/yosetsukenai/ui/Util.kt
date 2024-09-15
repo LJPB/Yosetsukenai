@@ -72,7 +72,7 @@ fun getTextOfSimpleTime(simpleTime: SimpleTime, context: Context): String =
 
 fun localDateToEpochSecond(localDate: LocalDate, zoneId: ZoneId): Long {
     val zonedDateTime = ZonedDateTime.of(
-        LocalDateTime.of(localDate, LocalTime.of(0, 0)),
+        LocalDateTime.of(localDate, LocalTime.of(12, 0)),
         zoneId
     )
     return zonedDateTime.toEpochSecond()
