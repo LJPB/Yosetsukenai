@@ -373,10 +373,11 @@ private fun SimplePeriodInputField(
                         }
                     }
                 },
-            value = numberText,
+            value = if (numberText == RepellentEditViewModel.EMPTY_INT.toString()) "" else numberText,
             onValueChange = {
                 if (it.isEmpty()) {
                     numberText = it
+                    onNumberChanged(RepellentEditViewModel.EMPTY_INT)
                 }
                 if (it.isNotEmpty() && it.isDigitsOnly() && it.length <= 3) {
                     numberText = it.toInt().toString()
