@@ -20,12 +20,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import me.ljpb.yosetsukenai.R
 import me.ljpb.yosetsukenai.ui.ConstIcon
 
+/**
+ * @param enabled 保存ボタンを押せる?
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditTopBar(
     modifier: Modifier = Modifier,
     onCancel: () -> Unit,
     onSave: () -> Unit,
+    enabled: Boolean = true,
     scrollBehavior: TopAppBarScrollBehavior
 ) {
     TopAppBar(
@@ -40,7 +44,10 @@ fun EditTopBar(
             }
         },
         actions = {
-            TextButton(onClick = onSave) {
+            TextButton(
+                onClick = onSave,
+                enabled = enabled
+            ) {
                 Button(onClick = onSave) {
                     Text(text = stringResource(id = R.string.save))
                 }
