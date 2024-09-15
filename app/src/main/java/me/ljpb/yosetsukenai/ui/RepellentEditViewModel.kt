@@ -9,7 +9,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import me.ljpb.yosetsukenai.data.NotifyAction
 import me.ljpb.yosetsukenai.data.PeriodUnit
+import me.ljpb.yosetsukenai.data.RepellentScheduleAction
 import me.ljpb.yosetsukenai.data.SimplePeriod
 import me.ljpb.yosetsukenai.data.SimpleTime
 import me.ljpb.yosetsukenai.data.room.NotifyEntity
@@ -21,7 +23,9 @@ data class PeriodAndTime(val period: SimplePeriod, val time: SimpleTime)
 
 class RepellentEditViewModel(
     private val repellent: RepellentScheduleEntity?,
-    private val notifications: List<NotifyEntity>
+    private val notifications: List<NotifyEntity>,
+    private val repellentAction: RepellentScheduleAction,
+    private val notifyAction: NotifyAction,
 ) : ViewModel() {
     companion object {
         const val EMPTY_INT = -1
