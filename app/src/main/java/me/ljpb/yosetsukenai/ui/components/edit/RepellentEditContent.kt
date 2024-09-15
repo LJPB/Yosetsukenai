@@ -31,9 +31,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -55,12 +54,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
+import androidx.lifecycle.viewmodel.compose.viewModel
 import me.ljpb.yosetsukenai.R
 import me.ljpb.yosetsukenai.data.PeriodUnit
 import me.ljpb.yosetsukenai.data.SimplePeriod
-import me.ljpb.yosetsukenai.data.SimpleTime
-import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
 import me.ljpb.yosetsukenai.ui.ConstIcon
+import me.ljpb.yosetsukenai.ui.ViewModelProvider
 import me.ljpb.yosetsukenai.ui.components.common.NotifyInputDialog
 import me.ljpb.yosetsukenai.ui.components.common.RowItem
 import me.ljpb.yosetsukenai.ui.components.common.RowItemWithOneItem
@@ -71,8 +70,6 @@ import me.ljpb.yosetsukenai.ui.epochSecondToLocalDate
 import me.ljpb.yosetsukenai.ui.getNotifyText
 import me.ljpb.yosetsukenai.ui.getTextOfLocalDate
 import me.ljpb.yosetsukenai.ui.localDateToEpochSecond
-import java.time.LocalDate
-import java.time.ZoneId
 
 private enum class DialogType {
     DatePicker,
@@ -85,33 +82,15 @@ private enum class DialogType {
 @Composable
 fun RepellentEditContent(
     modifier: Modifier = Modifier,
-    repellent: RepellentScheduleEntity?,
-    notifies: List<Pair<SimplePeriod, SimpleTime>> = emptyList(),
+    repellentEditViewModel: RepellentEditViewModel,
 ) {
-    // TODO: 構成の変更への対応 
-    // 表示するrepellentのプロパティの初期化
-    // 渡されたrepellentがnullの場合 : 新規追加だから初期値で表示
-    // 渡されたrepellentが非nullの場合 : 編集だから渡されたrepellentの値を初期値として表示
-    var name by remember { mutableStateOf("") }
-    var startDate by remember { mutableStateOf(LocalDate.now()) }
-    var validityPeriod by remember { mutableStateOf(SimplePeriod.ofDays(30)) }
-    var zoneId = ZoneId.systemDefault()
-    val places = remember { mutableStateListOf<String>() }
-
-    if (repellent != null) {
-        name = repellent.name
-        startDate = repellent.startDate
-        validityPeriod = repellent.validityPeriod
-        zoneId = repellent.zoneId
-        places.addAll(repellent.places)
-    }
-
-    val notifyList = remember { mutableStateListOf<Pair<SimplePeriod, SimpleTime>>() }
-    notifyList.addAll(notifies)
-
-    // 順番に注意：validityPeriodの初期化後に書く (repellentのnullチェック前に書くとこの二重に書かなくてはいけなくなる)
-    var validityNumber by remember { mutableIntStateOf(validityPeriod.number) }
-    var validityPeriodUnit by remember { mutableStateOf(validityPeriod.periodUnit) }
+    val name by repellentEditViewModel.name.collectAsState()
+    val startDate by repellentEditViewModel.startDate.collectAsState()
+    val validityPeriodUnit by repellentEditViewModel.validityPeriodUnit.collectAsState()
+    val validityNumber by repellentEditViewModel.validityNumber.collectAsState()
+    val zoneId by repellentEditViewModel.zoneId.collectAsState()
+    val places by repellentEditViewModel.places.collectAsState()
+    val notifyList by repellentEditViewModel.notifyList.collectAsState()
 
     val textStyle = MaterialTheme.typography.titleMedium
     val textColor = MaterialTheme.colorScheme.onSurface
@@ -139,8 +118,7 @@ fun RepellentEditContent(
                 datePickerState = datePickerState,
                 onDismiss = hiddenDialog,
                 onConfirm = { epochMillis ->
-                    startDate =
-                        epochSecondToLocalDate(epochMillis / 1000, zoneId)
+                    repellentEditViewModel.setStartDate(epochSecondToLocalDate(epochMillis / 1000, zoneId))
                     hiddenDialog()
                 },
                 isLandscape = false
@@ -150,9 +128,7 @@ fun RepellentEditContent(
                 defaultValue = "",
                 label = stringResource(id = R.string.edit_place),
                 onSave = { text ->
-                    if (text !in places) {
-                        places.add(text)
-                    }
+                    repellentEditViewModel.addPlace(text)
                     hiddenDialog()
                 },
                 onDismiss = hiddenDialog,
@@ -161,10 +137,8 @@ fun RepellentEditContent(
 
             DialogType.Notify -> NotifyInputDialog(
                 onSave = { simplePeriod, simpleTime ->
-                    val pair = Pair(simplePeriod, simpleTime)
-                    if (pair !in notifyList) {
-                        notifyList.add(pair)
-                    }
+                    val pair = PeriodAndTime(simplePeriod, simpleTime)
+                    repellentEditViewModel.addNotify(pair)
                     hiddenDialog()
                 },
                 onDismiss = hiddenDialog,
@@ -195,7 +169,7 @@ fun RepellentEditContent(
             item = {
                 SimpleTextField(
                     value = name,
-                    onValueChange = { name = it },
+                    onValueChange = repellentEditViewModel::setName,
                     textStyle = textStyle,
                     textColor = textColor,
                     textAlign = TextAlign.End,
@@ -226,9 +200,9 @@ fun RepellentEditContent(
             itemName = stringResource(id = R.string.repellent_validity_period),
             item = {
                 SimplePeriodInputField(
-                    defaultValue = validityPeriod.copy(),
-                    onNumberChanged = { validityNumber = it },
-                    onPeriodUniteChanged = { validityPeriodUnit = it },
+                    defaultValue = SimplePeriod.of(validityNumber, validityPeriodUnit),
+                    onNumberChanged = repellentEditViewModel::setValidityNumber,
+                    onPeriodUniteChanged = repellentEditViewModel::setValidityPeriodUnit,
                     textStyle = textStyle,
                     textColor = textColor
                 )
@@ -248,23 +222,7 @@ fun RepellentEditContent(
                     places.forEachIndexed { index, place ->
                         ItemTag(
                             text = place,
-                            deleteOnClick = {
-                                // 完全に同時に削除(タップ)したのインデックスのズレ対策にtrt-catchで囲んでいる
-                                // 例えば[a, b]を同時に削除した時，aが先に削除されたらその時点でのリストは[b]となるが，
-                                // 削除リクエストとしてindex = 1となっていたらIndexOutOfBoundsExceptionとなる
-                                // また[a, b, c, d]でb, cを同時に削除した時，
-                                // index = 1(b)を削除して，index = 2(c)を削除するという順番で処理が行われた時
-                                // bが削除された時点でのリストが[a, c, d]となり，この場合のindex = 2はdとなり
-                                // 本来は削除しない要素が削除されてしまう
-                                // その対策として，list[index] == item という条件を加えている
-                                try {
-                                    if (places[index] == place) {
-                                        places.removeAt(index)
-                                    }
-                                } catch (_: IndexOutOfBoundsException) {
-
-                                }
-                            }
+                            deleteOnClick = { repellentEditViewModel.removePlace(index, place) }
                         )
                     }
                     // 追加ボタン
@@ -291,26 +249,10 @@ fun RepellentEditContent(
                     verticalArrangement = Arrangement.spacedBy(4.dp),
                     horizontalAlignment = Alignment.End
                 ) {
-                    notifyList.forEachIndexed { index, notify ->
+                    notifyList.forEachIndexed { index, periodAndTime ->
                         ItemTag(
-                            text = getNotifyText(notify.first, notify.second, context),
-                            deleteOnClick = {
-                                // 完全に同時に削除(タップ)したのインデックスのズレ対策にtrt-catchで囲んでいる
-                                // 例えば[a, b]を同時に削除した時，aが先に削除されたらその時点でのリストは[b]となるが，
-                                // 削除リクエストとしてindex = 1となっていたらIndexOutOfBoundsExceptionとなる
-                                // また[a, b, c, d]でb, cを同時に削除した時，
-                                // index = 1(b)を削除して，index = 2(c)を削除するという順番で処理が行われた時
-                                // bが削除された時点でのリストが[a, c, d]となり，この場合のindex = 2はdとなり
-                                // 本来は削除しない要素が削除されてしまう
-                                // その対策として，list[index] == item という条件を加えている
-                                try {
-                                    if (notifyList[index] == notify) {
-                                        notifyList.removeAt(index)
-                                    }
-                                } catch (_: IndexOutOfBoundsException) {
-
-                                }
-                            }
+                            text = getNotifyText(periodAndTime.period, periodAndTime.time, context),
+                            deleteOnClick = { repellentEditViewModel.removeNotify(index, periodAndTime) }
                         )
                     }
                     // 追加ボタン
@@ -561,7 +503,8 @@ private fun ItemTagPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun RepellentEditPreview() {
+    val viewModel: RepellentEditViewModel = viewModel(factory = ViewModelProvider.repellentEditViewModel(null, listOf()))
     RepellentEditContent(
-        repellent = null
+        repellentEditViewModel = viewModel
     )
 }
