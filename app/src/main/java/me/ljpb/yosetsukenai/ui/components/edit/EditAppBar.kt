@@ -44,13 +44,11 @@ fun EditTopBar(
             }
         },
         actions = {
-            TextButton(
+            Button(
                 onClick = onSave,
                 enabled = enabled
             ) {
-                Button(onClick = onSave) {
-                    Text(text = stringResource(id = R.string.save))
-                }
+                Text(text = stringResource(id = R.string.save))
             }
         },
         scrollBehavior = scrollBehavior,
