@@ -84,19 +84,19 @@ class RepellentEditViewModel(
     }
 
     fun addPlace(string: String) {
-        _places.update { it.addedList(string, false) }
+        _places.update { it.addedList(string) }
     }
 
-    fun removePlace(index: Int, string: String) {
-        _places.update { it.removedList(index, string) }
+    fun removePlace(string: String) {
+        _places.update { it.removedList(string) }
     }
 
     fun addNotify(periodAndTime: PeriodAndTime) {
-        _notifyList.update { it.addedList(periodAndTime, false) }
+        _notifyList.update { it.addedList(periodAndTime) }
     }
 
-    fun removeNotify(index: Int, periodAndTime: PeriodAndTime) {
-        _notifyList.update { it.removedList(index, periodAndTime) }
+    fun removeNotify(periodAndTime: PeriodAndTime) {
+        _notifyList.update { it.removedList(periodAndTime) }
     }
 
     fun saveRepellent() {
@@ -109,32 +109,19 @@ class RepellentEditViewModel(
 }
 
 /**
- * @param overlap (追加後の)要素の重複を認めるかどうか
+ * 重複を許さない要素の追加
  */
-private fun <T> List<T>.addedList(item: T, overlap: Boolean = true): List<T> {
-    return if (!overlap && item in this) this else (this + listOf(item))
+private fun <T> List<T>.addedList(item: T): List<T> {
+    return if (item in this) this else (this + listOf(item))
 }
 
-private fun <T> List<T>.removedList(index: Int, item: T): List<T> {
+private fun <T> List<T>.removedList(item: T): List<T> {
     val original = this
     val tmp = mutableListOf<T>().apply { addAll(original) }
-    return tmp.xRemove(index, item)
+    return tmp.xRemove(item)
 }
 
-private fun <T> MutableList<T>.xRemove(index: Int, item: T): MutableList<T> {
-    // 完全に同時に削除(タップ)したのインデックスのズレ対策にtrt-catchで囲んでいる
-    // 例えば[a, b]を同時に削除した時，aが先に削除されたらその時点でのリストは[b]となるが，
-    // 削除リクエストとしてindex = 1となっていたらIndexOutOfBoundsExceptionとなる
-    // また[a, b, c, d]でb, cを同時に削除した時，
-    // index = 1(b)を削除して，index = 2(c)を削除するという順番で処理が行われた時
-    // bが削除された時点でのリストが[a, c, d]となり，この場合のindex = 2はdとなり
-    // 本来は削除しない要素が削除されてしまう
-    // その対策として，list[index] == item という条件を加えている
-    try {
-        if (this[index] == item) {
-            this.removeAt(index)
-        }
-    } catch (_: IndexOutOfBoundsException) {
-    }
+private fun <T> MutableList<T>.xRemove(item: T): MutableList<T> {
+    this.remove(item)
     return this
 }

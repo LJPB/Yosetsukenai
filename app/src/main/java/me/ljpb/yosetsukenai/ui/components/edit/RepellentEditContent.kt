@@ -267,10 +267,10 @@ fun RepellentEditContent(
                         verticalArrangement = Arrangement.spacedBy(4.dp),
                         horizontalAlignment = Alignment.End
                     ) {
-                        places.forEachIndexed { index, place ->
+                        places.forEach { place ->
                             ItemTag(
                                 text = place,
-                                deleteOnClick = { repellentEditViewModel.removePlace(index, place) }
+                                deleteOnClick = { repellentEditViewModel.removePlace(place) }
                             )
                         }
                         // 追加ボタン
@@ -297,7 +297,7 @@ fun RepellentEditContent(
                         verticalArrangement = Arrangement.spacedBy(4.dp),
                         horizontalAlignment = Alignment.End
                     ) {
-                        notifyList.forEachIndexed { index, periodAndTime ->
+                        notifyList.forEach { periodAndTime ->
                             ItemTag(
                                 text = getNotifyText(
                                     periodAndTime.period,
@@ -305,10 +305,7 @@ fun RepellentEditContent(
                                     context
                                 ),
                                 deleteOnClick = {
-                                    repellentEditViewModel.removeNotify(
-                                        index,
-                                        periodAndTime
-                                    )
+                                    repellentEditViewModel.removeNotify(periodAndTime)
                                 }
                             )
                         }
