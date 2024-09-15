@@ -1,6 +1,7 @@
 package me.ljpb.yosetsukenai.ui.components.edit
 
 import android.content.Context
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -27,9 +28,12 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -41,6 +45,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.dimensionResource
@@ -83,6 +88,7 @@ private enum class DialogType {
 fun RepellentEditContent(
     modifier: Modifier = Modifier,
     repellentEditViewModel: RepellentEditViewModel,
+    onCancel: () -> Unit,
 ) {
     val name by repellentEditViewModel.name.collectAsState()
     val startDate by repellentEditViewModel.startDate.collectAsState()
@@ -100,6 +106,7 @@ fun RepellentEditContent(
     // ============ ダイアログ関連 ============
     var showDialog by rememberSaveable { mutableStateOf(false) }
     var dialogType by rememberSaveable { mutableStateOf(DialogType.None) }
+
     val showDialogOf = { type: DialogType ->
         showDialog = true
         dialogType = type
@@ -118,7 +125,12 @@ fun RepellentEditContent(
                 datePickerState = datePickerState,
                 onDismiss = hiddenDialog,
                 onConfirm = { epochMillis ->
-                    repellentEditViewModel.setStartDate(epochSecondToLocalDate(epochMillis / 1000, zoneId))
+                    repellentEditViewModel.setStartDate(
+                        epochSecondToLocalDate(
+                            epochMillis / 1000,
+                            zoneId
+                        )
+                    )
                     hiddenDialog()
                 },
                 isLandscape = false
@@ -150,124 +162,170 @@ fun RepellentEditContent(
     }
     // ============ ダイアログ関連 終了 ============
 
-    Column(
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    val canSave by repellentEditViewModel.canSave.collectAsState()
+
+    // 端末の戻るボタンを押した時の処理
+    BackHandler {
+        // TODO: 変更済みの場合は確認ダイアログの表示
+        onCancel()
+    }
+
+    Scaffold(
         modifier = modifier
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
             .clickable( // TextFieldの外をタップした時にフォーカスを外すためのもの
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
             ) {
                 focusManager.clearFocus()
+            },
+        topBar = {
+            EditTopBar(
+                onCancel = {
+                    // TODO: 変更済みの場合は確認ダイアログの表示 
+                    onCancel()
+                },
+                onSave = repellentEditViewModel::saveRepellent,
+                enabled = canSave,
+                scrollBehavior = scrollBehavior
+            )
+        },
+        bottomBar = {
+            if (repellentEditViewModel.isUpdate) {
+                EditBottomBar {
+                    // TODO: 確認ダイアログの表示 
+                    repellentEditViewModel.deleteRepellent()
+                }
             }
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.detail_content_vertical_padding))
-    ) {
-        // 商品名
-        RowItemWithOneItem(
-            leadingIcon = ConstIcon.PRODUCT_NAME,
-            itemName = stringResource(id = R.string.repellent_name),
-            item = {
-                SimpleTextField(
-                    value = name,
-                    onValueChange = repellentEditViewModel::setName,
-                    textStyle = textStyle,
-                    textColor = textColor,
-                    textAlign = TextAlign.End,
-                    placeholderText = stringResource(id = R.string.edit_repellent_name),
-                    placeholderTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            focusManager.clearFocus()
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .padding(
+                    top = innerPadding.calculateTopPadding(),
+                    bottom = innerPadding.calculateBottomPadding()
+                )
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.detail_content_vertical_padding))
+        ) {
+            // 商品名
+            RowItemWithOneItem(
+                leadingIcon = ConstIcon.PRODUCT_NAME,
+                itemName = stringResource(id = R.string.repellent_name),
+                item = {
+                    SimpleTextField(
+                        value = name,
+                        onValueChange = repellentEditViewModel::setName,
+                        textStyle = textStyle,
+                        textColor = textColor,
+                        textAlign = TextAlign.End,
+                        placeholderText = stringResource(id = R.string.edit_repellent_name),
+                        placeholderTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                focusManager.clearFocus()
+                            }
+                        ),
+                    )
+                }
+            )
+
+            // 開始日
+            HorizontalDivider()
+            RowItemWithText(
+                leadingIcon = ConstIcon.START_DATE,
+                itemName = stringResource(id = R.string.repellent_start_date),
+                text = getTextOfLocalDate(startDate, context)
+            ) { showDialogOf(DialogType.DatePicker) }
+
+            // 有効期間
+            HorizontalDivider()
+            RowItemWithOneItem(
+                leadingIcon = ConstIcon.VALIDITY_PERIOD,
+                itemName = stringResource(id = R.string.repellent_validity_period),
+                item = {
+                    SimplePeriodInputField(
+                        defaultValue = SimplePeriod.of(validityNumber, validityPeriodUnit),
+                        onNumberChanged = repellentEditViewModel::setValidityNumber,
+                        onPeriodUniteChanged = repellentEditViewModel::setValidityPeriodUnit,
+                        textStyle = textStyle,
+                        textColor = textColor
+                    )
+                }
+            )
+
+            // 場所
+            HorizontalDivider()
+            RowItem(
+                leadingIcon = ConstIcon.PLACE,
+                itemName = stringResource(id = R.string.repellent_place),
+                item = {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                        horizontalAlignment = Alignment.End
+                    ) {
+                        places.forEachIndexed { index, place ->
+                            ItemTag(
+                                text = place,
+                                deleteOnClick = { repellentEditViewModel.removePlace(index, place) }
+                            )
                         }
-                    ),
-                )
-            }
-        )
-
-        // 開始日
-        HorizontalDivider()
-        RowItemWithText(
-            leadingIcon = ConstIcon.START_DATE,
-            itemName = stringResource(id = R.string.repellent_start_date),
-            text = getTextOfLocalDate(startDate, context)
-        ) { showDialogOf(DialogType.DatePicker) }
-
-        // 有効期間
-        HorizontalDivider()
-        RowItemWithOneItem(
-            leadingIcon = ConstIcon.VALIDITY_PERIOD,
-            itemName = stringResource(id = R.string.repellent_validity_period),
-            item = {
-                SimplePeriodInputField(
-                    defaultValue = SimplePeriod.of(validityNumber, validityPeriodUnit),
-                    onNumberChanged = repellentEditViewModel::setValidityNumber,
-                    onPeriodUniteChanged = repellentEditViewModel::setValidityPeriodUnit,
-                    textStyle = textStyle,
-                    textColor = textColor
-                )
-            }
-        )
-
-        // 場所
-        HorizontalDivider()
-        RowItem(
-            leadingIcon = ConstIcon.PLACE,
-            itemName = stringResource(id = R.string.repellent_place),
-            item = {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                    horizontalAlignment = Alignment.End
-                ) {
-                    places.forEachIndexed { index, place ->
-                        ItemTag(
-                            text = place,
-                            deleteOnClick = { repellentEditViewModel.removePlace(index, place) }
-                        )
-                    }
-                    // 追加ボタン
-                    TextButton(
-                        modifier = Modifier.height(dimensionResource(id = R.dimen.row_item_height)),
-                        onClick = { showDialogOf(DialogType.Place) }
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.add),
-                            textAlign = TextAlign.Center
-                        )
+                        // 追加ボタン
+                        TextButton(
+                            modifier = Modifier.height(dimensionResource(id = R.dimen.row_item_height)),
+                            onClick = { showDialogOf(DialogType.Place) }
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.add),
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     }
                 }
-            }
-        )
+            )
 
-        // 通知
-        HorizontalDivider()
-        RowItem(
-            leadingIcon = ConstIcon.NOTIFY,
-            itemName = stringResource(id = R.string.repellent_notify),
-            item = {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                    horizontalAlignment = Alignment.End
-                ) {
-                    notifyList.forEachIndexed { index, periodAndTime ->
-                        ItemTag(
-                            text = getNotifyText(periodAndTime.period, periodAndTime.time, context),
-                            deleteOnClick = { repellentEditViewModel.removeNotify(index, periodAndTime) }
-                        )
-                    }
-                    // 追加ボタン
-                    TextButton(
-                        modifier = Modifier.height(dimensionResource(id = R.dimen.row_item_height)),
-                        onClick = { showDialogOf(DialogType.Notify) }
+            // 通知
+            HorizontalDivider()
+            RowItem(
+                leadingIcon = ConstIcon.NOTIFY,
+                itemName = stringResource(id = R.string.repellent_notify),
+                item = {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                        horizontalAlignment = Alignment.End
                     ) {
-                        Text(
-                            text = stringResource(id = R.string.add),
-                            textAlign = TextAlign.Center
-                        )
+                        notifyList.forEachIndexed { index, periodAndTime ->
+                            ItemTag(
+                                text = getNotifyText(
+                                    periodAndTime.period,
+                                    periodAndTime.time,
+                                    context
+                                ),
+                                deleteOnClick = {
+                                    repellentEditViewModel.removeNotify(
+                                        index,
+                                        periodAndTime
+                                    )
+                                }
+                            )
+                        }
+                        // 追加ボタン
+                        TextButton(
+                            modifier = Modifier.height(dimensionResource(id = R.dimen.row_item_height)),
+                            onClick = { showDialogOf(DialogType.Notify) }
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.add),
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     }
                 }
-            }
-        )
-    } // Column
+            )
+        } // Column
+    } // Scaffold
 } // function
 
 @Composable
@@ -502,8 +560,9 @@ private fun ItemTagPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun RepellentEditPreview() {
-    val viewModel: RepellentEditViewModel = viewModel(factory = ViewModelProvider.repellentEditViewModel(null, listOf()))
+    val viewModel: RepellentEditViewModel =
+        viewModel(factory = ViewModelProvider.repellentEditViewModel(null, listOf()))
     RepellentEditContent(
         repellentEditViewModel = viewModel
-    )
+    ) {}
 }

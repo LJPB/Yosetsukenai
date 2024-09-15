@@ -1,9 +1,13 @@
 package me.ljpb.yosetsukenai.ui.components.edit
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import me.ljpb.yosetsukenai.data.PeriodUnit
 import me.ljpb.yosetsukenai.data.SimplePeriod
@@ -13,14 +17,15 @@ import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
 import java.time.LocalDate
 import java.time.ZoneId
 
-data class PeriodAndTime(
-    val period: SimplePeriod, val time: SimpleTime
-)
+data class PeriodAndTime(val period: SimplePeriod, val time: SimpleTime)
 
 class RepellentEditViewModel(
     private val repellent: RepellentScheduleEntity?,
     private val notifies: List<NotifyEntity>
 ) : ViewModel() {
+    // RepellentScheduleEntityの新規追加か更新かのフラグ
+    val isUpdate = repellent != null
+
     private val _name = MutableStateFlow(repellent?.name ?: "")
     val name: StateFlow<String> = _name.asStateFlow()
 
@@ -47,8 +52,17 @@ class RepellentEditViewModel(
             }
             .toList()
     )
-
     val notifyList: StateFlow<List<PeriodAndTime>> = _notifyList.asStateFlow()
+
+    // 保存可能かどうかのフラグ
+    // nameが入力されていれば保存可能(他は初期値が設定されている)
+    val canSave: StateFlow<Boolean> = name
+        .map { it.isNotEmpty() }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly,
+            repellent?.name?.isNotEmpty() ?: false
+        )
 
     fun setName(string: String) {
         _name.update { string }
@@ -77,9 +91,17 @@ class RepellentEditViewModel(
     fun addNotify(periodAndTime: PeriodAndTime) {
         _notifyList.update { it.addedList(periodAndTime, false) }
     }
-    
+
     fun removeNotify(index: Int, periodAndTime: PeriodAndTime) {
         _notifyList.update { it.removedList(index, periodAndTime) }
+    }
+
+    fun saveRepellent() {
+
+    }
+
+    fun deleteRepellent() {
+
     }
 }
 
