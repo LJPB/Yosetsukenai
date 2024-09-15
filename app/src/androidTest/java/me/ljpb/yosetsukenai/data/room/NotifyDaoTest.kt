@@ -12,6 +12,7 @@ import org.junit.Before
 import org.junit.Test
 import java.io.IOException
 import java.time.LocalDate
+import java.time.ZoneId
 import java.util.UUID
 
 class NotifyDaoTest {
@@ -27,7 +28,8 @@ class NotifyDaoTest {
         startDate = LocalDate.of(2024, 9, 5),
         finishDate = LocalDate.of(2024, 9, 8),
         places = listOf("aaa", "bbb"),
-        ignore = false
+        ignore = false,
+        zoneId = ZoneId.of("UTC")
     )
 
     private val child1 = NotifyEntity(

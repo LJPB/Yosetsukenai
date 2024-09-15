@@ -14,6 +14,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.IOException
 import java.time.LocalDate
+import java.time.ZoneId
 
 @RunWith(AndroidJUnit4::class)
 class RepellentScheduleDaoTest {
@@ -28,7 +29,8 @@ class RepellentScheduleDaoTest {
         startDate = LocalDate.of(2024, 9, 5),
         finishDate = LocalDate.of(2024, 9, 8),
         places = listOf("aaa", "bbb"),
-        ignore = false
+        ignore = false,
+        zoneId = ZoneId.of("UTC")
     )
 
     private val validityItem2 = RepellentScheduleEntity(
@@ -38,7 +40,8 @@ class RepellentScheduleDaoTest {
         startDate = LocalDate.of(2024, 9, 4),
         finishDate = LocalDate.of(2024, 9, 11),
         places = listOf("ccc"),
-        ignore = false
+        ignore = false,
+        zoneId = ZoneId.of("UTC")
     )
 
     private val validityItemsList = listOf(validityItem1, validityItem2)
@@ -50,7 +53,8 @@ class RepellentScheduleDaoTest {
         startDate = LocalDate.of(2024, 8, 5),
         finishDate = LocalDate.of(2024, 8, 12),
         places = listOf("aaa", "bbb"),
-        ignore = true
+        ignore = true,
+        zoneId = ZoneId.of("UTC")
     )
 
     private val expiredItem = RepellentScheduleEntity(
@@ -60,7 +64,8 @@ class RepellentScheduleDaoTest {
         startDate = LocalDate.of(2024, 9, 1),
         finishDate = LocalDate.of(2024, 9, 3),
         places = listOf("aaa", "bbb"),
-        ignore = false
+        ignore = false,
+        zoneId = ZoneId.of("UTC")
     )
     
     private val itemsOrderByDate = listOf(

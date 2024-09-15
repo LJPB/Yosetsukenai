@@ -11,6 +11,7 @@ import org.junit.Before
 import org.junit.Test
 import java.io.IOException
 import java.time.LocalDate
+import java.time.ZoneId
 
 class InsectEncounterDaoTest {
     private lateinit var dao: InsectEncounterDao
@@ -23,7 +24,8 @@ class InsectEncounterDaoTest {
         date = LocalDate.of(2024, 9, 5),
         size = "a",
         condition = "a",
-        place = "a"
+        place = "a",
+        zoneId = ZoneId.of("UTC")
     )
     private val item2 = InsectEncounterEntity(
         id = 2,
@@ -31,7 +33,8 @@ class InsectEncounterDaoTest {
         date = LocalDate.of(2024, 9, 7),
         size = "b",
         condition = "b",
-        place = "b"
+        place = "b",
+        zoneId = ZoneId.of("UTC")
     )
     private val item3 = InsectEncounterEntity(
         id = 3,
@@ -39,7 +42,8 @@ class InsectEncounterDaoTest {
         date = LocalDate.of(2024, 8, 5),
         size = "c",
         condition = "c",
-        place = "c"
+        place = "c",
+        zoneId = ZoneId.of("UTC")
     )
     private val item4 = InsectEncounterEntity(
         id = 4,
@@ -47,7 +51,8 @@ class InsectEncounterDaoTest {
         date = LocalDate.of(2024, 8, 6),
         size = "d",
         condition = "d",
-        place = "d"
+        place = "d",
+        zoneId = ZoneId.of("UTC")
     )
 
     @Before
