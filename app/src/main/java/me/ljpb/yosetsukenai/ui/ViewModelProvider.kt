@@ -11,7 +11,7 @@ object ViewModelProvider {
             initializer {
                 RepellentEditViewModel(
                     repellent = repellent,
-                    notifies = notifies
+                    notifications = notifies
                 )
             }
         }

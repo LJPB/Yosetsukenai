@@ -21,7 +21,7 @@ data class PeriodAndTime(val period: SimplePeriod, val time: SimpleTime)
 
 class RepellentEditViewModel(
     private val repellent: RepellentScheduleEntity?,
-    private val notifies: List<NotifyEntity>
+    private val notifications: List<NotifyEntity>
 ) : ViewModel() {
     companion object {
         const val EMPTY_INT = -1
@@ -52,17 +52,17 @@ class RepellentEditViewModel(
     private val _notifyList = MutableStateFlow(
         mutableListOf<PeriodAndTime>()
             .apply {
-                addAll(notifies.map { notify -> PeriodAndTime(notify.schedule, notify.time) })
+                addAll(notifications.map { notify -> PeriodAndTime(notify.schedule, notify.time) })
             }
             .toList()
     )
     val notifyList: StateFlow<List<PeriodAndTime>> = _notifyList.asStateFlow()
 
     // 保存ボタンを押した時に更新するために，削除した通知情報の保持
-    private val deletedNotifies: MutableList<PeriodAndTime> = mutableListOf()
+    private val deletedNotifyList: MutableList<PeriodAndTime> = mutableListOf()
 
     // 保存ボタンを押した時に更新するために，追加した通知情報の保持
-    private val addedNotifies: MutableList<PeriodAndTime> = mutableListOf()
+    private val addedNotifyList: MutableList<PeriodAndTime> = mutableListOf()
 
     // 保存可能かどうかのフラグ
     val canSave: StateFlow<Boolean> = combine(name, validityNumber) { nameValue, numberValue ->
@@ -101,7 +101,7 @@ class RepellentEditViewModel(
         _notifyList.update { list ->
             val tmp = mutableListOf<PeriodAndTime>().apply { addAll(list) }
             if (periodAndTime !in tmp) { // 通知時間の重複は許容しない
-                addedNotifies.add(periodAndTime)
+                addedNotifyList.add(periodAndTime)
                 tmp.add(periodAndTime)
             }
             tmp
@@ -111,8 +111,8 @@ class RepellentEditViewModel(
     fun removeNotify(periodAndTime: PeriodAndTime) {
         _notifyList.update { list ->
             val tmp = mutableListOf<PeriodAndTime>().apply { addAll(list) }
-            addedNotifies.remove(periodAndTime)
-            deletedNotifies.add(periodAndTime)
+            addedNotifyList.remove(periodAndTime)
+            deletedNotifyList.add(periodAndTime)
             tmp.remove(periodAndTime)
             tmp
         }
