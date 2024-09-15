@@ -162,7 +162,6 @@ fun RepellentEditContent(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.detail_content_vertical_padding))
     ) {
         // 商品名
-        HorizontalDivider()
         RowItemWithOneItem(
             leadingIcon = ConstIcon.PRODUCT_NAME,
             itemName = stringResource(id = R.string.repellent_name),
