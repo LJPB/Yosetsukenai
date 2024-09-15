@@ -101,7 +101,7 @@ class RepellentEditViewModel(
         _notifyList.update { list ->
             val tmp = mutableListOf<PeriodAndTime>().apply { addAll(list) }
             if (periodAndTime !in tmp) { // 通知時間の重複は許容しない
-                addedNotifyList.add(periodAndTime)
+                addedNotifyList.takeIf { periodAndTime !in it }?.add(periodAndTime) // addedNotifyListに含まれていなければ追加する
                 tmp.add(periodAndTime)
             }
             tmp
@@ -112,14 +112,23 @@ class RepellentEditViewModel(
         _notifyList.update { list ->
             val tmp = mutableListOf<PeriodAndTime>().apply { addAll(list) }
             addedNotifyList.remove(periodAndTime)
-            deletedNotifyList.add(periodAndTime)
+            deletedNotifyList.takeIf { periodAndTime !in it }?.add(periodAndTime) // deletedNotifyListに含まれていなければ追加する
             tmp.remove(periodAndTime)
             tmp
         }
     }
 
     fun saveRepellent() {
-
+        /*******************************  注意  *******************************
+         * deletedNotifyListで削除 → addedNotifyListで追加 の順番で処理する
+         * UI操作で「通知を削除 → PeriodAndTimeが同じ通知を追加」としたとき
+         * 通知の追加処理を先に行うと，その時点で通知日時が同じ通知が2件(以上)となる
+         * 削除処理を先に行うことで，本来削除したい通知－つまり先に存在している通知を削除して
+         * それから新しい通知を追加する，というUI操作と同じ順番で処理ができる
+         *********************************************************************/
+        // deleteNotification()
+        // add/updateRepellent()
+        // addNotification(repellent)
     }
 
     fun deleteRepellent() {
