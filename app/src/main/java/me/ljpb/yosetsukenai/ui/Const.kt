@@ -21,4 +21,5 @@ object ConstIcon {
     
     val BACK = Icons.AutoMirrored.Default.ArrowBack
     val CLOSE = Icons.Default.Close
+    val CANCEL = Icons.Default.Close
 }
