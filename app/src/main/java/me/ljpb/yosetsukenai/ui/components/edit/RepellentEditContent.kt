@@ -88,6 +88,7 @@ private enum class DialogType {
 fun RepellentEditContent(
     modifier: Modifier = Modifier,
     repellentEditViewModel: RepellentEditViewModel,
+    isLandscape: Boolean,
     onCancel: () -> Unit,
 ) {
     val name by repellentEditViewModel.name.collectAsState()
@@ -133,7 +134,7 @@ fun RepellentEditContent(
                     )
                     hiddenDialog()
                 },
-                isLandscape = false
+                isLandscape = isLandscape
             )
 
             DialogType.Place -> TextInputDialog(
@@ -154,7 +155,7 @@ fun RepellentEditContent(
                     hiddenDialog()
                 },
                 onDismiss = hiddenDialog,
-                isLandscape = false
+                isLandscape = isLandscape
             )
 
             else -> {}
@@ -564,6 +565,7 @@ private fun RepellentEditPreview() {
     val viewModel: RepellentEditViewModel =
         viewModel(factory = ViewModelProvider.repellentEditViewModel(null, listOf()))
     RepellentEditContent(
-        repellentEditViewModel = viewModel
+        repellentEditViewModel = viewModel,
+        isLandscape = false
     ) {}
 }
