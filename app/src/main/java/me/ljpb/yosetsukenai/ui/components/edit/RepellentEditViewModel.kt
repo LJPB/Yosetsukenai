@@ -49,7 +49,7 @@ class RepellentEditViewModel(
     private val _places = MutableStateFlow<List<String>>(repellent?.places ?: emptyList())
     val places: StateFlow<List<String>> = _places.asStateFlow()
 
-    private val _notifyList = MutableStateFlow<List<PeriodAndTime>>(
+    private val _notifyList = MutableStateFlow(
         mutableListOf<PeriodAndTime>()
             .apply {
                 addAll(notifies.map { notify -> PeriodAndTime(notify.schedule, notify.time) })
@@ -57,6 +57,12 @@ class RepellentEditViewModel(
             .toList()
     )
     val notifyList: StateFlow<List<PeriodAndTime>> = _notifyList.asStateFlow()
+
+    // 保存ボタンを押した時に更新するために，削除した通知情報の保持
+    private val deletedNotifies: MutableList<PeriodAndTime> = mutableListOf()
+
+    // 保存ボタンを押した時に更新するために，追加した通知情報の保持
+    private val addedNotifies: MutableList<PeriodAndTime> = mutableListOf()
 
     // 保存可能かどうかのフラグ
     val canSave: StateFlow<Boolean> = combine(name, validityNumber) { nameValue, numberValue ->
@@ -92,11 +98,24 @@ class RepellentEditViewModel(
     }
 
     fun addNotify(periodAndTime: PeriodAndTime) {
-        _notifyList.update { it.addedList(periodAndTime) }
+        _notifyList.update { list ->
+            val tmp = mutableListOf<PeriodAndTime>().apply { addAll(list) }
+            if (periodAndTime !in tmp) { // 通知時間の重複は許容しない
+                addedNotifies.add(periodAndTime)
+                tmp.add(periodAndTime)
+            }
+            tmp
+        }
     }
 
     fun removeNotify(periodAndTime: PeriodAndTime) {
-        _notifyList.update { it.removedList(periodAndTime) }
+        _notifyList.update { list ->
+            val tmp = mutableListOf<PeriodAndTime>().apply { addAll(list) }
+            addedNotifies.remove(periodAndTime)
+            deletedNotifies.add(periodAndTime)
+            tmp.remove(periodAndTime)
+            tmp
+        }
     }
 
     fun saveRepellent() {
@@ -125,3 +144,13 @@ private fun <T> MutableList<T>.xRemove(item: T): MutableList<T> {
     this.remove(item)
     return this
 }
+
+private fun NotifyEntity.match(periodAndTime: PeriodAndTime): Boolean =
+    this.schedule == periodAndTime.period && this.time == periodAndTime.time
+
+/**
+ * 渡されたPeriodAndTimeと同じSimplePeriod, SimpleTimeを持つNotifyEntityのインデックス値を返す
+ * 存在しない場合は-1が返される
+ */
+private fun List<NotifyEntity>.indexOf(periodAndTime: PeriodAndTime): Int =
+    this.indexOfFirst { it.match(periodAndTime) }
