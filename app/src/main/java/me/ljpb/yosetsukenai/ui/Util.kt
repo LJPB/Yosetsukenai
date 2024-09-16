@@ -35,31 +35,31 @@ fun getNotificationText(simplePeriod: SimplePeriod, simpleTime: SimpleTime, cont
     val timeText = getTextOfSimpleTime(simpleTime, context)
     if (simplePeriod.number == 0 && simplePeriod.periodUnit == PeriodUnit.Day) { // 当日
         return context.getString(
-            R.string.notify_text_on_the_day,
+            R.string.notification_text_on_the_day,
             timeText
         )
     } else {
         return when (simplePeriod.periodUnit) {
             PeriodUnit.Day -> context.getString(
-                R.string.notify_text_before_day,
+                R.string.notification_text_before_day,
                 simplePeriod.number,
                 timeText
             )
 
             PeriodUnit.Week -> context.getString(
-                R.string.notify_text_before_week,
+                R.string.notification_text_before_week,
                 simplePeriod.number,
                 timeText
             )
 
             PeriodUnit.Month -> context.getString(
-                R.string.notify_text_before_month,
+                R.string.notification_text_before_month,
                 simplePeriod.number,
                 timeText
             )
 
             PeriodUnit.Year -> context.getString(
-                R.string.notify_text_before_year,
+                R.string.notification_text_before_year,
                 simplePeriod.number,
                 timeText
             )

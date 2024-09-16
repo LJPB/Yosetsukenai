@@ -293,7 +293,7 @@ fun RepellentEditContent(
             HorizontalDivider()
             RowItem(
                 leadingIcon = ConstIcon.NOTIFICATION,
-                itemName = stringResource(id = R.string.repellent_notify),
+                itemName = stringResource(id = R.string.repellent_notification),
                 item = {
                     Column(
                         verticalArrangement = Arrangement.spacedBy(4.dp),

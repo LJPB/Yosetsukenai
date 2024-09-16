@@ -134,7 +134,7 @@ fun RepellentDetailContent(
         // 通知
         RowItem(
             leadingIcon = ConstIcon.NOTIFICATION,
-            itemName = stringResource(id = R.string.repellent_notify)
+            itemName = stringResource(id = R.string.repellent_notification)
         ) {
             Column(
                 horizontalAlignment = Alignment.End

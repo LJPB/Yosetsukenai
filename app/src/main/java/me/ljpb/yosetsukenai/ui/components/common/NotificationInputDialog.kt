@@ -107,7 +107,7 @@ private fun TimeInputContent(modifier: Modifier = Modifier, timePickerState: Tim
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
             modifier = Modifier.padding(vertical = 8.dp),
-            text = stringResource(id = R.string.notify_input_dialog_select_time),
+            text = stringResource(id = R.string.notification_input_dialog_select_time),
             style = MaterialTheme.typography.labelLarge,
         )
         TimeInput(
@@ -133,12 +133,12 @@ private fun DateSelector(
     // NotifyDateUnit.ordinalでこのリストの要素にアクセスするため，要素はNotifyDateUnitの定義順でもれなく並べる必要がある
     val radioOptions = listOf(
         Pair(
-            stringResource(id = R.string.notify_input_dialog_select_day),
-            stringResource(id = R.string.notify_input_dialog_unit_day),
+            stringResource(id = R.string.notification_input_dialog_select_day),
+            stringResource(id = R.string.notification_input_dialog_unit_day),
         ),
         Pair(
-            stringResource(id = R.string.notify_input_dialog_select_week),
-            stringResource(id = R.string.notify_input_dialog_unit_week),
+            stringResource(id = R.string.notification_input_dialog_select_week),
+            stringResource(id = R.string.notification_input_dialog_unit_week),
         )
     )
     var numberText by rememberSaveable { mutableStateOf(defaultNumber.toString()) }
