@@ -14,9 +14,13 @@ class NotificationRepository(private val dao: NotificationDao, private val notif
 
     override suspend fun update(entity: NotificationEntity) {
         notificationManager.updateNotifySchedule(entity)
+        dao.update(entity)
     }
 
-    override suspend fun delete(entity: NotificationEntity) = dao.delete(entity)
+    override suspend fun delete(entity: NotificationEntity) {
+        notificationManager.cancelNotify(entity)
+        dao.delete(entity)
+    }
 
     override fun getNotificationsOf(parent: RepellentScheduleEntity): Flow<List<NotificationEntity>> =
         dao.getItemByRepellentScheduleId(parent.id)
