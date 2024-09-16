@@ -1,5 +1,6 @@
 package me.ljpb.yosetsukenai.notification
 
+import android.content.Context
 import me.ljpb.yosetsukenai.data.PeriodAndTime
 import me.ljpb.yosetsukenai.data.PeriodUnit
 import me.ljpb.yosetsukenai.data.SimplePeriod
@@ -68,6 +69,9 @@ object NotificationManager {
 
     }
 
+    fun notify(context: Context, notification: NotificationEntity) {
+    }
+    
     private fun LocalDate.minus(period: SimplePeriod): LocalDate {
         return when (period.periodUnit) {
             PeriodUnit.Day -> this.minusDays(period.number.toLong())
