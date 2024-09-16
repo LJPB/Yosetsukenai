@@ -1,6 +1,15 @@
 package me.ljpb.yosetsukenai.notification
 
+import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
+import android.content.Context.NOTIFICATION_SERVICE
+import android.content.pm.PackageManager
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import me.ljpb.yosetsukenai.R
 import me.ljpb.yosetsukenai.data.PeriodAndTime
 import me.ljpb.yosetsukenai.data.PeriodUnit
 import me.ljpb.yosetsukenai.data.SimplePeriod
@@ -54,7 +63,7 @@ object AppNotificationManager {
     }
 
     fun setNotification(notification: NotificationEntity) {
-        
+
     }
 
     fun updateNotifySchedule(
@@ -70,6 +79,35 @@ object AppNotificationManager {
     }
 
     fun notify(context: Context, notification: NotificationEntity) {
+        // TODO: 通知アイコンの変更 
+        // TODO: 通知アクションの追加
+        val channelId = context.getString(R.string.notification_channel_id)
+        val builder = NotificationCompat
+            .Builder(context, channelId)
+            .setSmallIcon(R.drawable.ic_launcher_background)
+            .setContentTitle(notification.notificationTitle)
+            .setContentText(notification.notificationText)
+
+        with(NotificationManagerCompat.from(context)) {
+            if (
+                ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                return@with
+            }
+            notify(notification.notificationId, builder.build())
+        }
+    }
+
+    fun createNotificationChannel(context: Context) {
+        val channel = NotificationChannel(
+            context.getString(R.string.notification_channel_id),
+            context.getString(R.string.notification_channel_name),
+            NotificationManager.IMPORTANCE_DEFAULT
+        )
+        val notificationManager =
+            context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
     }
 
     private fun LocalDate.minus(period: SimplePeriod): LocalDate {
