@@ -9,7 +9,6 @@ import me.ljpb.yosetsukenai.data.RepellentScheduleAction
 import me.ljpb.yosetsukenai.data.RepellentScheduleRepository
 import me.ljpb.yosetsukenai.data.room.AppDatabase
 import me.ljpb.yosetsukenai.data.room.TableConverter
-import me.ljpb.yosetsukenai.notification.NotificationManagerRepository
 
 interface DbRepositoryContainer {
     val insectRepository: InsectAction
@@ -29,7 +28,7 @@ class AppDbRepositoryContainer(private val context: Context) : DbRepositoryConta
     }
 
     override val notificationRepository: NotificationAction by lazy {
-        NotificationRepository(db.notificationDao(), NotificationManagerRepository())
+        NotificationRepository(db.notificationDao())
     }
 
     override val repellentScheduleRepository: RepellentScheduleAction by lazy {
