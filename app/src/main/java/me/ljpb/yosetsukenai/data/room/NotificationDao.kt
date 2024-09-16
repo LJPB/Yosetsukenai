@@ -9,16 +9,16 @@ import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface NotifyDao {
+interface NotificationDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(entity: NotifyEntity): Long
+    suspend fun insert(entity: NotificationEntity): Long
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun update(entity: NotifyEntity)
+    suspend fun update(entity: NotificationEntity)
 
     @Delete
-    suspend fun delete(entity: NotifyEntity)
+    suspend fun delete(entity: NotificationEntity)
 
-    @Query("select * from notify where repellentScheduleId = :id")
-    fun getItemByRepellentScheduleId(id: Long): Flow<List<NotifyEntity>>
+    @Query("select * from notification where repellentScheduleId = :id")
+    fun getItemByRepellentScheduleId(id: Long): Flow<List<NotificationEntity>>
 }

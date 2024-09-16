@@ -49,7 +49,7 @@ private const val EMPTY_INT_VALUE = -1
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NotifyInputDialog(
+fun NotificationInputDialog(
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit = {},
     onSave: (SimplePeriod, SimpleTime) -> Unit,
@@ -213,8 +213,8 @@ private fun DateSelectorPreview() {
 
 @Preview
 @Composable
-private fun NotifyInputDialogPreview() {
-    NotifyInputDialog(
+private fun NotificationInputDialogPreview() {
+    NotificationInputDialog(
         onDismiss = {},
         onSave = {a, b ->},
         isLandscape = true

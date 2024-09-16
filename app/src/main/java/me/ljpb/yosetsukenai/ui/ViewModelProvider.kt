@@ -4,20 +4,20 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import me.ljpb.yosetsukenai.MyApplication
-import me.ljpb.yosetsukenai.data.room.NotifyEntity
+import me.ljpb.yosetsukenai.data.room.NotificationEntity
 import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
 
 object ViewModelProvider {
-    fun repellentEditViewModel(repellent: RepellentScheduleEntity?, notifies: List<NotifyEntity>) =
+    fun repellentEditViewModel(repellent: RepellentScheduleEntity?, notifications: List<NotificationEntity>) =
         viewModelFactory {
             initializer {
                 val app = this[APPLICATION_KEY] as MyApplication
                 val container = app.dbRepositoryContainer
                 RepellentEditViewModel(
                     repellent = repellent,
-                    notifications = notifies,
+                    notifications = notifications,
                     repellentAction = container.repellentScheduleRepository,
-                    notifyAction = container.notifyRepository
+                    notifyAction = container.notificationRepository
                 )
             }
         }

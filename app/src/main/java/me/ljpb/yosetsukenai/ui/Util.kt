@@ -5,7 +5,7 @@ import me.ljpb.yosetsukenai.R
 import me.ljpb.yosetsukenai.data.PeriodUnit
 import me.ljpb.yosetsukenai.data.SimplePeriod
 import me.ljpb.yosetsukenai.data.SimpleTime
-import me.ljpb.yosetsukenai.data.room.NotifyEntity
+import me.ljpb.yosetsukenai.data.room.NotificationEntity
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -29,9 +29,9 @@ fun getTextOfLocalDate(localDate: LocalDate, context: Context): String =
         localDate.dayOfMonth,
     )
 
-fun getTextOfNotify(notify: NotifyEntity, context: Context): String = getNotifyText(notify.schedule, notify.time, context)
+fun getTextOfNotificationEntity(notification: NotificationEntity, context: Context): String = getNotificationText(notification.schedule, notification.time, context)
 
-fun getNotifyText(simplePeriod: SimplePeriod, simpleTime: SimpleTime, context: Context): String {
+fun getNotificationText(simplePeriod: SimplePeriod, simpleTime: SimpleTime, context: Context): String {
     val timeText = getTextOfSimpleTime(simpleTime, context)
     if (simplePeriod.number == 0 && simplePeriod.periodUnit == PeriodUnit.Day) { // 当日
         return context.getString(

@@ -8,7 +8,7 @@ import me.ljpb.yosetsukenai.data.SimpleTime
 import java.util.UUID
 
 @Entity(
-    tableName = "notify",
+    tableName = "notification",
     foreignKeys = [ForeignKey(
         entity = RepellentScheduleEntity::class,
         parentColumns = ["id"],
@@ -16,12 +16,12 @@ import java.util.UUID
         onDelete = ForeignKey.CASCADE
     )]
 )
-data class NotifyEntity(
+data class NotificationEntity(
     @PrimaryKey
     val id: Long = 0L,
     val repellentScheduleId: Long,
     val jobId: UUID,
-    val notifyId: Int,
+    val notificationId: Int,
     val triggerTimeSeconds: Long,
     val schedule: SimplePeriod,
     val time: SimpleTime

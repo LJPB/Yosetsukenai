@@ -6,7 +6,10 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class RepellentEditViewModelTest {
-    private val viewModel = RepellentEditViewModel(null, listOf())
+    private val viewModel = RepellentEditViewModel(
+        null,
+        listOf()
+    )
     private val addedNotifyListName = "addedNotifyList"
     private val deletedNotifyListName = "deletedNotifyList"
     private val toAddValue = PeriodAndTime(SimplePeriod.ofDays(1), SimpleTime.of(1, 1))
@@ -18,9 +21,9 @@ class RepellentEditViewModelTest {
         // private変数の取得
         val addedNotifyList = viewModel.javaClass.getDeclaredField(addedNotifyListName)
         addedNotifyList.isAccessible = true
-        viewModel.addNotify(toAddValue)
-        viewModel.addNotify(toDeleteValue)
-        viewModel.addNotify(toAddValue)
+        viewModel.addNotification(toAddValue)
+        viewModel.addNotification(toDeleteValue)
+        viewModel.addNotification(toAddValue)
         // 取得したprivate変数の値の取得
         val list = addedNotifyList.get(viewModel)
         assertEquals(list, listOf(toAddValue, toDeleteValue))
@@ -32,9 +35,9 @@ class RepellentEditViewModelTest {
         // private変数の取得
         val addedNotifyList = viewModel.javaClass.getDeclaredField(addedNotifyListName)
         addedNotifyList.isAccessible = true
-        viewModel.addNotify(toAddValue)
-        viewModel.addNotify(toDeleteValue)
-        viewModel.removeNotify(toDeleteValue)
+        viewModel.addNotification(toAddValue)
+        viewModel.addNotification(toDeleteValue)
+        viewModel.removeNotification(toDeleteValue)
         // 取得したprivate変数の値の取得
         val list = addedNotifyList.get(viewModel)
         assertEquals(list, listOf(toAddValue))
@@ -46,9 +49,9 @@ class RepellentEditViewModelTest {
         // private変数の取得
         val addedNotifyList = viewModel.javaClass.getDeclaredField(addedNotifyListName)
         addedNotifyList.isAccessible = true
-        viewModel.addNotify(toAddValue)
-        viewModel.removeNotify(toAddValue)
-        viewModel.addNotify(toAddValue)
+        viewModel.addNotification(toAddValue)
+        viewModel.removeNotification(toAddValue)
+        viewModel.addNotification(toAddValue)
         // 取得したprivate変数の値の取得
         val list = addedNotifyList.get(viewModel)
         assertEquals(list, listOf(toAddValue))
@@ -60,9 +63,9 @@ class RepellentEditViewModelTest {
         // private変数の取得
         val deletedNotifyList = viewModel.javaClass.getDeclaredField(deletedNotifyListName)
         deletedNotifyList.isAccessible = true
-        viewModel.addNotify(toAddValue)
-        viewModel.addNotify(toDeleteValue)
-        viewModel.removeNotify(toDeleteValue)
+        viewModel.addNotification(toAddValue)
+        viewModel.addNotification(toDeleteValue)
+        viewModel.removeNotification(toDeleteValue)
         // 取得したprivate変数の値の取得
         val list = deletedNotifyList.get(viewModel)
         assertEquals(list, listOf(toDeleteValue))
@@ -74,10 +77,10 @@ class RepellentEditViewModelTest {
         // private変数の取得
         val deletedNotifyList = viewModel.javaClass.getDeclaredField(deletedNotifyListName)
         deletedNotifyList.isAccessible = true
-        viewModel.addNotify(toDeleteValue)
-        viewModel.removeNotify(toDeleteValue)
-        viewModel.addNotify(toDeleteValue)
-        viewModel.removeNotify(toDeleteValue)
+        viewModel.addNotification(toDeleteValue)
+        viewModel.removeNotification(toDeleteValue)
+        viewModel.addNotification(toDeleteValue)
+        viewModel.removeNotification(toDeleteValue)
         
         // 取得したprivate変数の値の取得
         val list = deletedNotifyList.get(viewModel)
@@ -90,9 +93,9 @@ class RepellentEditViewModelTest {
         // private変数の取得
         val deletedNotifyList = viewModel.javaClass.getDeclaredField(deletedNotifyListName)
         deletedNotifyList.isAccessible = true
-        viewModel.addNotify(toDeleteValue)
-        viewModel.removeNotify(toDeleteValue)
-        viewModel.removeNotify(toDeleteValue)
+        viewModel.addNotification(toDeleteValue)
+        viewModel.removeNotification(toDeleteValue)
+        viewModel.removeNotification(toDeleteValue)
         
         // 取得したprivate変数の値の取得
         val list = deletedNotifyList.get(viewModel)

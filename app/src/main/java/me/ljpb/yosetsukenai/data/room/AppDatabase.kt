@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
 @Database(
-    entities = [RepellentScheduleEntity::class, InsectEncounterEntity::class, NotifyEntity::class],
+    entities = [RepellentScheduleEntity::class, InsectEncounterEntity::class, NotificationEntity::class],
     version = 1,
     exportSchema = false
 )
@@ -17,7 +17,7 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun insectEncounterDao(): InsectEncounterDao
     
-    abstract fun notifyDao(): NotifyDao
+    abstract fun notificationDao(): NotificationDao
 
     companion object {
         @Volatile

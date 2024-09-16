@@ -17,7 +17,7 @@ object ConstIcon {
     val VALIDITY_PERIOD = Icons.Outlined.Schedule
     val INSECT = Icons.Outlined.BugReport
     val PLACE = Icons.Outlined.PinDrop
-    val NOTIFY = Icons.Outlined.Notifications
+    val NOTIFICATION = Icons.Outlined.Notifications
     
     val BACK = Icons.AutoMirrored.Default.ArrowBack
     val CLOSE = Icons.Default.Close

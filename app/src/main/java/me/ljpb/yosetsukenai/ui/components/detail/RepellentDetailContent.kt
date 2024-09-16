@@ -19,16 +19,16 @@ import me.ljpb.yosetsukenai.R
 import me.ljpb.yosetsukenai.data.SimplePeriod
 import me.ljpb.yosetsukenai.data.SimpleTime
 import me.ljpb.yosetsukenai.data.room.InsectEncounterEntity
-import me.ljpb.yosetsukenai.data.room.NotifyEntity
+import me.ljpb.yosetsukenai.data.room.NotificationEntity
 import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
 import me.ljpb.yosetsukenai.ui.ConstIcon
 import me.ljpb.yosetsukenai.ui.components.common.InsectTag
-import me.ljpb.yosetsukenai.ui.components.common.NotifyTag
+import me.ljpb.yosetsukenai.ui.components.common.NotificationTag
 import me.ljpb.yosetsukenai.ui.components.common.PlaceTag
 import me.ljpb.yosetsukenai.ui.components.common.RowItem
 import me.ljpb.yosetsukenai.ui.components.common.RowItemWithText
 import me.ljpb.yosetsukenai.ui.getTextOfLocalDate
-import me.ljpb.yosetsukenai.ui.getTextOfNotify
+import me.ljpb.yosetsukenai.ui.getTextOfNotificationEntity
 import me.ljpb.yosetsukenai.ui.getTextOfSimplePeriod
 import java.time.LocalDate
 import java.time.ZoneId
@@ -39,7 +39,7 @@ fun RepellentDetailContent(
     modifier: Modifier = Modifier,
     repellent: RepellentScheduleEntity,
     insects: List<InsectEncounterEntity>,
-    notifies: List<NotifyEntity>,
+    notifications: List<NotificationEntity>,
     insectOnClick: (InsectEncounterEntity) -> Unit,
 ) {
     val context = LocalContext.current
@@ -133,18 +133,18 @@ fun RepellentDetailContent(
 
         // 通知
         RowItem(
-            leadingIcon = ConstIcon.NOTIFY,
+            leadingIcon = ConstIcon.NOTIFICATION,
             itemName = stringResource(id = R.string.repellent_notify)
         ) {
             Column(
                 horizontalAlignment = Alignment.End
             ) {
-                notifies.forEach { notify ->
-                    NotifyTag(
+                notifications.forEach { notification ->
+                    NotificationTag(
                         modifier = Modifier
                             .height(dimensionResource(id = R.dimen.row_item_height))
                             .padding(vertical = 4.dp),
-                        text = getTextOfNotify(notify, context)
+                        text = getTextOfNotificationEntity(notification, context)
                     )
                 }
             }
@@ -192,27 +192,27 @@ private fun RepellentDetailPreview() {
                 zoneId = ZoneId.of("UTC")
             ),
         ),
-        notifies = listOf(
-            NotifyEntity(
+        notifications = listOf(
+            NotificationEntity(
                 repellentScheduleId = 1,
                 jobId = UUID.randomUUID(),
-                notifyId = 1,
+                notificationId = 1,
                 triggerTimeSeconds = 1,
                 schedule = SimplePeriod.ofDays(3),
                 time = SimpleTime.of(1, 1)
             ),
-            NotifyEntity(
+            NotificationEntity(
                 repellentScheduleId = 1,
                 jobId = UUID.randomUUID(),
-                notifyId = 1,
+                notificationId = 1,
                 triggerTimeSeconds = 1,
                 schedule = SimplePeriod.ofDays(3),
                 time = SimpleTime.of(1, 1)
             ),
-            NotifyEntity(
+            NotificationEntity(
                 repellentScheduleId = 1,
                 jobId = UUID.randomUUID(),
-                notifyId = 1,
+                notificationId = 1,
                 triggerTimeSeconds = 1,
                 schedule = SimplePeriod.ofDays(3),
                 time = SimpleTime.of(1, 1)

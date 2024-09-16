@@ -67,21 +67,21 @@ import me.ljpb.yosetsukenai.ui.ConstIcon
 import me.ljpb.yosetsukenai.ui.PeriodAndTime
 import me.ljpb.yosetsukenai.ui.RepellentEditViewModel
 import me.ljpb.yosetsukenai.ui.ViewModelProvider
-import me.ljpb.yosetsukenai.ui.components.common.NotifyInputDialog
+import me.ljpb.yosetsukenai.ui.components.common.NotificationInputDialog
 import me.ljpb.yosetsukenai.ui.components.common.RowItem
 import me.ljpb.yosetsukenai.ui.components.common.RowItemWithOneItem
 import me.ljpb.yosetsukenai.ui.components.common.RowItemWithText
 import me.ljpb.yosetsukenai.ui.components.common.SimpleTextField
 import me.ljpb.yosetsukenai.ui.components.common.TextInputDialog
 import me.ljpb.yosetsukenai.ui.epochSecondToLocalDate
-import me.ljpb.yosetsukenai.ui.getNotifyText
+import me.ljpb.yosetsukenai.ui.getNotificationText
 import me.ljpb.yosetsukenai.ui.getTextOfLocalDate
 import me.ljpb.yosetsukenai.ui.localDateToEpochSecond
 
 private enum class DialogType {
     DatePicker,
     Place,
-    Notify,
+    Notification,
     None // 初期値用
 }
 
@@ -99,7 +99,7 @@ fun RepellentEditContent(
     val validityNumber by repellentEditViewModel.validityNumber.collectAsState()
     val zoneId by repellentEditViewModel.zoneId.collectAsState()
     val places by repellentEditViewModel.places.collectAsState()
-    val notifyList by repellentEditViewModel.notifyList.collectAsState()
+    val notificationList by repellentEditViewModel.notificationList.collectAsState()
 
     val textStyle = MaterialTheme.typography.titleMedium
     val textColor = MaterialTheme.colorScheme.onSurface
@@ -150,10 +150,10 @@ fun RepellentEditContent(
                 allowEmpty = false
             )
 
-            DialogType.Notify -> NotifyInputDialog(
+            DialogType.Notification -> NotificationInputDialog(
                 onSave = { simplePeriod, simpleTime ->
                     val pair = PeriodAndTime(simplePeriod, simpleTime)
-                    repellentEditViewModel.addNotify(pair)
+                    repellentEditViewModel.addNotification(pair)
                     hiddenDialog()
                 },
                 onDismiss = hiddenDialog,
@@ -292,29 +292,29 @@ fun RepellentEditContent(
             // 通知
             HorizontalDivider()
             RowItem(
-                leadingIcon = ConstIcon.NOTIFY,
+                leadingIcon = ConstIcon.NOTIFICATION,
                 itemName = stringResource(id = R.string.repellent_notify),
                 item = {
                     Column(
                         verticalArrangement = Arrangement.spacedBy(4.dp),
                         horizontalAlignment = Alignment.End
                     ) {
-                        notifyList.forEach { periodAndTime ->
+                        notificationList.forEach { periodAndTime ->
                             ItemTag(
-                                text = getNotifyText(
+                                text = getNotificationText(
                                     periodAndTime.period,
                                     periodAndTime.time,
                                     context
                                 ),
                                 deleteOnClick = {
-                                    repellentEditViewModel.removeNotify(periodAndTime)
+                                    repellentEditViewModel.removeNotification(periodAndTime)
                                 }
                             )
                         }
                         // 追加ボタン
                         TextButton(
                             modifier = Modifier.height(dimensionResource(id = R.dimen.row_item_height)),
-                            onClick = { showDialogOf(DialogType.Notify) }
+                            onClick = { showDialogOf(DialogType.Notification) }
                         ) {
                             Text(
                                 text = stringResource(id = R.string.add),

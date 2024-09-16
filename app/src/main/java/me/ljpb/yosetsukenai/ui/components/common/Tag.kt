@@ -79,7 +79,7 @@ fun InsectTag(
 }
 
 @Composable
-fun NotifyTag(
+fun NotificationTag(
     modifier: Modifier = Modifier,
     text: String,
     enabled: Boolean = false,
@@ -115,8 +115,8 @@ private fun InsectTagPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun NotifyTagPreview() {
-    NotifyTag(
+private fun NotificationTagPreview() {
+    NotificationTag(
         modifier = Modifier.padding(8.dp),
         text = "aaa"
     )

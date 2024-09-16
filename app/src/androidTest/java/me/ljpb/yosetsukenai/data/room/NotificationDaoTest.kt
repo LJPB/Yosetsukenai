@@ -15,8 +15,8 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.util.UUID
 
-class NotifyDaoTest {
-    private lateinit var notifyDao: NotifyDao
+class NotificationDaoTest {
+    private lateinit var notificationDao: NotificationDao
     private lateinit var repellentDao: RepellentScheduleDao
     private lateinit var database: AppDatabase
     private lateinit var converter: TableConverter
@@ -32,21 +32,21 @@ class NotifyDaoTest {
         zoneId = ZoneId.of("UTC")
     )
 
-    private val child1 = NotifyEntity(
+    private val child1 = NotificationEntity(
         id = 1,
         repellentScheduleId = parent.id,
         jobId = UUID.randomUUID(),
-        notifyId = 1,
+        notificationId = 1,
         triggerTimeSeconds = 1L,
         schedule = SimplePeriod.ofDays(1),
         time = SimpleTime.of(1, 1)
     )
 
-    private val child2 = NotifyEntity(
+    private val child2 = NotificationEntity(
         id = 2,
         repellentScheduleId = parent.id,
         jobId = UUID.randomUUID(),
-        notifyId = 2,
+        notificationId = 2,
         triggerTimeSeconds = 2L,
         schedule = SimplePeriod.ofDays(2),
         time = SimpleTime.of(2, 2)
@@ -59,12 +59,12 @@ class NotifyDaoTest {
             .allowMainThreadQueries()
             .build()
         repellentDao = database.repellentScheduleDao()
-        notifyDao = database.notifyDao()
+        notificationDao = database.notificationDao()
         converter = TableConverter()
         runBlocking {
             repellentDao.insert(parent)
-            notifyDao.insert(child1)
-            notifyDao.insert(child2)
+            notificationDao.insert(child1)
+            notificationDao.insert(child2)
         }
     }
 
@@ -77,7 +77,7 @@ class NotifyDaoTest {
     @Test
     fun parentDeleted() = runBlocking {
         repellentDao.delete(parent)
-        val list = notifyDao.getItemByRepellentScheduleId(parent.id).first()
+        val list = notificationDao.getItemByRepellentScheduleId(parent.id).first()
         assert(list.isEmpty())
     }
 }

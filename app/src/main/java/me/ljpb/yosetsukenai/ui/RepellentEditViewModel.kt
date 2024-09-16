@@ -11,12 +11,12 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import me.ljpb.yosetsukenai.data.NotifyAction
+import me.ljpb.yosetsukenai.data.NotificationAction
 import me.ljpb.yosetsukenai.data.PeriodUnit
 import me.ljpb.yosetsukenai.data.RepellentScheduleAction
 import me.ljpb.yosetsukenai.data.SimplePeriod
 import me.ljpb.yosetsukenai.data.SimpleTime
-import me.ljpb.yosetsukenai.data.room.NotifyEntity
+import me.ljpb.yosetsukenai.data.room.NotificationEntity
 import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
 import java.time.LocalDate
 import java.time.ZoneId
@@ -25,9 +25,9 @@ data class PeriodAndTime(val period: SimplePeriod, val time: SimpleTime)
 
 class RepellentEditViewModel(
     private val repellent: RepellentScheduleEntity?,
-    private val notifications: List<NotifyEntity>,
+    private val notifications: List<NotificationEntity>,
     private val repellentAction: RepellentScheduleAction,
-    private val notifyAction: NotifyAction,
+    private val notifyAction: NotificationAction,
 ) : ViewModel() {
     companion object {
         const val EMPTY_INT = -1
@@ -55,14 +55,14 @@ class RepellentEditViewModel(
     private val _places = MutableStateFlow<List<String>>(repellent?.places ?: emptyList())
     val places: StateFlow<List<String>> = _places.asStateFlow()
 
-    private val _notifyList = MutableStateFlow(
+    private val _notificationList = MutableStateFlow(
         mutableListOf<PeriodAndTime>()
             .apply {
-                addAll(notifications.map { notify -> PeriodAndTime(notify.schedule, notify.time) })
+                addAll(notifications.map { notification -> PeriodAndTime(notification.schedule, notification.time) })
             }
             .toList()
     )
-    val notifyList: StateFlow<List<PeriodAndTime>> = _notifyList.asStateFlow()
+    val notificationList: StateFlow<List<PeriodAndTime>> = _notificationList.asStateFlow()
 
     // 保存ボタンを押した時に更新するために，削除した通知情報の保持
     private val deletedNotifyList: MutableList<PeriodAndTime> = mutableListOf()
@@ -103,8 +103,8 @@ class RepellentEditViewModel(
         _places.update { it.removedList(string) }
     }
 
-    fun addNotify(periodAndTime: PeriodAndTime) {
-        _notifyList.update { list ->
+    fun addNotification(periodAndTime: PeriodAndTime) {
+        _notificationList.update { list ->
             val tmp = mutableListOf<PeriodAndTime>().apply { addAll(list) }
             if (periodAndTime !in tmp) { // 通知時間の重複は許容しない
                 addedNotifyList.takeIf { periodAndTime !in it }
@@ -115,8 +115,8 @@ class RepellentEditViewModel(
         }
     }
 
-    fun removeNotify(periodAndTime: PeriodAndTime) {
-        _notifyList.update { list ->
+    fun removeNotification(periodAndTime: PeriodAndTime) {
+        _notificationList.update { list ->
             val tmp = mutableListOf<PeriodAndTime>().apply { addAll(list) }
             addedNotifyList.remove(periodAndTime)
             deletedNotifyList.takeIf { periodAndTime !in it }
@@ -229,12 +229,12 @@ private fun <T> MutableList<T>.xRemove(item: T): MutableList<T> {
     return this
 }
 
-private fun NotifyEntity.match(periodAndTime: PeriodAndTime): Boolean =
+private fun NotificationEntity.match(periodAndTime: PeriodAndTime): Boolean =
     this.schedule == periodAndTime.period && this.time == periodAndTime.time
 
 /**
  * 渡されたPeriodAndTimeと同じSimplePeriod, SimpleTimeを持つNotifyEntityのインデックス値を返す
  * 存在しない場合は-1が返される
  */
-private fun List<NotifyEntity>.indexOf(periodAndTime: PeriodAndTime): Int =
+private fun List<NotificationEntity>.indexOf(periodAndTime: PeriodAndTime): Int =
     this.indexOfFirst { it.match(periodAndTime) }
