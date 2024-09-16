@@ -5,6 +5,7 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import me.ljpb.yosetsukenai.data.PeriodAndTime
 import me.ljpb.yosetsukenai.data.SimplePeriod
 import me.ljpb.yosetsukenai.data.SimpleTime
 import org.junit.After
@@ -37,9 +38,10 @@ class NotificationDaoTest {
         repellentScheduleId = parent.id,
         jobId = UUID.randomUUID(),
         notificationId = 1,
-        triggerTimeSeconds = 1L,
-        schedule = SimplePeriod.ofDays(1),
-        time = SimpleTime.of(1, 1)
+        triggerTimeEpochSeconds = 1L,
+        schedule = PeriodAndTime(SimplePeriod.ofDays(1), SimpleTime.of(1, 1)),
+        notificationTitle = "",
+        notificationText = ""
     )
 
     private val child2 = NotificationEntity(
@@ -47,10 +49,10 @@ class NotificationDaoTest {
         repellentScheduleId = parent.id,
         jobId = UUID.randomUUID(),
         notificationId = 2,
-        triggerTimeSeconds = 2L,
-        schedule = SimplePeriod.ofDays(2),
-        time = SimpleTime.of(2, 2)
-    )
+        triggerTimeEpochSeconds = 2L,
+        schedule = PeriodAndTime(SimplePeriod.ofDays(2), SimpleTime.of(2, 2)),
+        notificationTitle = "",
+        notificationText = ""    )
 
     @Before
     fun createDb() {
