@@ -8,5 +8,7 @@ interface NotificationManager {
     
     fun setNotification(notification: NotificationEntity)
     
+    fun updateNotification(from: NotificationEntity, to: NotificationEntity): NotificationEntity
+    
     fun cancelNotify(notification: NotificationEntity)
 }
