@@ -198,7 +198,7 @@ private fun RepellentDetailPreview() {
                 repellentScheduleId = 1,
                 jobId = UUID.randomUUID(),
                 notificationId = 1,
-                triggerTimeSeconds = 1,
+                triggerTimeEpochSeconds = 1,
                 notificationTitle = "a",
                 notificationText = "a",
                 schedule = PeriodAndTime(SimplePeriod.ofDays(3), SimpleTime.of(1, 1))
@@ -207,7 +207,7 @@ private fun RepellentDetailPreview() {
                 repellentScheduleId = 1,
                 jobId = UUID.randomUUID(),
                 notificationId = 1,
-                triggerTimeSeconds = 1,
+                triggerTimeEpochSeconds = 1,
                 notificationTitle = "a",
                 notificationText = "a",
                 schedule = PeriodAndTime(SimplePeriod.ofDays(3), SimpleTime.of(1, 1))
@@ -216,7 +216,7 @@ private fun RepellentDetailPreview() {
                 repellentScheduleId = 1,
                 jobId = UUID.randomUUID(),
                 notificationId = 1,
-                triggerTimeSeconds = 1,
+                triggerTimeEpochSeconds = 1,
                 notificationTitle = "a",
                 notificationText = "a",
                 schedule = PeriodAndTime(SimplePeriod.ofDays(3), SimpleTime.of(1, 1))

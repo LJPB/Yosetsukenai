@@ -23,6 +23,6 @@ data class NotificationEntity(
     val notificationId: Int,
     val notificationTitle: String,
     val notificationText: String,
-    val triggerTimeSeconds: Long,
+    val triggerTimeEpochSeconds: Long,
     val schedule: PeriodAndTime
 )
