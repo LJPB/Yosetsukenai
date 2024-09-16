@@ -5,10 +5,10 @@ import me.ljpb.yosetsukenai.data.room.NotificationEntity
 
 interface NotificationManager {
     fun createNotificationEntity(periodAndTime: PeriodAndTime, parentId: Long): NotificationEntity
-    
+
     fun setNotification(notification: NotificationEntity)
-    
-    fun updateSchedule(from: NotificationEntity, to: PeriodAndTime): NotificationEntity
-    
+
+    fun updateNotifySchedule(updatedNotificationEntity: NotificationEntity)
+
     fun cancelNotify(notification: NotificationEntity)
 }
