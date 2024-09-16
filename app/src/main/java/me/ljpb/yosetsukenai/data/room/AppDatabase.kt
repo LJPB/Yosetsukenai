@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
 @Database(
-    entities = [RepellentScheduleEntity::class, InsectEncounterEntity::class, NotificationEntity::class],
+    entities = [RepellentScheduleEntity::class, InsectEntity::class, NotificationEntity::class],
     version = 1,
     exportSchema = false
 )
@@ -15,7 +15,7 @@ import androidx.room.TypeConverters
 abstract class AppDatabase : RoomDatabase() {
     abstract fun repellentScheduleDao(): RepellentScheduleDao
 
-    abstract fun insectEncounterDao(): InsectEncounterDao
+    abstract fun insectDao(): InsectDao
     
     abstract fun notificationDao(): NotificationDao
 

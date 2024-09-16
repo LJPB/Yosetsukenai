@@ -5,8 +5,8 @@ import androidx.room.PrimaryKey
 import java.time.LocalDate
 import java.time.ZoneId
 
-@Entity(tableName = "insect_encounter")
-data class InsectEncounterEntity(
+@Entity(tableName = "insect")
+data class InsectEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
     val name: String,

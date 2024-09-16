@@ -1,8 +1,8 @@
 package me.ljpb.yosetsukenai
 
 import android.content.Context
-import me.ljpb.yosetsukenai.data.InsectEncounterAction
-import me.ljpb.yosetsukenai.data.InsectEncounterRepository
+import me.ljpb.yosetsukenai.data.InsectAction
+import me.ljpb.yosetsukenai.data.InsectRepository
 import me.ljpb.yosetsukenai.data.NotificationAction
 import me.ljpb.yosetsukenai.data.NotificationRepository
 import me.ljpb.yosetsukenai.data.RepellentScheduleAction
@@ -11,7 +11,7 @@ import me.ljpb.yosetsukenai.data.room.AppDatabase
 import me.ljpb.yosetsukenai.data.room.TableConverter
 
 interface DbRepositoryContainer {
-    val insectEncounterRepository: InsectEncounterAction
+    val insectRepository: InsectAction
     val notificationRepository: NotificationAction
     val repellentScheduleRepository: RepellentScheduleAction
 }
@@ -20,9 +20,9 @@ class AppDbRepositoryContainer(private val context: Context) : DbRepositoryConta
     private val db = AppDatabase.getDatabase(context)
     private val typeConverter = TableConverter()
 
-    override val insectEncounterRepository: InsectEncounterAction by lazy {
-        InsectEncounterRepository(
-            db.insectEncounterDao(),
+    override val insectRepository: InsectAction by lazy {
+        InsectRepository(
+            db.insectDao(),
             typeConverter
         )
     }

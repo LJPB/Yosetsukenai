@@ -13,12 +13,12 @@ import java.io.IOException
 import java.time.LocalDate
 import java.time.ZoneId
 
-class InsectEncounterDaoTest {
-    private lateinit var dao: InsectEncounterDao
+class InsectDaoTest {
+    private lateinit var dao: InsectDao
     private lateinit var database: AppDatabase
     private lateinit var converter: TableConverter
 
-    private val item1 = InsectEncounterEntity(
+    private val item1 = InsectEntity(
         id = 1,
         name = "a",
         date = LocalDate.of(2024, 9, 5),
@@ -27,7 +27,7 @@ class InsectEncounterDaoTest {
         place = "a",
         zoneId = ZoneId.of("UTC")
     )
-    private val item2 = InsectEncounterEntity(
+    private val item2 = InsectEntity(
         id = 2,
         name = "b",
         date = LocalDate.of(2024, 9, 7),
@@ -36,7 +36,7 @@ class InsectEncounterDaoTest {
         place = "b",
         zoneId = ZoneId.of("UTC")
     )
-    private val item3 = InsectEncounterEntity(
+    private val item3 = InsectEntity(
         id = 3,
         name = "c",
         date = LocalDate.of(2024, 8, 5),
@@ -45,7 +45,7 @@ class InsectEncounterDaoTest {
         place = "c",
         zoneId = ZoneId.of("UTC")
     )
-    private val item4 = InsectEncounterEntity(
+    private val item4 = InsectEntity(
         id = 4,
         name = "d",
         date = LocalDate.of(2024, 8, 6),
@@ -61,7 +61,7 @@ class InsectEncounterDaoTest {
         database = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
             .allowMainThreadQueries()
             .build()
-        dao = database.insectEncounterDao()
+        dao = database.insectDao()
         converter = TableConverter()
         runBlocking {
             dao.insert(item1)
@@ -95,7 +95,7 @@ class InsectEncounterDaoTest {
             from = converter.fromLocalDateToString(LocalDate.of(2024, 9, 8)),
             to = converter.fromLocalDateToString(LocalDate.of(2025, 1, 1))
         ).first()
-        val expect = emptyList<InsectEncounterEntity>()
+        val expect = emptyList<InsectEntity>()
         assertEquals(items, expect)
     }
 

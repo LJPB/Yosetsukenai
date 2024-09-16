@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import me.ljpb.yosetsukenai.R
 import me.ljpb.yosetsukenai.data.SimplePeriod
 import me.ljpb.yosetsukenai.data.SimpleTime
-import me.ljpb.yosetsukenai.data.room.InsectEncounterEntity
+import me.ljpb.yosetsukenai.data.room.InsectEntity
 import me.ljpb.yosetsukenai.data.room.NotificationEntity
 import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
 import me.ljpb.yosetsukenai.ui.ConstIcon
@@ -38,9 +38,9 @@ import java.util.UUID
 fun RepellentDetailContent(
     modifier: Modifier = Modifier,
     repellent: RepellentScheduleEntity,
-    insects: List<InsectEncounterEntity>,
+    insects: List<InsectEntity>,
     notifications: List<NotificationEntity>,
-    insectOnClick: (InsectEncounterEntity) -> Unit,
+    insectOnClick: (InsectEntity) -> Unit,
 ) {
     val context = LocalContext.current
     val name = repellent.name
@@ -167,7 +167,7 @@ private fun RepellentDetailPreview() {
             zoneId = ZoneId.of("UTC")
         ),
         insects = listOf(
-            InsectEncounterEntity(
+            InsectEntity(
                 name = "aaa",
                 date = LocalDate.of(2024, 9, 3),
                 size = "大きい",
@@ -175,7 +175,7 @@ private fun RepellentDetailPreview() {
                 place = "玄関",
                 zoneId = ZoneId.of("UTC")
             ),
-            InsectEncounterEntity(
+            InsectEntity(
                 name = "aaa",
                 date = LocalDate.of(2024, 9, 3),
                 size = "大きい",
@@ -183,7 +183,7 @@ private fun RepellentDetailPreview() {
                 place = "玄関",
                 zoneId = ZoneId.of("UTC")
             ),
-            InsectEncounterEntity(
+            InsectEntity(
                 name = "aaa",
                 date = LocalDate.of(2024, 9, 3),
                 size = "大きい",
