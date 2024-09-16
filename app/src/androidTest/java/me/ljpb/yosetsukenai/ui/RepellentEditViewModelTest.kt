@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import me.ljpb.yosetsukenai.data.NotificationRepository
+import me.ljpb.yosetsukenai.data.PeriodAndTime
 import me.ljpb.yosetsukenai.data.RepellentScheduleRepository
 import me.ljpb.yosetsukenai.data.SimplePeriod
 import me.ljpb.yosetsukenai.data.SimpleTime

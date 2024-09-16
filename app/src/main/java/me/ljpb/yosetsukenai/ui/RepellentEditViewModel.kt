@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import me.ljpb.yosetsukenai.data.NotificationAction
+import me.ljpb.yosetsukenai.data.PeriodAndTime
 import me.ljpb.yosetsukenai.data.PeriodUnit
 import me.ljpb.yosetsukenai.data.RepellentScheduleAction
 import me.ljpb.yosetsukenai.data.SimplePeriod
@@ -20,8 +21,7 @@ import me.ljpb.yosetsukenai.data.room.NotificationEntity
 import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
 import java.time.LocalDate
 import java.time.ZoneId
-
-data class PeriodAndTime(val period: SimplePeriod, val time: SimpleTime)
+import java.util.Collections.addAll
 
 class RepellentEditViewModel(
     private val repellent: RepellentScheduleEntity?,

@@ -61,10 +61,10 @@ import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.viewmodel.compose.viewModel
 import me.ljpb.yosetsukenai.R
+import me.ljpb.yosetsukenai.data.PeriodAndTime
 import me.ljpb.yosetsukenai.data.PeriodUnit
 import me.ljpb.yosetsukenai.data.SimplePeriod
 import me.ljpb.yosetsukenai.ui.ConstIcon
-import me.ljpb.yosetsukenai.ui.PeriodAndTime
 import me.ljpb.yosetsukenai.ui.RepellentEditViewModel
 import me.ljpb.yosetsukenai.ui.ViewModelProvider
 import me.ljpb.yosetsukenai.ui.components.common.NotificationInputDialog
