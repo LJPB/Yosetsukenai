@@ -2,6 +2,7 @@ package me.ljpb.yosetsukenai.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -9,6 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import me.ljpb.yosetsukenai.data.NotifyAction
 import me.ljpb.yosetsukenai.data.PeriodUnit
 import me.ljpb.yosetsukenai.data.RepellentScheduleAction
@@ -105,7 +107,8 @@ class RepellentEditViewModel(
         _notifyList.update { list ->
             val tmp = mutableListOf<PeriodAndTime>().apply { addAll(list) }
             if (periodAndTime !in tmp) { // 通知時間の重複は許容しない
-                addedNotifyList.takeIf { periodAndTime !in it }?.add(periodAndTime) // addedNotifyListに含まれていなければ追加する
+                addedNotifyList.takeIf { periodAndTime !in it }
+                    ?.add(periodAndTime) // addedNotifyListに含まれていなければ追加する
                 tmp.add(periodAndTime)
             }
             tmp
@@ -116,13 +119,14 @@ class RepellentEditViewModel(
         _notifyList.update { list ->
             val tmp = mutableListOf<PeriodAndTime>().apply { addAll(list) }
             addedNotifyList.remove(periodAndTime)
-            deletedNotifyList.takeIf { periodAndTime !in it }?.add(periodAndTime) // deletedNotifyListに含まれていなければ追加する
+            deletedNotifyList.takeIf { periodAndTime !in it }
+                ?.add(periodAndTime) // deletedNotifyListに含まれていなければ追加する
             tmp.remove(periodAndTime)
             tmp
         }
     }
 
-    fun saveRepellent() {
+    fun saveRepellent() = viewModelScope.launch {
         /*******************************  注意  *******************************
          * deletedNotifyListで削除 → addedNotifyListで追加 の順番で処理する
          * UI操作で「通知を削除 → PeriodAndTimeが同じ通知を追加」としたとき
@@ -130,15 +134,82 @@ class RepellentEditViewModel(
          * 削除処理を先に行うことで，本来削除したい通知－つまり先に存在している通知を削除して
          * それから新しい通知を追加する，というUI操作と同じ順番で処理ができる
          *********************************************************************/
+        // add/updateRepellent() Notification用にIDが必要だから一番最初にする
         // deleteNotification()
-        // add/updateRepellent()
         // addNotification(repellent)
+
+        val repellentId = if (isUpdate) updateRepellent() else addRepellent()
+        // TODO: 通知関連の処理 
     }
 
-    fun deleteRepellent() {
+    fun deleteRepellent() = viewModelScope.launch {
+        if (repellent != null) repellentAction.delete(repellent)
+        notifications.forEach { notifyAction.delete(it) }
+    }
 
+    private suspend fun addRepellent(): Long {
+        val deferred = viewModelScope.async {
+            repellentAction.insert(getRepellent())
+        }.await()
+        return deferred
+    }
+
+    private suspend fun updateRepellent(): Long {
+        if (repellent == null) return -1
+        viewModelScope.launch {
+            repellentAction.update(getRepellent())
+        }
+        return repellent.id
+    }
+
+    private fun getRepellent(): RepellentScheduleEntity {
+        val entityName = name.value
+        val entityPeriod = SimplePeriod.of(validityNumber.value, validityPeriodUnit.value)
+        val entityStartDate = startDate.value
+        val entityFinishDate = entityStartDate.addPeriod(entityPeriod)
+        val entityPlaces = places.value
+        val entityIgnore = false
+        val entityZoneId = zoneId.value
+
+        val tmp = RepellentScheduleEntity(
+            name = entityName,
+            validityPeriod = entityPeriod,
+            startDate = entityStartDate,
+            finishDate = entityFinishDate,
+            places = entityPlaces,
+            ignore = entityIgnore,
+            zoneId = entityZoneId
+        )
+        val entity = repellent?.updateValue(tmp) ?: tmp
+        return entity
     }
 }
+
+/**
+ * id以外を渡されたオブジェクトの値に更新したRepellentScheduleEntityを返す
+ */
+private fun RepellentScheduleEntity.updateValue(repellent: RepellentScheduleEntity): RepellentScheduleEntity =
+    this.copy(
+        name = repellent.name,
+        validityPeriod = repellent.validityPeriod,
+        startDate = repellent.startDate,
+        finishDate = repellent.finishDate,
+        places = repellent.places,
+        ignore = repellent.ignore,
+        zoneId = repellent.zoneId
+    )
+
+/**
+ * 渡された期間を追加したLocalDateを返す
+ */
+private fun LocalDate.addPeriod(simplePeriod: SimplePeriod): LocalDate =
+    when (simplePeriod.periodUnit) {
+        PeriodUnit.Day -> this.plusDays(simplePeriod.number.toLong())
+        PeriodUnit.Week -> this.plusWeeks(simplePeriod.number.toLong())
+        PeriodUnit.Month -> this.plusMonths(simplePeriod.number.toLong())
+        PeriodUnit.Year -> this.plusYears(simplePeriod.number.toLong())
+    }
+
 
 /**
  * 重複を許さない要素の追加
