@@ -16,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import me.ljpb.yosetsukenai.R
+import me.ljpb.yosetsukenai.data.PeriodAndTime
 import me.ljpb.yosetsukenai.data.SimplePeriod
 import me.ljpb.yosetsukenai.data.SimpleTime
 import me.ljpb.yosetsukenai.data.room.InsectEntity
@@ -198,24 +199,21 @@ private fun RepellentDetailPreview() {
                 jobId = UUID.randomUUID(),
                 notificationId = 1,
                 triggerTimeSeconds = 1,
-                schedule = SimplePeriod.ofDays(3),
-                time = SimpleTime.of(1, 1)
+                schedule = PeriodAndTime(SimplePeriod.ofDays(3), SimpleTime.of(1, 1))
             ),
             NotificationEntity(
                 repellentScheduleId = 1,
                 jobId = UUID.randomUUID(),
                 notificationId = 1,
                 triggerTimeSeconds = 1,
-                schedule = SimplePeriod.ofDays(3),
-                time = SimpleTime.of(1, 1)
+                schedule = PeriodAndTime(SimplePeriod.ofDays(3), SimpleTime.of(1, 1))
             ),
             NotificationEntity(
                 repellentScheduleId = 1,
                 jobId = UUID.randomUUID(),
                 notificationId = 1,
                 triggerTimeSeconds = 1,
-                schedule = SimplePeriod.ofDays(3),
-                time = SimpleTime.of(1, 1)
+                schedule = PeriodAndTime(SimplePeriod.ofDays(3), SimpleTime.of(1, 1))
             ),
         )
     ) {}

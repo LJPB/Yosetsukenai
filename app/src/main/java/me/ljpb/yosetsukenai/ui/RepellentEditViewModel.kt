@@ -16,12 +16,10 @@ import me.ljpb.yosetsukenai.data.PeriodAndTime
 import me.ljpb.yosetsukenai.data.PeriodUnit
 import me.ljpb.yosetsukenai.data.RepellentScheduleAction
 import me.ljpb.yosetsukenai.data.SimplePeriod
-import me.ljpb.yosetsukenai.data.SimpleTime
 import me.ljpb.yosetsukenai.data.room.NotificationEntity
 import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
 import java.time.LocalDate
 import java.time.ZoneId
-import java.util.Collections.addAll
 
 class RepellentEditViewModel(
     private val repellent: RepellentScheduleEntity?,
@@ -58,7 +56,7 @@ class RepellentEditViewModel(
     private val _notificationList = MutableStateFlow(
         mutableListOf<PeriodAndTime>()
             .apply {
-                addAll(notifications.map { notification -> PeriodAndTime(notification.schedule, notification.time) })
+                addAll(notifications.map { it.schedule })
             }
             .toList()
     )
@@ -230,7 +228,7 @@ private fun <T> MutableList<T>.xRemove(item: T): MutableList<T> {
 }
 
 private fun NotificationEntity.match(periodAndTime: PeriodAndTime): Boolean =
-    this.schedule == periodAndTime.period && this.time == periodAndTime.time
+    this.schedule == periodAndTime
 
 /**
  * 渡されたPeriodAndTimeと同じSimplePeriod, SimpleTimeを持つNotifyEntityのインデックス値を返す

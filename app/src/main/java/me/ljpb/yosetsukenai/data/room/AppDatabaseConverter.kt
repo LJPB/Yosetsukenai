@@ -1,7 +1,7 @@
 package me.ljpb.yosetsukenai.data.room
 
+import me.ljpb.yosetsukenai.data.PeriodAndTime
 import me.ljpb.yosetsukenai.data.SimplePeriod
-import me.ljpb.yosetsukenai.data.SimpleTime
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.UUID
@@ -27,13 +27,13 @@ interface AppDatabaseConverter {
 
     fun fromUuidToString(uuid: UUID): String
 
-    // SimpleTime
-    fun fromStringToSimpleTime(string: String): SimpleTime
-
-    fun fromSimpleTimeToString(time: SimpleTime): String
-
     // ZoneId
     fun fromStringToZoneId(string: String): ZoneId = ZoneId.of(string)
 
     fun fromZoneIdToString(zoneId: ZoneId): String = zoneId.id
+
+    // PeriodAndTime
+    fun fromStringToPeriodAndTime(string: String): PeriodAndTime
+
+    fun fromPeriodAndTimeToString(periodAndTime: PeriodAndTime): String
 }

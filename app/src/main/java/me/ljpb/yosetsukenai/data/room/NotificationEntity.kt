@@ -3,8 +3,7 @@ package me.ljpb.yosetsukenai.data.room
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import me.ljpb.yosetsukenai.data.SimplePeriod
-import me.ljpb.yosetsukenai.data.SimpleTime
+import me.ljpb.yosetsukenai.data.PeriodAndTime
 import java.util.UUID
 
 @Entity(
@@ -23,6 +22,5 @@ data class NotificationEntity(
     val jobId: UUID,
     val notificationId: Int,
     val triggerTimeSeconds: Long,
-    val schedule: SimplePeriod,
-    val time: SimpleTime
+    val schedule: PeriodAndTime
 )

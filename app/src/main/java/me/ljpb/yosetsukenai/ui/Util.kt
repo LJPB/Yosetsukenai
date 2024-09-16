@@ -29,7 +29,7 @@ fun getTextOfLocalDate(localDate: LocalDate, context: Context): String =
         localDate.dayOfMonth,
     )
 
-fun getTextOfNotificationEntity(notification: NotificationEntity, context: Context): String = getNotificationText(notification.schedule, notification.time, context)
+fun getTextOfNotificationEntity(notification: NotificationEntity, context: Context): String = getNotificationText(notification.schedule.period, notification.schedule.time, context)
 
 fun getNotificationText(simplePeriod: SimplePeriod, simpleTime: SimpleTime, context: Context): String {
     val timeText = getTextOfSimpleTime(simpleTime, context)
