@@ -1,19 +1,43 @@
 package me.ljpb.yosetsukenai.ui
 
+import android.content.Context
+import androidx.room.Room
+import androidx.test.core.app.ApplicationProvider
+import me.ljpb.yosetsukenai.data.NotificationRepository
+import me.ljpb.yosetsukenai.data.RepellentScheduleRepository
 import me.ljpb.yosetsukenai.data.SimplePeriod
 import me.ljpb.yosetsukenai.data.SimpleTime
+import me.ljpb.yosetsukenai.data.room.AppDatabase
+import me.ljpb.yosetsukenai.data.room.AppDatabaseConverter
+import me.ljpb.yosetsukenai.data.room.TableConverter
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 
 class RepellentEditViewModelTest {
-    private val viewModel = RepellentEditViewModel(
-        null,
-        listOf()
-    )
+    private lateinit var database: AppDatabase
+    private lateinit var viewModel: RepellentEditViewModel
+    private lateinit var converter: AppDatabaseConverter
     private val addedNotifyListName = "addedNotifyList"
     private val deletedNotifyListName = "deletedNotifyList"
     private val toAddValue = PeriodAndTime(SimplePeriod.ofDays(1), SimpleTime.of(1, 1))
     private val toDeleteValue = PeriodAndTime(SimplePeriod.ofWeeks(3), SimpleTime.of(10, 10))
+
+    @Before
+    fun setUp() {
+        val context: Context = ApplicationProvider.getApplicationContext()
+        database = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
+            .allowMainThreadQueries()
+            .build()
+        converter = TableConverter()
+
+        viewModel = RepellentEditViewModel(
+            null,
+            listOf(),
+            RepellentScheduleRepository(database.repellentScheduleDao(), converter),
+            NotificationRepository(database.notificationDao())
+        )
+    }
 
     // 新規要素が重複なく追加されているか
     @Test
@@ -28,7 +52,7 @@ class RepellentEditViewModelTest {
         val list = addedNotifyList.get(viewModel)
         assertEquals(list, listOf(toAddValue, toDeleteValue))
     }
-    
+
     // 新規要素の削除は正しく行われているか
     @Test
     fun addTestTwo() {
@@ -42,7 +66,7 @@ class RepellentEditViewModelTest {
         val list = addedNotifyList.get(viewModel)
         assertEquals(list, listOf(toAddValue))
     }
-    
+
     // 追加→削除→追加でaddedNotifyListに重複して登録されないことの確認
     @Test
     fun addTestThree() {
@@ -56,7 +80,7 @@ class RepellentEditViewModelTest {
         val list = addedNotifyList.get(viewModel)
         assertEquals(list, listOf(toAddValue))
     }
-    
+
     // 削除した要素を保持できているか
     @Test
     fun deleteTestOne() {
@@ -70,7 +94,7 @@ class RepellentEditViewModelTest {
         val list = deletedNotifyList.get(viewModel)
         assertEquals(list, listOf(toDeleteValue))
     }
-    
+
     // 一度削除した要素を追加後，再度削除しても重複しないか
     @Test
     fun deleteTestTwo() {
@@ -81,12 +105,12 @@ class RepellentEditViewModelTest {
         viewModel.removeNotification(toDeleteValue)
         viewModel.addNotification(toDeleteValue)
         viewModel.removeNotification(toDeleteValue)
-        
+
         // 取得したprivate変数の値の取得
         val list = deletedNotifyList.get(viewModel)
         assertEquals(list, listOf(toDeleteValue))
     }
-    
+
     // 繰り返し削除しても要素は重複しないかの確認
     @Test
     fun deleteTestThree() {
@@ -96,11 +120,11 @@ class RepellentEditViewModelTest {
         viewModel.addNotification(toDeleteValue)
         viewModel.removeNotification(toDeleteValue)
         viewModel.removeNotification(toDeleteValue)
-        
+
         // 取得したprivate変数の値の取得
         val list = deletedNotifyList.get(viewModel)
         assertEquals(list, listOf(toDeleteValue))
     }
-    
-    
+
+
 }
