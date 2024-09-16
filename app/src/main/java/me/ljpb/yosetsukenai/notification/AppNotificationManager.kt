@@ -13,7 +13,7 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.UUID
 
-object NotificationManager {
+object AppNotificationManager {
     /**
      * @param date 通知を送る日付
      * @param time 通知を送る時間
@@ -54,7 +54,7 @@ object NotificationManager {
     }
 
     fun setNotification(notification: NotificationEntity) {
-
+        
     }
 
     fun updateNotifySchedule(
@@ -71,7 +71,7 @@ object NotificationManager {
 
     fun notify(context: Context, notification: NotificationEntity) {
     }
-    
+
     private fun LocalDate.minus(period: SimplePeriod): LocalDate {
         return when (period.periodUnit) {
             PeriodUnit.Day -> this.minusDays(period.number.toLong())
