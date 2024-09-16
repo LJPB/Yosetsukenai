@@ -75,7 +75,7 @@ class RepellentEditViewModel(
         nameValue.isNotEmpty() && numberValue != EMPTY_INT
     }.stateIn(
         viewModelScope,
-        SharingStarted.Eagerly,
+        SharingStarted.WhileSubscribed(),
         repellent?.name?.isNotEmpty() ?: false
     )
 
