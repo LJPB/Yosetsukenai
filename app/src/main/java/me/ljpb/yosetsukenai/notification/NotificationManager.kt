@@ -3,6 +3,7 @@ package me.ljpb.yosetsukenai.notification
 import me.ljpb.yosetsukenai.data.PeriodAndTime
 import me.ljpb.yosetsukenai.data.room.NotificationEntity
 import java.time.LocalDate
+import java.time.ZoneId
 
 interface NotificationManager {
     /**
@@ -13,7 +14,8 @@ interface NotificationManager {
     fun createNotificationEntity(
         date: LocalDate,
         before: PeriodAndTime,
-        parentId: Long
+        parentId: Long,
+        zoneId: ZoneId
     ): NotificationEntity
 
     fun setNotification(notification: NotificationEntity)
