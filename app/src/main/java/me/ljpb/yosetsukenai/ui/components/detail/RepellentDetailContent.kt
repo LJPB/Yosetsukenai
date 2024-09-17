@@ -199,8 +199,6 @@ private fun RepellentDetailPreview() {
                 jobId = UUID.randomUUID(),
                 notificationId = 1,
                 triggerTimeEpochSeconds = 1,
-                notificationTitle = "a",
-                notificationText = "a",
                 schedule = PeriodAndTime(SimplePeriod.ofDays(3), SimpleTime.of(1, 1))
             ),
             NotificationEntity(
@@ -208,8 +206,6 @@ private fun RepellentDetailPreview() {
                 jobId = UUID.randomUUID(),
                 notificationId = 1,
                 triggerTimeEpochSeconds = 1,
-                notificationTitle = "a",
-                notificationText = "a",
                 schedule = PeriodAndTime(SimplePeriod.ofDays(3), SimpleTime.of(1, 1))
             ),
             NotificationEntity(
@@ -217,8 +213,6 @@ private fun RepellentDetailPreview() {
                 jobId = UUID.randomUUID(),
                 notificationId = 1,
                 triggerTimeEpochSeconds = 1,
-                notificationTitle = "a",
-                notificationText = "a",
                 schedule = PeriodAndTime(SimplePeriod.ofDays(3), SimpleTime.of(1, 1))
             ),
         )

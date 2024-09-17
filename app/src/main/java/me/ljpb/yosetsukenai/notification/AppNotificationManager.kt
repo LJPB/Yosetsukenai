@@ -55,8 +55,6 @@ object AppNotificationManager {
             repellentScheduleId = parentId,
             jobId = uuid,
             notificationId = uuid.hashCode(),
-            notificationTitle = title,
-            notificationText = text,
             triggerTimeEpochSeconds = triggerTimeEpochSeconds,
             schedule = PeriodAndTime(before, time)
         )
@@ -78,15 +76,20 @@ object AppNotificationManager {
 
     }
 
-    fun notify(context: Context, notification: NotificationEntity) {
+    fun notify(
+        context: Context, 
+        notification: NotificationEntity,
+        title: String,
+        text: String
+    ) {
         // TODO: 通知アイコンの変更 
         // TODO: 通知アクションの追加
         val channelId = context.getString(R.string.notification_channel_id)
         val builder = NotificationCompat
             .Builder(context, channelId)
             .setSmallIcon(R.drawable.ic_launcher_background)
-            .setContentTitle(notification.notificationTitle)
-            .setContentText(notification.notificationText)
+            .setContentTitle(title)
+            .setContentText(text)
 
         with(NotificationManagerCompat.from(context)) {
             if (

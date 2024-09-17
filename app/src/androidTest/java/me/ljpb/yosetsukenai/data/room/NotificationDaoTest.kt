@@ -40,8 +40,6 @@ class NotificationDaoTest {
         notificationId = 1,
         triggerTimeEpochSeconds = 1L,
         schedule = PeriodAndTime(SimplePeriod.ofDays(1), SimpleTime.of(1, 1)),
-        notificationTitle = "",
-        notificationText = ""
     )
 
     private val child2 = NotificationEntity(
@@ -51,8 +49,7 @@ class NotificationDaoTest {
         notificationId = 2,
         triggerTimeEpochSeconds = 2L,
         schedule = PeriodAndTime(SimplePeriod.ofDays(2), SimpleTime.of(2, 2)),
-        notificationTitle = "",
-        notificationText = ""    )
+        )
 
     @Before
     fun createDb() {
