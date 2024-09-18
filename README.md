@@ -5,7 +5,7 @@
 
 現時点におけるポイント：
 
-1. 前回の開発[AlarmByNotification](https://github.com/LJPB/AlarmByNotification)は設計をせずに作ったため，コードの修正が困難だった。今回は，その反省を踏まえてアプリの大まかな構造を事前に考えておいた。
+1. 前回の開発[AlarmByNotification](https://github.com/LJPB/AlarmByNotification)は設計をせずに作ったため，コードの修正が困難だった。今回はその反省を踏まえてアプリの大まかな構造を事前に考えておいた。
 
 
 現時点における問題点：
