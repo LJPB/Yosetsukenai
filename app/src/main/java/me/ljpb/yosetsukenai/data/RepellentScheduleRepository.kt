@@ -18,6 +18,8 @@ class RepellentScheduleRepository(
 
     override fun getSize(): Long = dao.getSize()
 
+    override fun getRepellentById(id: Long): Flow<RepellentScheduleEntity?> = dao.getItemById(id)
+
     override fun getEnabledRepellents(currentDate: LocalDate): Flow<List<RepellentScheduleEntity>> =
         dao.getEnabledItems(converter.fromLocalDateToString(currentDate))
 

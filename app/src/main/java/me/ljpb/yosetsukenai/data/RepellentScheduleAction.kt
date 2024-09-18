@@ -12,6 +12,8 @@ interface RepellentScheduleAction {
     suspend fun delete(entity: RepellentScheduleEntity)
 
     fun getSize(): Long
+    
+    fun getRepellentById(id: Long): Flow<RepellentScheduleEntity?>
 
     fun getEnabledRepellents(currentDate: LocalDate): Flow<List<RepellentScheduleEntity>>
 

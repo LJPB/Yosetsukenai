@@ -21,6 +21,9 @@ class NotificationRepository(private val dao: NotificationDao) : NotificationAct
         dao.delete(entity)
     }
 
+    override fun getNotificationById(id: Long): Flow<NotificationEntity?> = dao.getItemById(id)
+    
+
     override fun getNotificationsOf(parent: RepellentScheduleEntity): Flow<List<NotificationEntity>> =
         dao.getItemByRepellentScheduleId(parent.id)
 

@@ -2,7 +2,7 @@
     <string name="app_name">ヨセツケナイ</string>
     <string name="notification_channel_id">REPELLENT_NOTIFICATION</string>
     <string name="notification_channel_name">RepellentNotification</string>
-    
+
     <string name="expired">期限切れ</string>
     <string name="until">残り%1$02d日</string>
     <string name="formated_date">%1$d年%2$02d月%3$02d日</string>
@@ -17,7 +17,7 @@
     <string name="validity_period_text">有効期間：%1$s</string>
     <string name="skip">スキップ</string>
     <string name="reset_repellent">今日の日付で再設定</string>
-    
+
     <string name="repellent_name">商品名</string>
     <string name="repellent_start_date">開始日</string>
     <string name="repellent_end_date">終了日</string>
@@ -25,7 +25,7 @@
     <string name="repellent_place">場所</string>
     <string name="repellent_insect">有効期間内に発見した虫</string>
     <string name="repellent_notification">通知</string>
-    
+
     <string name="back">戻る</string>
     <string name="edit">編集</string>
     <string name="delete">削除</string>
@@ -35,23 +35,23 @@
 
     <string name="edit_repellent_name">商品名を入力</string>
     <string name="edit_place">場所</string>
-    
+
     <string name="notification_text_on_the_day">当日(%1$s)</string>
     <string name="notification_text_before_day">%1$d日前(%2$s)</string>
     <string name="notification_text_before_week">%1$d週間前(%2$s)</string>
     <string name="notification_text_before_month">%1$dヶ月前(%2$s)</string>
     <string name="notification_text_before_year">%1$d年前(%2$s)</string>
-    
+
     <string name="notification_input_dialog_unit_day">日前</string>
     <string name="notification_input_dialog_unit_week">週間前</string>
-    
+
     <string name="notification_input_dialog_select_day">日数 (0で当日)</string>
     <string name="notification_input_dialog_select_week">週数</string>
     <string name="notification_input_dialog_select_time">通知する時間</string>
-    
+
     <string name="simple_time_text">%1$02d:%2$02d</string>
-    
-    <string name="notification_title">まもなく効果が切れます</string>
-    <string name="notification_text">本文TODO</string>
+
+    <string name="notification_title">まもなく効果がなくなります</string>
+    <string name="notification_text">%1$sの効果が%2$sになくなります。</string>
     
 </resources>

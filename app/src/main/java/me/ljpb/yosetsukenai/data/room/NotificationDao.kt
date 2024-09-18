@@ -19,6 +19,9 @@ interface NotificationDao {
     @Delete
     suspend fun delete(entity: NotificationEntity)
 
+    @Query("select * from notification where id = :id")
+    fun getItemById(id: Long): Flow<NotificationEntity?>
+    
     @Query("select * from notification where repellentScheduleId = :id")
     fun getItemByRepellentScheduleId(id: Long): Flow<List<NotificationEntity>>
 }

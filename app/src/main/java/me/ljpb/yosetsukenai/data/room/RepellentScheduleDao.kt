@@ -23,6 +23,10 @@ interface RepellentScheduleDao {
     fun getSize(): Long
 
     // 現在有効な虫除けの一覧を開始日と終了日の昇順で取得
+    @Query("select * from repellent_schedule where id = :id")
+    fun getItemById(id: Long): Flow<RepellentScheduleEntity?>
+
+    // 現在有効な虫除けの一覧を開始日と終了日の昇順で取得
     @Query("select * from repellent_schedule where :currentDate between startDate and finishDate order by finishDate asc")
     fun getEnabledItems(currentDate: String): Flow<List<RepellentScheduleEntity>>
 

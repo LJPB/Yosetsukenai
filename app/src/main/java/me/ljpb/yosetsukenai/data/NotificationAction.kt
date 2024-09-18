@@ -11,5 +11,7 @@ interface NotificationAction {
 
     suspend fun delete(entity: NotificationEntity)
     
+    fun getNotificationById(id: Long): Flow<NotificationEntity?>
+    
     fun getNotificationsOf(parent: RepellentScheduleEntity): Flow<List<NotificationEntity>>
 }
