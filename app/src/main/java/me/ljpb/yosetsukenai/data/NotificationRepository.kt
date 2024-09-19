@@ -1,23 +1,25 @@
 package me.ljpb.yosetsukenai.data
 
+import androidx.work.WorkManager
 import kotlinx.coroutines.flow.Flow
 import me.ljpb.yosetsukenai.data.room.NotificationDao
 import me.ljpb.yosetsukenai.data.room.NotificationEntity
 import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
+import me.ljpb.yosetsukenai.notification.AppNotificationManager
 
-class NotificationRepository(private val dao: NotificationDao) : NotificationAction {
+class NotificationRepository(private val dao: NotificationDao, private val workManager: WorkManager) : NotificationAction {
     override suspend fun insert(entity: NotificationEntity): Long {
-//        NotificationManager.setNotification(entity)
+        AppNotificationManager.setNotification(entity, workManager)
         return dao.insert(entity)
     }
 
     override suspend fun update(entity: NotificationEntity) {
-//        NotificationManager.updateNotifySchedule(entity)
+        AppNotificationManager.updateNotification(entity, workManager)
         dao.update(entity)
     }
 
     override suspend fun delete(entity: NotificationEntity) {
-//        NotificationManager.cancelNotify(entity)
+        AppNotificationManager.cancelNotification(entity, workManager)
         dao.delete(entity)
     }
 

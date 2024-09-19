@@ -1,6 +1,7 @@
 package me.ljpb.yosetsukenai
 
 import android.content.Context
+import androidx.work.WorkManager
 import me.ljpb.yosetsukenai.data.InsectAction
 import me.ljpb.yosetsukenai.data.InsectRepository
 import me.ljpb.yosetsukenai.data.NotificationAction
@@ -19,6 +20,7 @@ interface DbRepositoryContainer {
 class AppDbRepositoryContainer(private val context: Context) : DbRepositoryContainer {
     private val db = AppDatabase.getDatabase(context)
     private val typeConverter = TableConverter()
+    private val workManager = WorkManager.getInstance(context)
 
     override val insectRepository: InsectAction by lazy {
         InsectRepository(
@@ -28,7 +30,7 @@ class AppDbRepositoryContainer(private val context: Context) : DbRepositoryConta
     }
 
     override val notificationRepository: NotificationAction by lazy {
-        NotificationRepository(db.notificationDao())
+        NotificationRepository(db.notificationDao(), workManager)
     }
 
     override val repellentScheduleRepository: RepellentScheduleAction by lazy {
