@@ -19,6 +19,7 @@ import me.ljpb.yosetsukenai.data.PeriodUnit
 import me.ljpb.yosetsukenai.data.SimplePeriod
 import me.ljpb.yosetsukenai.data.SimpleTime
 import me.ljpb.yosetsukenai.data.room.NotificationEntity
+import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -81,7 +82,7 @@ object AppNotificationManager {
             .addTag(notification.repellentScheduleId.toString())
             .setInputData(notification.toData())
             .build()
-        
+
         workManager.enqueueUniqueWork(
             notification.jobId.toString(),
             ExistingWorkPolicy.REPLACE,
@@ -89,12 +90,19 @@ object AppNotificationManager {
         )
     }
 
-    fun updateNotifySchedule(updatedNotificationEntity: NotificationEntity) {
-
+    fun updateNotifySchedule(
+        updatedNotificationEntity: NotificationEntity,
+        workManager: WorkManager
+    ) {
+        setNotification(updatedNotificationEntity, workManager)
     }
 
-    fun cancelNotify(notification: NotificationEntity) {
+    fun cancelNotify(notification: NotificationEntity, workManager: WorkManager) {
+        workManager.cancelUniqueWork(notification.jobId.toString())
+    }
 
+    fun cancelAllNotifiesOf(repellent: RepellentScheduleEntity, workManager: WorkManager) {
+        workManager.cancelAllWorkByTag(repellent.id.toString())
     }
 
     fun notify(
