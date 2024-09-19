@@ -90,14 +90,14 @@ object AppNotificationManager {
         )
     }
 
-    fun updateNotifySchedule(
+    fun updateNotification(
         updatedNotificationEntity: NotificationEntity,
         workManager: WorkManager
     ) {
         setNotification(updatedNotificationEntity, workManager)
     }
 
-    fun cancelNotify(notification: NotificationEntity, workManager: WorkManager) {
+    fun cancelNotification(notification: NotificationEntity, workManager: WorkManager) {
         workManager.cancelUniqueWork(notification.jobId.toString())
     }
 
