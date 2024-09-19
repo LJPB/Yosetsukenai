@@ -3,6 +3,7 @@ package me.ljpb.yosetsukenai.ui
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
+import androidx.work.WorkManager
 import me.ljpb.yosetsukenai.data.NotificationRepository
 import me.ljpb.yosetsukenai.data.PeriodAndTime
 import me.ljpb.yosetsukenai.data.RepellentScheduleRepository
@@ -36,7 +37,7 @@ class RepellentEditViewModelTest {
             null,
             listOf(),
             RepellentScheduleRepository(database.repellentScheduleDao(), converter),
-            NotificationRepository(database.notificationDao())
+            NotificationRepository(database.notificationDao(), WorkManager.getInstance(context))
         )
     }
 
