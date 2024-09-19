@@ -59,7 +59,7 @@ object AppNotificationManager {
 
         return NotificationEntity(
             repellentScheduleId = parentId,
-            jobId = uuid,
+            uuid = uuid,
             notificationId = uuid.hashCode(),
             triggerTimeEpochSeconds = triggerTimeEpochSeconds,
             schedule = PeriodAndTime(before, time)
@@ -84,7 +84,7 @@ object AppNotificationManager {
             .build()
 
         workManager.enqueueUniqueWork(
-            notification.jobId.toString(),
+            notification.uuid.toString(),
             ExistingWorkPolicy.REPLACE,
             request
         )
@@ -98,7 +98,7 @@ object AppNotificationManager {
     }
 
     fun cancelNotification(notification: NotificationEntity, workManager: WorkManager) {
-        workManager.cancelUniqueWork(notification.jobId.toString())
+        workManager.cancelUniqueWork(notification.uuid.toString())
     }
 
     fun cancelAllNotifiesOf(repellent: RepellentScheduleEntity, workManager: WorkManager) {

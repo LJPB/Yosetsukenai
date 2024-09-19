@@ -196,21 +196,21 @@ private fun RepellentDetailPreview() {
         notifications = listOf(
             NotificationEntity(
                 repellentScheduleId = 1,
-                jobId = UUID.randomUUID(),
+                uuid = UUID.randomUUID(),
                 notificationId = 1,
                 triggerTimeEpochSeconds = 1,
                 schedule = PeriodAndTime(SimplePeriod.ofDays(3), SimpleTime.of(1, 1))
             ),
             NotificationEntity(
                 repellentScheduleId = 1,
-                jobId = UUID.randomUUID(),
+                uuid = UUID.randomUUID(),
                 notificationId = 1,
                 triggerTimeEpochSeconds = 1,
                 schedule = PeriodAndTime(SimplePeriod.ofDays(3), SimpleTime.of(1, 1))
             ),
             NotificationEntity(
                 repellentScheduleId = 1,
-                jobId = UUID.randomUUID(),
+                uuid = UUID.randomUUID(),
                 notificationId = 1,
                 triggerTimeEpochSeconds = 1,
                 schedule = PeriodAndTime(SimplePeriod.ofDays(3), SimpleTime.of(1, 1))

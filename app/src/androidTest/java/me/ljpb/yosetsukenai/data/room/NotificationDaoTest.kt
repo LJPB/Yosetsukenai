@@ -36,7 +36,7 @@ class NotificationDaoTest {
     private val child1 = NotificationEntity(
         id = 1,
         repellentScheduleId = parent.id,
-        jobId = UUID.randomUUID(),
+        uuid = UUID.randomUUID(),
         notificationId = 1,
         triggerTimeEpochSeconds = 1L,
         schedule = PeriodAndTime(SimplePeriod.ofDays(1), SimpleTime.of(1, 1)),
@@ -45,7 +45,7 @@ class NotificationDaoTest {
     private val child2 = NotificationEntity(
         id = 2,
         repellentScheduleId = parent.id,
-        jobId = UUID.randomUUID(),
+        uuid = UUID.randomUUID(),
         notificationId = 2,
         triggerTimeEpochSeconds = 2L,
         schedule = PeriodAndTime(SimplePeriod.ofDays(2), SimpleTime.of(2, 2)),

@@ -19,7 +19,7 @@ data class NotificationEntity(
     @PrimaryKey
     val id: Long = 0L,
     val repellentScheduleId: Long,
-    val jobId: UUID,
+    val uuid: UUID,
     val notificationId: Int,
     val triggerTimeEpochSeconds: Long,
     val schedule: PeriodAndTime
