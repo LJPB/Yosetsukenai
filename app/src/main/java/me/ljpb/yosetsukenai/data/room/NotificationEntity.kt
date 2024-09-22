@@ -16,7 +16,7 @@ import java.util.UUID
     )]
 )
 data class NotificationEntity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
     val repellentScheduleId: Long,
     val uuid: UUID,
