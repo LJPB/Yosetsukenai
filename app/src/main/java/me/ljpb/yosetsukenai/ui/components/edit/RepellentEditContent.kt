@@ -112,10 +112,12 @@ fun RepellentEditContent(
     // ============ ダイアログ関連 ============
     var showDialog by rememberSaveable { mutableStateOf(false) }
     var dialogType by rememberSaveable { mutableStateOf(DialogType.None) }
-
+    var isError by rememberSaveable { mutableStateOf(false) }
+    
     val showDialogOf = { type: DialogType ->
         showDialog = true
         dialogType = type
+        isError = false
     }
     val hiddenDialog = {
         showDialog = false
@@ -127,6 +129,7 @@ fun RepellentEditContent(
 
     if (showDialog) {
         when (dialogType) {
+            // 開始日の選択
             DialogType.DatePicker -> DatePickerModal(
                 datePickerState = datePickerState,
                 onDismiss = hiddenDialog,
@@ -142,17 +145,21 @@ fun RepellentEditContent(
                 isLandscape = isLandscape
             )
 
+            // 場所の追加
             DialogType.Place -> TextInputDialog(
                 defaultValue = "",
                 label = stringResource(id = R.string.edit_place),
                 onSave = { text ->
-                    repellentEditViewModel.addPlace(text)
-                    hiddenDialog()
+                    isError = !repellentEditViewModel.addPlace(text) // 追加に失敗したらfalseが返されるが，この場合isErrorはtrueにしたい
+                    if (!isError) hiddenDialog() // エラー出ない場合のみ保存ボタンでダイアログを閉じられる
                 },
                 onDismiss = hiddenDialog,
-                allowEmpty = false
+                allowEmpty = false,
+                isError = isError,
+                errorMessage = stringResource(R.string.add_place_error_already_exist)
             )
 
+            // 通知の追加
             DialogType.Notification -> NotificationInputDialog(
                 onSave = { simplePeriod, simpleTime ->
                     val pair = PeriodAndTime(simplePeriod, simpleTime)

@@ -35,6 +35,7 @@
 
     <string name="edit_repellent_name">商品名を入力</string>
     <string name="edit_place">場所</string>
+    <string name="add_place_error_already_exist">この場所はすでに存在します</string>
 
     <string name="notification_text_on_the_day">当日(%1$s)</string>
     <string name="notification_text_before_day">%1$d日前(%2$s)</string>

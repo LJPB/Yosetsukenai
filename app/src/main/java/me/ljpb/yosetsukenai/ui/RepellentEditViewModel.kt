@@ -104,10 +104,20 @@ class RepellentEditViewModel(
         _validityNumber.update { number }
     }
 
-    fun addPlace(string: String) {
+    /**
+     * 場所をリストに追加する
+     * すでに存在する場所は追加できない
+     * @return 追加できたらtrue, 追加できなかったらfalse
+     */
+    fun addPlace(string: String): Boolean {
+        if (string in places.value) return false
         _places.update { it.addedList(string) }
+        return true
     }
 
+    /**
+     * 場所をリストから削除する
+     */
     fun removePlace(string: String) {
         _places.update { it.removedList(string) }
     }
@@ -115,23 +125,26 @@ class RepellentEditViewModel(
     /**
      * UI操作による通知の追加
      * 既存/新規追加済みの場合は重複して追加しない
+     * @return 追加できたらtrue, すでに存在済みで追加できなかったらfalse
      */
-    fun addNotification(periodAndTime: PeriodAndTime) {
+    fun addNotification(periodAndTime: PeriodAndTime): Boolean {
         // 既存の通知リスト(existingNotificationList)に同じ時間の通知があればtrue，なければfalse
         val isExist = existingNotificationList.value
             .find { it.match(periodAndTime) }
             // 同じ時間の通知が存在する場合，findの戻り値がnullではないから，.runが実行されてtrueが返される
             // 同じ時間の通知が存在しない場合，findの戻り値がnullとなり，エルビス演算子でfalseが返される
             ?.run { true } ?: false
-        if (isExist) return // 存在する場合は追加できない
+        if (isExist) return false // 存在する場合は，重複して追加できない
+        
+        val isContain = periodAndTime in newNotificationList.value
+        if (isContain) return false // すでに新規追加済みの場合は，重複して追加できない
 
         _newNotificationList.update { list ->
-            val tmp = mutableListOf<PeriodAndTime>().apply { addAll(list) }
-            tmp.takeIf { periodAndTime !in tmp }?.add(periodAndTime) // 新規追加済みの場合は，改めて追加しない
             // 一度追加して削除した後，再び追加した場合は「削除済みリスト」から取り除く
             deletedNotificationList.remove(periodAndTime)
-            tmp
+            list.addedList(periodAndTime)
         }
+        return true
     }
 
     /**
