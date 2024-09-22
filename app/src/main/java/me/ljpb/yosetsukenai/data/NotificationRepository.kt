@@ -9,8 +9,9 @@ import me.ljpb.yosetsukenai.notification.AppNotificationManager
 
 class NotificationRepository(private val dao: NotificationDao, private val workManager: WorkManager) : NotificationAction {
     override suspend fun insert(entity: NotificationEntity): Long {
-        AppNotificationManager.setNotification(entity, workManager)
-        return dao.insert(entity)
+        val id = dao.insert(entity)
+        AppNotificationManager.setNotification(entity.copy(id = id), workManager)
+        return id
     }
 
     override suspend fun update(entity: NotificationEntity) {

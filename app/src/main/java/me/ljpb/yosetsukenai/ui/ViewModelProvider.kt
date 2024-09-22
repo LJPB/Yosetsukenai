@@ -15,9 +15,9 @@ object ViewModelProvider {
                 val container = app.dbRepositoryContainer
                 RepellentEditViewModel(
                     repellent = repellent,
-                    notifications = notifications,
+                    existingNotifications = notifications,
                     repellentAction = container.repellentScheduleRepository,
-                    notifyAction = container.notificationRepository
+                    notificationAction = container.notificationRepository
                 )
             }
         }

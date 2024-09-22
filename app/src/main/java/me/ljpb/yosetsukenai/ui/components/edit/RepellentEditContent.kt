@@ -99,7 +99,10 @@ fun RepellentEditContent(
     val validityNumber by repellentEditViewModel.validityNumber.collectAsState()
     val zoneId by repellentEditViewModel.zoneId.collectAsState()
     val places by repellentEditViewModel.places.collectAsState()
-    val notificationList by repellentEditViewModel.notificationList.collectAsState()
+    // 既存の通知のリスト
+    val existingNotificationList by repellentEditViewModel.existingNotificationList.collectAsState()
+    // 新規追加した通知のリスト
+    val newNotificationList by repellentEditViewModel.newNotificationList.collectAsState()
 
     val textStyle = MaterialTheme.typography.titleMedium
     val textColor = MaterialTheme.colorScheme.onSurface
@@ -189,7 +192,7 @@ fun RepellentEditContent(
                     // TODO: 変更済みの場合は確認ダイアログの表示 
                     onCancel()
                 },
-                onSave = repellentEditViewModel::saveRepellent,
+                onSave = repellentEditViewModel::save,
                 enabled = canSave,
                 scrollBehavior = scrollBehavior
             )
@@ -198,7 +201,7 @@ fun RepellentEditContent(
             if (repellentEditViewModel.isUpdate) {
                 EditBottomBar {
                     // TODO: 確認ダイアログの表示 
-                    repellentEditViewModel.deleteRepellent()
+                    repellentEditViewModel.delete()
                 }
             }
         }
@@ -299,7 +302,22 @@ fun RepellentEditContent(
                         verticalArrangement = Arrangement.spacedBy(4.dp),
                         horizontalAlignment = Alignment.End
                     ) {
-                        notificationList.forEach { periodAndTime ->
+                        // 既存の通知の表示
+                        existingNotificationList.forEach { notification ->
+                            ItemTag(
+                                text = getNotificationText(
+                                    notification.schedule.period,
+                                    notification.schedule.time,
+                                    context
+                                ),
+                                deleteOnClick = {
+                                    repellentEditViewModel.removeExistingNotification(notification)
+                                }
+                            )
+                        }
+
+                        // 新規追加した通知の表示
+                        newNotificationList.forEach { periodAndTime ->
                             ItemTag(
                                 text = getNotificationText(
                                     periodAndTime.period,
@@ -307,10 +325,11 @@ fun RepellentEditContent(
                                     context
                                 ),
                                 deleteOnClick = {
-                                    repellentEditViewModel.removeNotification(periodAndTime)
+                                    repellentEditViewModel.removeNewNotification(periodAndTime)
                                 }
                             )
                         }
+
                         // 追加ボタン
                         TextButton(
                             modifier = Modifier.height(dimensionResource(id = R.dimen.row_item_height)),

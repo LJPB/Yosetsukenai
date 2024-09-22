@@ -51,8 +51,8 @@ object AppNotificationManager {
         val uuid = UUID.randomUUID()
 
         val localDateTime = LocalDateTime.of(
-            date.minus(before),
-            LocalTime.of(time.hour, time.minutes)
+            date.minus(before), // 日付
+            LocalTime.of(time.hour, time.minutes) // 時間
         )
         val zonedDateTime = ZonedDateTime.of(localDateTime, zoneId)
         val triggerTimeEpochSeconds = zonedDateTime.toEpochSecond()
@@ -63,6 +63,35 @@ object AppNotificationManager {
             notificationId = uuid.hashCode(),
             triggerTimeEpochSeconds = triggerTimeEpochSeconds,
             schedule = PeriodAndTime(before, time)
+        )
+    }
+    
+    /**
+     * 通知時間を更新したNotificationEntityを取得する
+     * @param original 更新対象となるNotificationEntity
+     * @param updatedDate 更新後に通知を送る日付
+     * @param updatedTime 更新後の通知を送る時間
+     * @param updatedBefore dateからbeforeの期間だけ早く送る。
+     * @param updatedZoneId 更新後のZoneId
+     */
+    fun updateNotificationEntity(
+        original: NotificationEntity,
+        updatedDate: LocalDate,
+        updatedTime: SimpleTime,
+        updatedBefore: SimplePeriod,
+        updatedZoneId: ZoneId,
+    ): NotificationEntity {
+
+        val localDateTime = LocalDateTime.of(
+            updatedDate.minus(updatedBefore), // 日付
+            LocalTime.of(updatedTime.hour, updatedTime.minutes) // 時間
+        )
+        val zonedDateTime = ZonedDateTime.of(localDateTime, updatedZoneId)
+        val triggerTimeEpochSeconds = zonedDateTime.toEpochSecond()
+
+        return original.copy(
+            triggerTimeEpochSeconds = triggerTimeEpochSeconds,
+            schedule = PeriodAndTime(updatedBefore, updatedTime)
         )
     }
 

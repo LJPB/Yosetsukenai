@@ -18,55 +18,66 @@ import me.ljpb.yosetsukenai.data.RepellentScheduleAction
 import me.ljpb.yosetsukenai.data.SimplePeriod
 import me.ljpb.yosetsukenai.data.room.NotificationEntity
 import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
+import me.ljpb.yosetsukenai.notification.AppNotificationManager
 import java.time.LocalDate
 import java.time.ZoneId
 
 class RepellentEditViewModel(
     private val repellent: RepellentScheduleEntity?,
-    private val notifications: List<NotificationEntity>,
+    private val existingNotifications: List<NotificationEntity>,
     private val repellentAction: RepellentScheduleAction,
-    private val notifyAction: NotificationAction,
+    private val notificationAction: NotificationAction,
 ) : ViewModel() {
     companion object {
+        /**
+         * 未入力を表すInt値
+         */
         const val EMPTY_INT = -1
     }
 
     // RepellentScheduleEntityの新規追加か更新かのフラグ
     val isUpdate = repellent != null
 
+    // 虫除けの名前
     private val _name = MutableStateFlow(repellent?.name ?: "")
     val name: StateFlow<String> = _name.asStateFlow()
 
+    // 虫除けの開始日
     private val _startDate = MutableStateFlow(repellent?.startDate ?: LocalDate.now())
     val startDate: StateFlow<LocalDate> = _startDate.asStateFlow()
 
+    // 虫除けの有効期間の単位
     private val _validityPeriodUnit =
         MutableStateFlow(repellent?.validityPeriod?.periodUnit ?: PeriodUnit.Day)
     val validityPeriodUnit: StateFlow<PeriodUnit> = _validityPeriodUnit.asStateFlow()
 
+    // 虫除けの有効期間の日数部分
     private val _validityNumber = MutableStateFlow(repellent?.validityPeriod?.number ?: 30)
     val validityNumber: StateFlow<Int> = _validityNumber.asStateFlow()
 
+    // 登録時のタイムゾーン
     private val _zoneId = MutableStateFlow(repellent?.zoneId ?: ZoneId.systemDefault())
     val zoneId: StateFlow<ZoneId> = _zoneId.asStateFlow()
 
+    // 虫除けを使用した場所
     private val _places = MutableStateFlow<List<String>>(repellent?.places ?: emptyList())
     val places: StateFlow<List<String>> = _places.asStateFlow()
 
-    private val _notificationList = MutableStateFlow(
-        mutableListOf<PeriodAndTime>()
-            .apply {
-                addAll(notifications.map { it.schedule })
-            }
-            .toList()
-    )
-    val notificationList: StateFlow<List<PeriodAndTime>> = _notificationList.asStateFlow()
+    // 既存の通知リスト
+    private val _existingNotificationList = MutableStateFlow(existingNotifications)
 
-    // 保存ボタンを押した時に更新するために，削除した通知情報の保持
-    private val deletedNotifyList: MutableList<PeriodAndTime> = mutableListOf()
+    val existingNotificationList = _existingNotificationList.asStateFlow()
 
-    // 保存ボタンを押した時に更新するために，追加した通知情報の保持
-    private val addedNotifyList: MutableList<PeriodAndTime> = mutableListOf()
+    // 削除された既存の通知のリスト
+    private val deletedExistingNotificationList = mutableListOf<NotificationEntity>()
+
+    // 新規追加した通知のリスト
+    private val _newNotificationList = MutableStateFlow(listOf<PeriodAndTime>())
+
+    val newNotificationList = _newNotificationList.asStateFlow()
+
+    // 新規追加したものの削除された通知のリスト
+    private val deletedNotificationList: MutableList<PeriodAndTime> = mutableListOf()
 
     // 保存可能かどうかのフラグ
     val canSave: StateFlow<Boolean> = combine(name, validityNumber) { nameValue, numberValue ->
@@ -101,65 +112,155 @@ class RepellentEditViewModel(
         _places.update { it.removedList(string) }
     }
 
+    /**
+     * UI操作による通知の追加
+     * 既存/新規追加済みの場合は重複して追加しない
+     */
     fun addNotification(periodAndTime: PeriodAndTime) {
-        _notificationList.update { list ->
+        // 既存の通知リスト(existingNotificationList)に同じ時間の通知があればtrue，なければfalse
+        val isExist = existingNotificationList.value
+            .find { it.match(periodAndTime) }
+            // 同じ時間の通知が存在する場合，findの戻り値がnullではないから，.runが実行されてtrueが返される
+            // 同じ時間の通知が存在しない場合，findの戻り値がnullとなり，エルビス演算子でfalseが返される
+            ?.run { true } ?: false
+        if (isExist) return // 存在する場合は追加できない
+
+        _newNotificationList.update { list ->
             val tmp = mutableListOf<PeriodAndTime>().apply { addAll(list) }
-            if (periodAndTime !in tmp) { // 通知時間の重複は許容しない
-                addedNotifyList.takeIf { periodAndTime !in it }
-                    ?.add(periodAndTime) // addedNotifyListに含まれていなければ追加する
-                tmp.add(periodAndTime)
-            }
+            tmp.takeIf { periodAndTime !in tmp }?.add(periodAndTime) // 新規追加済みの場合は，改めて追加しない
+            // 一度追加して削除した後，再び追加した場合は「削除済みリスト」から取り除く
+            deletedNotificationList.remove(periodAndTime)
             tmp
         }
     }
 
-    fun removeNotification(periodAndTime: PeriodAndTime) {
-        _notificationList.update { list ->
-            val tmp = mutableListOf<PeriodAndTime>().apply { addAll(list) }
-            addedNotifyList.remove(periodAndTime)
-            deletedNotifyList.takeIf { periodAndTime !in it }
-                ?.add(periodAndTime) // deletedNotifyListに含まれていなければ追加する
-            tmp.remove(periodAndTime)
-            tmp
+    /**
+     * UI操作による新規追加した通知の削除
+     */
+    fun removeNewNotification(periodAndTime: PeriodAndTime) {
+        // 新規追加した通知の削除
+        _newNotificationList.update {
+            it.removedList(periodAndTime)
+        }
+        deletedNotificationList.add(periodAndTime)
+    }
+
+    /**
+     * UI操作による既存通知の削除
+     */
+    fun removeExistingNotification(notificationEntity: NotificationEntity) {
+        _existingNotificationList.update { it.removedList(notificationEntity) }
+        deletedExistingNotificationList.add(notificationEntity)
+    }
+
+    fun save() = viewModelScope.launch {
+        // TODO: 開始日よりも前に通知を設定できないようにする 
+        val repellentEntity = getRepellent() // 新規登録/更新後のRepellentScheduleEntity
+        val repellentId =
+            if (isUpdate) updateRepellent(repellentEntity) else addRepellent(repellentEntity)
+
+        // 既存の通知の削除
+        deletedExistingNotificationList.forEach {
+            deleteExistingNotificationEntity(it)
+        }
+
+        // 既存の通知の更新
+        existingNotificationList.value.forEach {
+            updateExistingNotificationEntity(
+                original = it,
+                updatedParent = repellentEntity
+            )
+        }
+
+        // 新規追加した通知の追加処理
+        newNotificationList.value.forEach {
+            addNewNotificationEntity(
+                finishDate = repellentEntity.finishDate,
+                periodAndTime = it,
+                parentId = repellentId,
+                zoneId = repellentEntity.zoneId
+            )
         }
     }
 
-    fun saveRepellent() = viewModelScope.launch {
-        /*******************************  注意  *******************************
-         * deletedNotifyListで削除 → addedNotifyListで追加 の順番で処理する
-         * UI操作で「通知を削除 → PeriodAndTimeが同じ通知を追加」としたとき
-         * 通知の追加処理を先に行うと，その時点で通知日時が同じ通知が2件(以上)となる
-         * 削除処理を先に行うことで，本来削除したい通知－つまり先に存在している通知を削除して
-         * それから新しい通知を追加する，というUI操作と同じ順番で処理ができる
-         *********************************************************************/
-        // add/updateRepellent() Notification用にIDが必要だから一番最初にする
-        // deleteNotification()
-        // addNotification(repellent)
-
-        val repellentId = if (isUpdate) updateRepellent() else addRepellent()
-        // TODO: 通知関連の処理 
-    }
-
-    fun deleteRepellent() = viewModelScope.launch {
+    fun delete() = viewModelScope.launch {
         if (repellent != null) repellentAction.delete(repellent)
-        notifications.forEach { notifyAction.delete(it) }
+        existingNotifications.forEach { deleteExistingNotificationEntity(it) }
     }
 
-    private suspend fun addRepellent(): Long {
+    /**
+     * 虫除け記録をDBに追加する
+     * @return 追加したRepellentScheduleEntityのid(プライマリキー)
+     */
+    private suspend fun addRepellent(repellentEntity: RepellentScheduleEntity): Long {
         val deferred = viewModelScope.async {
-            repellentAction.insert(getRepellent())
+            repellentAction.insert(repellentEntity)
         }.await()
         return deferred
     }
 
-    private suspend fun updateRepellent(): Long {
-        if (repellent == null) return -1
+    /**
+     * DB内の虫除け記録を更新する
+     * @return 更新したRepellentScheduleEntityのid(プライマリキー)
+     */
+    private suspend fun updateRepellent(repellentEntity: RepellentScheduleEntity): Long {
         viewModelScope.launch {
-            repellentAction.update(getRepellent())
+            repellentAction.update(repellentEntity)
         }
-        return repellent.id
+        return repellentEntity.id
     }
 
+    /**
+     * 新規追加した通知の登録
+     * @param finishDate 虫除けが終わる日付
+     * @param periodAndTime 虫除けが終わる何日前の何時に通知を送るかを指定するための情報
+     */
+    private suspend fun addNewNotificationEntity(
+        finishDate: LocalDate,
+        periodAndTime: PeriodAndTime,
+        parentId: Long,
+        zoneId: ZoneId
+    ) {
+        val notificationEntity = AppNotificationManager.createNotificationEntity(
+            date = finishDate,
+            time = periodAndTime.time,
+            before = periodAndTime.period,
+            parentId = parentId,
+            zoneId = zoneId
+        )
+        notificationAction.insert(notificationEntity)
+    }
+
+    /**
+     * 虫除け記録の(終了日やタイムゾーンの)更新による既存通知の更新
+     * @param original 更新対象となる通知
+     * @param updatedParent 更新後の虫除け記録
+     */
+    private suspend fun updateExistingNotificationEntity(
+        original: NotificationEntity,
+        updatedParent: RepellentScheduleEntity
+    ) {
+        val updatedNotificationEntity = AppNotificationManager
+            .updateNotificationEntity(
+                original = original,
+                updatedDate = updatedParent.finishDate,
+                updatedTime = original.schedule.time,
+                updatedBefore = original.schedule.period,
+                updatedZoneId = updatedParent.zoneId
+            )
+        notificationAction.update(updatedNotificationEntity)
+    }
+
+    /**
+     * 既存通知の削除処理
+     */
+    private suspend fun deleteExistingNotificationEntity(target: NotificationEntity) =
+        notificationAction.delete(target)
+
+    /**
+     * 新規追加する/更新した虫除け記録の情報(RepellentScheduleEntity)を取得する
+     * この戻り値がDBに登録する記録
+     */
     private fun getRepellent(): RepellentScheduleEntity {
         val entityName = name.value
         val entityPeriod = SimplePeriod.of(validityNumber.value, validityPeriodUnit.value)
@@ -216,23 +317,24 @@ private fun <T> List<T>.addedList(item: T): List<T> {
     return if (item in this) this else (this + listOf(item))
 }
 
+/**
+ * 渡されたitemを削除したリストを返す
+ */
 private fun <T> List<T>.removedList(item: T): List<T> {
     val original = this
     val tmp = mutableListOf<T>().apply { addAll(original) }
-    return tmp.xRemove(item)
+    return tmp.apply { remove(item) }
 }
 
-private fun <T> MutableList<T>.xRemove(item: T): MutableList<T> {
-    this.remove(item)
-    return this
-}
-
+/**
+ * NotificationEntity.scheduleと渡されたperiodAndTimeが一致するか
+ */
 private fun NotificationEntity.match(periodAndTime: PeriodAndTime): Boolean =
     this.schedule == periodAndTime
 
-/**
- * 渡されたPeriodAndTimeと同じSimplePeriod, SimpleTimeを持つNotifyEntityのインデックス値を返す
- * 存在しない場合は-1が返される
- */
-private fun List<NotificationEntity>.indexOf(periodAndTime: PeriodAndTime): Int =
-    this.indexOfFirst { it.match(periodAndTime) }
+///**
+// * 渡されたPeriodAndTimeと同じSimplePeriod, SimpleTimeを持つNotifyEntityのインデックス値を返す
+// * 存在しない場合は-1が返される
+// */
+//private fun List<NotificationEntity>.indexOf(periodAndTime: PeriodAndTime): Int =
+//    this.indexOfFirst { it.match(periodAndTime) }
