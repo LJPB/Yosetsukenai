@@ -1,4 +1,4 @@
-package me.ljpb.yosetsukenai.ui.screens
+package me.ljpb.yosetsukenai.ui.screens.edit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
