@@ -79,7 +79,7 @@ fun EditBottomBar(
 @Composable
 private fun EditTopBarPreview() {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-    EditTopBar(onCancel = { /*TODO*/ }, onSave = { /*TODO*/ }, scrollBehavior = scrollBehavior)
+    EditTopBar(onCancel = {}, onSave = {}, scrollBehavior = scrollBehavior)
 }
 
 @Preview
