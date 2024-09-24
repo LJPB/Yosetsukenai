@@ -21,6 +21,7 @@ import androidx.compose.material3.TimeInput
 import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -47,17 +48,32 @@ private enum class NotifyDateUnit(val periodUnit: PeriodUnit) {
 
 private const val EMPTY_INT_VALUE = -1
 
+/**
+ * 通知情報を入力するためのダイアログ
+ * @param onSave(SimplePeriod, SimpleTime)
+ * SimplePeriodは「何日前に通知を送るか」を表す期間
+ * SimpleTimeは「何時に通知を送るか」を表す時間
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationInputDialog(
     modifier: Modifier = Modifier,
+    isError: Boolean = false,
+    errorMessage: String? = null,
     onDismiss: () -> Unit = {},
     onSave: (SimplePeriod, SimpleTime) -> Unit,
     isLandscape: Boolean = false
 ) {
     val timePickerState = rememberTimePickerState()
+    // 何日前/何週間前・・・などの日数/週数の部分
     var number by rememberSaveable { mutableIntStateOf(1) }
+    // 何日前/何週間前・・・などの日/週間など単位の部分
     var dateUnit by rememberSaveable { mutableStateOf(NotifyDateUnit.Day) }
+
+    // isErrorがtrueのとき，日時の値が変更されたらエラー状態を解除したい。そのためのテキストの変更状態を管理するフラグ。
+    // isErrorがfalseのときは，常にfalse
+    // isErrorがtrueでかつ，そのときに日時の値が更新されたらtrueになる
+    var isValueChangedOnError by rememberSaveable { mutableStateOf(false) }
     AlertDialog(
         modifier = modifier,
         onDismissRequest = onDismiss,
@@ -68,6 +84,8 @@ fun NotificationInputDialog(
                         SimplePeriod.of(number, dateUnit.periodUnit),
                         SimpleTime.of(timePickerState.hour, timePickerState.minute)
                     )
+                    // もしisValueChangedOnError = trueのままだと，isErrorがtrueとなってもエラー状態が直ちに解除されてしまう
+                    isValueChangedOnError = false 
                 },
                 enabled = (number != EMPTY_INT_VALUE)
             ) {
@@ -83,11 +101,27 @@ fun NotificationInputDialog(
             Column(
                 modifier = Modifier.verticalScroll(rememberScrollState()),
             ) {
+                if (errorMessage != null && isError && !isValueChangedOnError) {
+                    Text(
+                        text = errorMessage,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
                 DateSelector(
                     defaultNumber = 1,
                     defaultUnit = NotifyDateUnit.Day,
-                    onNumberChanged = { number = it },
-                    onUnitChanged = { dateUnit = it }
+                    onNumberChanged = {
+                        // isErrorがtrueのときに変更されたらtrueにしたい。それ以外の時はfalseにしたい
+                        // このメソッドは入力テキストが更新されたときに呼ばれるため，isErrorを渡せば期待の値をセットできる
+                        isValueChangedOnError = isError
+                        number = it
+                    },
+                    onUnitChanged = {
+                        // isErrorがtrueのときに変更されたらtrueにしたい。それ以外の時はfalseにしたい
+                        // このメソッドは入力テキストが更新されたときに呼ばれるため，isErrorを渡せば期待の値をセットできる
+                        isValueChangedOnError = isError
+                        dateUnit = it
+                    },
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 TimeInputContent(timePickerState = timePickerState)
@@ -99,6 +133,13 @@ fun NotificationInputDialog(
             }
         }
     )
+    if (isError) { // timePickerStateが変わるたびに呼び出されないようにするために，エラー状態のときにのみ処理する
+        LaunchedEffect(timePickerState.hour, timePickerState.minute) {
+            // isErrorがtrueのときに変更されたらtrueにしたい。それ以外の時はfalseにしたい
+            // このメソッドは入力テキストが更新されたときに呼ばれるため，isErrorを渡せば期待の値をセットできる
+            isValueChangedOnError = true
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -207,7 +248,7 @@ private fun DateSelectorPreview() {
         defaultNumber = 1,
         defaultUnit = NotifyDateUnit.Day,
         onNumberChanged = {},
-        onUnitChanged = {}
+        onUnitChanged = {},
     )
 }
 
@@ -216,7 +257,9 @@ private fun DateSelectorPreview() {
 private fun NotificationInputDialogPreview() {
     NotificationInputDialog(
         onDismiss = {},
-        onSave = {a, b ->},
-        isLandscape = true
+        onSave = { a, b -> },
+        isLandscape = true,
+        isError = true,
+        errorMessage = "aaaaa"
     )
 }

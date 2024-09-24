@@ -49,6 +49,9 @@
     <string name="notification_input_dialog_select_day">日数 (0で当日)</string>
     <string name="notification_input_dialog_select_week">週数</string>
     <string name="notification_input_dialog_select_time">通知する時間</string>
+    
+    <string name="notification_add_error_exist">この日時の通知は設定済みです</string>
+    <string name="notification_add_error_before_start_date">虫除けの開始日前には設定できません</string>
 
     <string name="simple_time_text">%1$02d:%2$02d</string>
 

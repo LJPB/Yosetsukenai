@@ -65,6 +65,7 @@ import me.ljpb.yosetsukenai.data.PeriodAndTime
 import me.ljpb.yosetsukenai.data.PeriodUnit
 import me.ljpb.yosetsukenai.data.SimplePeriod
 import me.ljpb.yosetsukenai.ui.ConstIcon
+import me.ljpb.yosetsukenai.ui.NotificationState
 import me.ljpb.yosetsukenai.ui.RepellentEditViewModel
 import me.ljpb.yosetsukenai.ui.ViewModelProvider
 import me.ljpb.yosetsukenai.ui.components.common.NotificationInputDialog
@@ -112,12 +113,14 @@ fun RepellentEditContent(
     // ============ ダイアログ関連 ============
     var showDialog by rememberSaveable { mutableStateOf(false) }
     var dialogType by rememberSaveable { mutableStateOf(DialogType.None) }
-    var isError by rememberSaveable { mutableStateOf(false) }
-    
+    var isErrorPlace by rememberSaveable { mutableStateOf(false) }
+    var isErrorNotification by rememberSaveable { mutableStateOf(false) }
+    var notificationErrorType by rememberSaveable { mutableStateOf(NotificationState.Success) }
+
     val showDialogOf = { type: DialogType ->
         showDialog = true
         dialogType = type
-        isError = false
+        isErrorPlace = false
     }
     val hiddenDialog = {
         showDialog = false
@@ -150,25 +153,50 @@ fun RepellentEditContent(
                 defaultValue = "",
                 label = stringResource(id = R.string.edit_place),
                 onSave = { text ->
-                    isError = !repellentEditViewModel.addPlace(text) // 追加に失敗したらfalseが返されるが，この場合isErrorはtrueにしたい
-                    if (!isError) hiddenDialog() // エラー出ない場合のみ保存ボタンでダイアログを閉じられる
+                    isErrorPlace =
+                        !repellentEditViewModel.addPlace(text) // 追加に失敗したらfalseが返されるが，この場合isErrorはtrueにしたい
+                    if (!isErrorPlace) { // エラー出ない場合のみ保存ボタンでダイアログを閉じられる
+                        hiddenDialog()
+                        isErrorPlace = false // 初期化
+                    }
                 },
-                onDismiss = hiddenDialog,
+                onDismiss = {
+                    hiddenDialog()
+                    isErrorPlace = false
+                },
                 allowEmpty = false,
-                isError = isError,
+                isError = isErrorPlace,
                 errorMessage = stringResource(R.string.add_place_error_already_exist)
             )
 
             // 通知の追加
-            DialogType.Notification -> NotificationInputDialog(
-                onSave = { simplePeriod, simpleTime ->
-                    val pair = PeriodAndTime(simplePeriod, simpleTime)
-                    repellentEditViewModel.addNotification(pair)
-                    hiddenDialog()
-                },
-                onDismiss = hiddenDialog,
-                isLandscape = isLandscape
-            )
+            DialogType.Notification -> {
+                NotificationInputDialog(
+                    onSave = { simplePeriod, simpleTime ->
+                        val pair = PeriodAndTime(simplePeriod, simpleTime)
+                        notificationErrorType = repellentEditViewModel.addNotification(pair)
+                        isErrorNotification = notificationErrorType != NotificationState.Success
+                        if (!isErrorNotification) { // エラー出ない場合のみ保存ボタンでダイアログを閉じられる
+                            hiddenDialog()
+                            // 初期化
+                            isErrorNotification = false
+                            notificationErrorType = NotificationState.Success
+                        }
+                    },
+                    onDismiss = {
+                        hiddenDialog()
+                        isErrorNotification = false
+                        notificationErrorType = NotificationState.Success
+                    },
+                    isLandscape = isLandscape,
+                    isError = isErrorNotification,
+                    errorMessage = when (notificationErrorType) {
+                        NotificationState.Exist -> stringResource(R.string.notification_add_error_exist)
+                        NotificationState.BeforeStartDate -> stringResource(R.string.notification_add_error_before_start_date)
+                        else -> null
+                    }
+                )
+            }
 
             else -> {}
         }

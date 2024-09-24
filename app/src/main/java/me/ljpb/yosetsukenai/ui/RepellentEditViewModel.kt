@@ -22,6 +22,20 @@ import me.ljpb.yosetsukenai.notification.AppNotificationManager
 import java.time.LocalDate
 import java.time.ZoneId
 
+/**
+ * 通知を追加時の状態
+ */
+enum class NotificationState {
+    /** 追加に成功 */
+    Success,
+
+    /** すでに存在する */
+    Exist,
+
+    /** 開始日以前 */
+    BeforeStartDate
+}
+
 class RepellentEditViewModel(
     private val repellent: RepellentScheduleEntity?,
     private val existingNotifications: List<NotificationEntity>,
@@ -125,26 +139,41 @@ class RepellentEditViewModel(
     /**
      * UI操作による通知の追加
      * 既存/新規追加済みの場合は重複して追加しない
-     * @return 追加できたらtrue, すでに存在済みで追加できなかったらfalse
      */
-    fun addNotification(periodAndTime: PeriodAndTime): Boolean {
+    fun addNotification(periodAndTime: PeriodAndTime): NotificationState {
+        // TODO: 開始日以前かをチェックする 
         // 既存の通知リスト(existingNotificationList)に同じ時間の通知があればtrue，なければfalse
         val isExist = existingNotificationList.value
             .find { it.match(periodAndTime) }
             // 同じ時間の通知が存在する場合，findの戻り値がnullではないから，.runが実行されてtrueが返される
             // 同じ時間の通知が存在しない場合，findの戻り値がnullとなり，エルビス演算子でfalseが返される
             ?.run { true } ?: false
-        if (isExist) return false // 存在する場合は，重複して追加できない
-        
+        if (isExist) return NotificationState.Exist // 存在する場合は，重複して追加できない
+
+        /*********** 追加する通知の日時が開始日以前に設定されているかをチェックする処理 ***********/
+        // このメソッドを呼んだ時点で設定されてある有効期間
+        val tmpValidity = SimplePeriod.of(validityNumber.value, validityPeriodUnit.value)
+        // 虫除けの終了日(通知がなる日を求めるためのもの)
+        val tmpFinishDate = startDate.value.addPeriod(
+            SimplePeriod.of(
+                validityNumber.value,
+                validityPeriodUnit.value
+            )
+        )
+        // 通知がなる日
+        val pushDate = tmpFinishDate.minusPeriod(periodAndTime.period)
+
+        if (pushDate.isBefore(startDate.value)) return NotificationState.BeforeStartDate
+
         val isContain = periodAndTime in newNotificationList.value
-        if (isContain) return false // すでに新規追加済みの場合は，重複して追加できない
+        if (isContain) return NotificationState.Exist // すでに新規追加済みの場合は，重複して追加できない
 
         _newNotificationList.update { list ->
             // 一度追加して削除した後，再び追加した場合は「削除済みリスト」から取り除く
             deletedNotificationList.remove(periodAndTime)
             list.addedList(periodAndTime)
         }
-        return true
+        return NotificationState.Success
     }
 
     /**
@@ -320,6 +349,17 @@ private fun LocalDate.addPeriod(simplePeriod: SimplePeriod): LocalDate =
         PeriodUnit.Week -> this.plusWeeks(simplePeriod.number.toLong())
         PeriodUnit.Month -> this.plusMonths(simplePeriod.number.toLong())
         PeriodUnit.Year -> this.plusYears(simplePeriod.number.toLong())
+    }
+
+/**
+ * 渡された期間を引いたLocalDateを返す
+ */
+private fun LocalDate.minusPeriod(simplePeriod: SimplePeriod): LocalDate =
+    when (simplePeriod.periodUnit) {
+        PeriodUnit.Day -> this.minusDays(simplePeriod.number.toLong())
+        PeriodUnit.Week -> this.minusWeeks(simplePeriod.number.toLong())
+        PeriodUnit.Month -> this.minusMonths(simplePeriod.number.toLong())
+        PeriodUnit.Year -> this.minusYears(simplePeriod.number.toLong())
     }
 
 
