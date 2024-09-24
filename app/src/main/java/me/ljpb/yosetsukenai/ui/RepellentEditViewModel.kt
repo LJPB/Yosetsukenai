@@ -115,6 +115,7 @@ class RepellentEditViewModel(
     }
 
     fun setValidityNumber(number: Int) {
+        if (number == 0) return
         _validityNumber.update { number }
     }
 

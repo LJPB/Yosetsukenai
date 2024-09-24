@@ -288,7 +288,7 @@ fun RepellentEditContent(
                 itemName = stringResource(id = R.string.repellent_validity_period),
                 item = {
                     SimplePeriodInputField(
-                        defaultValue = SimplePeriod.of(validityNumber, validityPeriodUnit),
+                        value = SimplePeriod.of(validityNumber, validityPeriodUnit),
                         onNumberChanged = repellentEditViewModel::setValidityNumber,
                         onPeriodUniteChanged = repellentEditViewModel::setValidityPeriodUnit,
                         textStyle = textStyle,
@@ -385,15 +385,14 @@ fun RepellentEditContent(
 @Composable
 private fun SimplePeriodInputField(
     modifier: Modifier = Modifier,
-    defaultValue: SimplePeriod,
+    value: SimplePeriod,
     onNumberChanged: (Int) -> Unit,
     onPeriodUniteChanged: (PeriodUnit) -> Unit,
     textStyle: TextStyle,
     textColor: Color
 ) {
-    var numberText by remember { mutableStateOf(defaultValue.number.toString()) }
-    var periodUnit by remember { mutableStateOf(defaultValue.periodUnit) }
-
+    var numberText  = value.number.toString()
+    var periodUnit = value.periodUnit
     // TextFieldのwidthを3文字分確保する
     val measurer = rememberTextMeasurer()
     val measureResult = measurer.measure(
@@ -422,8 +421,8 @@ private fun SimplePeriodInputField(
                     if (!state.isFocused) { // フォーカスが外れた時
                         if (numberText == "") {
                             // フォーカスが外れた時に何も入力されていなければ，初期値をセットする
-                            numberText = defaultValue.number.toString()
-                            onNumberChanged(defaultValue.number)
+                            numberText = value.number.toString()
+                            onNumberChanged(value.number)
                         }
                     }
                 },
@@ -596,7 +595,7 @@ private fun TextDropMenuPreview() {
 private fun SimplePeriodInputFieldPreview() {
     val simplePeriod by remember { mutableStateOf(SimplePeriod.ofDays(3)) }
     SimplePeriodInputField(
-        defaultValue = SimplePeriod.ofDays(3),
+        value = SimplePeriod.ofDays(3),
         onNumberChanged = { simplePeriod.number = it },
         onPeriodUniteChanged = { simplePeriod.periodUnit = it },
         textStyle = MaterialTheme.typography.titleMedium,
