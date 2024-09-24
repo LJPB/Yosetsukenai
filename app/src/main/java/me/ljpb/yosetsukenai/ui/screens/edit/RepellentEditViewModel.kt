@@ -142,7 +142,6 @@ class RepellentEditViewModel(
      * 既存/新規追加済みの場合は重複して追加しない
      */
     fun addNotification(periodAndTime: PeriodAndTime): NotificationState {
-        // TODO: 開始日以前かをチェックする 
         // 既存の通知リスト(existingNotificationList)に同じ時間の通知があればtrue，なければfalse
         val isExist = existingNotificationList.value
             .find { it.match(periodAndTime) }
@@ -152,8 +151,6 @@ class RepellentEditViewModel(
         if (isExist) return NotificationState.Exist // 存在する場合は，重複して追加できない
 
         /*********** 追加する通知の日時が開始日以前に設定されているかをチェックする処理 ***********/
-        // このメソッドを呼んだ時点で設定されてある有効期間
-        val tmpValidity = SimplePeriod.of(validityNumber.value, validityPeriodUnit.value)
         // 虫除けの終了日(通知がなる日を求めるためのもの)
         val tmpFinishDate = startDate.value.addPeriod(
             SimplePeriod.of(
