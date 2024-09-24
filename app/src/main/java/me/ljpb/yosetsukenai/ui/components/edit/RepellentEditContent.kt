@@ -65,10 +65,9 @@ import me.ljpb.yosetsukenai.data.PeriodAndTime
 import me.ljpb.yosetsukenai.data.PeriodUnit
 import me.ljpb.yosetsukenai.data.SimplePeriod
 import me.ljpb.yosetsukenai.ui.ConstIcon
-import me.ljpb.yosetsukenai.ui.NotificationState
-import me.ljpb.yosetsukenai.ui.RepellentEditViewModel
+import me.ljpb.yosetsukenai.ui.screens.NotificationState
+import me.ljpb.yosetsukenai.ui.screens.RepellentEditViewModel
 import me.ljpb.yosetsukenai.ui.ViewModelProvider
-import me.ljpb.yosetsukenai.ui.components.common.NotificationInputDialog
 import me.ljpb.yosetsukenai.ui.components.common.RowItem
 import me.ljpb.yosetsukenai.ui.components.common.RowItemWithOneItem
 import me.ljpb.yosetsukenai.ui.components.common.RowItemWithText

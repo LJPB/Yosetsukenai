@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.viewmodel.compose.viewModel
 import me.ljpb.yosetsukenai.notification.AppNotificationManager
-import me.ljpb.yosetsukenai.ui.RepellentEditViewModel
+import me.ljpb.yosetsukenai.ui.screens.RepellentEditViewModel
 import me.ljpb.yosetsukenai.ui.ViewModelProvider
 import me.ljpb.yosetsukenai.ui.components.edit.RepellentEditContent
 import me.ljpb.yosetsukenai.ui.theme.YosetsukenaiTheme

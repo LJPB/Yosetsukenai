@@ -12,6 +12,7 @@ import me.ljpb.yosetsukenai.data.SimpleTime
 import me.ljpb.yosetsukenai.data.room.AppDatabase
 import me.ljpb.yosetsukenai.data.room.AppDatabaseConverter
 import me.ljpb.yosetsukenai.data.room.TableConverter
+import me.ljpb.yosetsukenai.ui.screens.RepellentEditViewModel
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
