@@ -173,13 +173,16 @@ private fun RepellentCardContent(
 
             // 場所を表示するタグ
             LazyRow(
-                modifier = Modifier.padding(vertical = 16.dp)
+                modifier = Modifier.padding(vertical = 4.dp)
             ) {
                 items(places) { place ->
                     PlaceTag(
-                        modifier = Modifier.padding(end = 8.dp),
+                        modifier = Modifier.padding(end = 4.dp),
                         text = place
                     )
+                }
+                item {
+                    Spacer(modifier = Modifier.width(4.dp))
                 }
             }
             progress()
