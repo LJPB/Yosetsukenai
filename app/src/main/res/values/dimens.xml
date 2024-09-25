@@ -5,7 +5,9 @@
     <dimen name="row_item_height">48dp</dimen>
     <dimen name="row_item_horizontal_padding">16dp</dimen>
     <dimen name="detail_content_vertical_padding">4dp</dimen>
-    
+    <dimen name="home_screen_card_vertical_padding">8dp</dimen>
+    <dimen name="home_screen_card_horizontal_padding">16dp</dimen>
     <dimen name="tag_min_width">96dp</dimen>
     <dimen name="tag_max_width">144dp</dimen>
+    <dimen name="tab_item_height">48dp</dimen>
 </resources>
