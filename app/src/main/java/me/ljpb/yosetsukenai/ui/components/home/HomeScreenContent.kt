@@ -3,15 +3,12 @@ package me.ljpb.yosetsukenai.ui.components.home
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import me.ljpb.yosetsukenai.R
 import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
-import me.ljpb.yosetsukenai.ui.screens.home.HomeScreenViewModel
 import java.time.LocalDate
 
 private const val VALID_TAB = 0
@@ -19,10 +16,17 @@ private const val EXPIRED_TAB = 1
 private const val HISTORY_TAB = 2
 private const val OTHERS_TAB = 3
 
+/**
+ * @param resetOnClick 同じ内容の虫除けを再設定するボタンを押した時の処理
+ * @param skipOnClick 再設定せずに期限切れリストから外すための処理
+ */
 @Composable
 fun HomeScreenContent(
     modifier: Modifier = Modifier,
-    homeScreenViewModel: HomeScreenViewModel,
+    validRepellentList: List<RepellentScheduleEntity>?,
+    expiredRepellentList: List<RepellentScheduleEntity>?,
+    resetOnClick: (RepellentScheduleEntity) -> Unit,
+    skipOnClick: (RepellentScheduleEntity) -> Unit,
     cardOnClick: (RepellentScheduleEntity) -> Unit,
 ) {
     val tabTitleList = listOf(
@@ -31,8 +35,6 @@ fun HomeScreenContent(
         stringResource(R.string.history_tab_title_text),
         stringResource(R.string.others_tab_title_text),
     )
-    val validRepellentList by homeScreenViewModel.validRepellentList.collectAsState()
-    val expiredRepellentList by homeScreenViewModel.expiredRepellentList.collectAsState()
     TabContainer(
         modifier = modifier,
         defaultIndex = if (expiredRepellentList?.isNotEmpty() == true) EXPIRED_TAB else VALID_TAB, // 期限切れのリストがあれば最初に表示する
@@ -51,7 +53,7 @@ fun HomeScreenContent(
                     .fillMaxHeight(),
                 validRepellentList = validRepellentList,
                 currentDate = LocalDate.now(),
-                resetOnClick = homeScreenViewModel::reset,
+                resetOnClick = resetOnClick,
                 cardOnClick = cardOnClick
             )
 
@@ -65,9 +67,9 @@ fun HomeScreenContent(
                         )
                         .fillMaxHeight(),
                     expiredRepellentList = expiredRepellentList,
-                    resetOnClick = homeScreenViewModel::reset,
+                    resetOnClick = resetOnClick,
                     cardOnClick = cardOnClick,
-                    skipOnClick = homeScreenViewModel::skip
+                    skipOnClick = skipOnClick
                 )
 
             HISTORY_TAB -> // TODO 
