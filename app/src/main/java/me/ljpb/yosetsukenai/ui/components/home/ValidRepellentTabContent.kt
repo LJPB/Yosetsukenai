@@ -14,6 +14,9 @@ import me.ljpb.yosetsukenai.R
 import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
 import java.time.LocalDate
 
+/**
+ * 有効な虫除けのリスト
+ */
 @Composable
 fun ValidRepellentTabContent(
     modifier: Modifier = Modifier,
@@ -61,7 +64,7 @@ private fun ValidRepellentTabBody(
             }
         }
     } else {
-        EmptyContent(
+        RepellentEmpty(
             modifier = Modifier.fillMaxSize(),
             text = stringResource(R.string.expired_not_found),
             bottomPadding = dimensionResource(R.dimen.tab_item_height)

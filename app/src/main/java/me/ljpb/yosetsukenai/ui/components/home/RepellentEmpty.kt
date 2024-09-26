@@ -11,8 +11,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+/**
+ * 虫除けが存在しないときに表示する画面
+ */
 @Composable
-fun EmptyContent(
+fun RepellentEmpty(
     modifier: Modifier = Modifier,
     topPadding: Dp = 0.dp,
     bottomPadding: Dp = 0.dp,

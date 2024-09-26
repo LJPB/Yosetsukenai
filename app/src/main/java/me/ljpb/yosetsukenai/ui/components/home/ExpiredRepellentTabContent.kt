@@ -13,6 +13,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import me.ljpb.yosetsukenai.R
 import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
 
+/**
+ * 期限が切れて対応が必要な虫除けのリスト
+ */
 @Composable
 fun ExpiredRepellentTabContent(
     modifier: Modifier = Modifier,
@@ -60,7 +63,7 @@ private fun ExpiredRepellentTabBody(
             }
         }
     } else {
-        EmptyContent(
+        RepellentEmpty(
             modifier = Modifier.fillMaxSize(),
             text = stringResource(R.string.expired_not_found),
             bottomPadding = dimensionResource(R.dimen.tab_item_height)
