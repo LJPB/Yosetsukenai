@@ -2,7 +2,6 @@ package me.ljpb.yosetsukenai.ui.screens.edit
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import me.ljpb.yosetsukenai.ui.components.edit.RepellentEditContent
 
 @Composable
 fun RepellentEditScreen(
