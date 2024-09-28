@@ -1,13 +1,7 @@
-package me.ljpb.yosetsukenai
+package me.ljpb.yosetsukenai.data
 
 import android.content.Context
 import androidx.work.WorkManager
-import me.ljpb.yosetsukenai.data.InsectAction
-import me.ljpb.yosetsukenai.data.InsectRepository
-import me.ljpb.yosetsukenai.data.NotificationAction
-import me.ljpb.yosetsukenai.data.NotificationRepository
-import me.ljpb.yosetsukenai.data.RepellentScheduleAction
-import me.ljpb.yosetsukenai.data.RepellentScheduleRepository
 import me.ljpb.yosetsukenai.data.room.AppDatabase
 import me.ljpb.yosetsukenai.data.room.TableConverter
 
