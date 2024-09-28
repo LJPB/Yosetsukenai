@@ -30,9 +30,8 @@ fun TabContainer(
     modifier: Modifier = Modifier,
     defaultIndex: Int,
     errorIndex: Int,
-    tabTextList: List<String>,
     onSelected: (Int) -> Unit,
-    content: @Composable (Int) -> Unit
+    tabContent: List<TabContent>
 ) {
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(defaultIndex) }
 
@@ -57,7 +56,7 @@ fun TabContainer(
                 )
             }
         ) {
-            tabTextList.forEachIndexed { index, string ->
+            tabContent.forEachIndexed { index, item ->
                 Tab(
                     modifier = Modifier
                         .height(dimensionResource(R.dimen.tab_item_height)),
@@ -68,7 +67,7 @@ fun TabContainer(
                     }
                 ) {
                     Text(
-                        text = string,
+                        text = item.title,
                         color = if (index == errorIndex) {
                             MaterialTheme.colorScheme.error
                         } else if (selectedTabIndex == index) {
@@ -80,7 +79,7 @@ fun TabContainer(
                 }
             }
         }
-        content(selectedTabIndex)
+        tabContent[selectedTabIndex].content()
     }
 }
 
@@ -88,10 +87,13 @@ fun TabContainer(
 @Composable
 private fun TabContainerPreview() {
     TabContainer(
-        tabTextList = listOf("aaa", "bbb", "ccc"),
         onSelected = {},
         errorIndex = 2,
-        defaultIndex = 2
-    ) {
-    }
+        defaultIndex = 2,
+        tabContent = listOf(
+            TabContent("aaa", {}),
+            TabContent("bbb", {}),
+            TabContent("ccc", {}),
+        )
+    )
 }
