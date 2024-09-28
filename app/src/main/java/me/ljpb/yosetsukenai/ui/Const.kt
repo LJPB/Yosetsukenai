@@ -2,6 +2,7 @@ package me.ljpb.yosetsukenai.ui
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.outlined.BugReport
 import androidx.compose.material.icons.outlined.CalendarMonth
@@ -22,4 +23,7 @@ object ConstIcon {
     val BACK = Icons.AutoMirrored.Default.ArrowBack
     val CLOSE = Icons.Default.Close
     val CANCEL = Icons.Default.Close
+    
+    val FAB_ADD_REPELLENT = Icons.Default.Add
+    val FAB_ADD_INSECT = Icons.Outlined.BugReport
 }
