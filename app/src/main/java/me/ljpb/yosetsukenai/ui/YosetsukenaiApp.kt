@@ -32,9 +32,13 @@ fun YosetsukenaiApp(
     homeScreenViewModel: HomeScreenViewModel,
 ) {
     val navController = rememberNavController()
+    // 詳細画面で表示する虫除け
     lateinit var selectedDetailRepellent: RepellentScheduleEntity
+    // 編集画面で編集(表示)する虫除け
     lateinit var selectedEditRepellent: RepellentScheduleEntity
+    // 編集画面で編集(表示)する通知リスト
     lateinit var selectedEditNotifications: List<NotificationEntity>
+
     lateinit var repellentDetailViewModel: RepellentDetailViewModel
     lateinit var repellentEditViewModel: RepellentEditViewModel
     Surface {
