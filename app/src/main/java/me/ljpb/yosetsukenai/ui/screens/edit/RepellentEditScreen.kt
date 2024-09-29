@@ -10,7 +10,6 @@ fun RepellentEditScreen(
     isLandscape: Boolean,
     onCancel: () -> Unit,
 ) {
-    // TODO: 諸々の処理 
     RepellentEditContent(
         modifier = modifier,
         repellentEditViewModel = repellentEditViewModel,
