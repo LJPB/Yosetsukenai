@@ -2,7 +2,6 @@ package me.ljpb.yosetsukenai.data
 
 import kotlinx.coroutines.flow.Flow
 import me.ljpb.yosetsukenai.data.room.NotificationEntity
-import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
 
 interface NotificationAction {
     suspend fun insert(entity: NotificationEntity): Long
@@ -13,5 +12,5 @@ interface NotificationAction {
     
     fun getNotificationById(id: Long): Flow<NotificationEntity?>
     
-    fun getNotificationsOf(parent: RepellentScheduleEntity): Flow<List<NotificationEntity>>
+    fun getNotificationsByParentId(parentId: Long): Flow<List<NotificationEntity>>
 }

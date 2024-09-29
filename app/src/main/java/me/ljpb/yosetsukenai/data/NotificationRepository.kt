@@ -4,7 +4,6 @@ import androidx.work.WorkManager
 import kotlinx.coroutines.flow.Flow
 import me.ljpb.yosetsukenai.data.room.NotificationDao
 import me.ljpb.yosetsukenai.data.room.NotificationEntity
-import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
 import me.ljpb.yosetsukenai.notification.AppNotificationManager
 
 class NotificationRepository(private val dao: NotificationDao, private val workManager: WorkManager) : NotificationAction {
@@ -27,7 +26,7 @@ class NotificationRepository(private val dao: NotificationDao, private val workM
     override fun getNotificationById(id: Long): Flow<NotificationEntity?> = dao.getItemById(id)
     
 
-    override fun getNotificationsOf(parent: RepellentScheduleEntity): Flow<List<NotificationEntity>> =
-        dao.getItemByRepellentScheduleId(parent.id)
+    override fun getNotificationsByParentId(parentId: Long): Flow<List<NotificationEntity>> =
+        dao.getItemByRepellentScheduleId(parentId)
 
 }
