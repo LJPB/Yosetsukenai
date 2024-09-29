@@ -93,6 +93,7 @@ fun RepellentEditContent(
     modifier: Modifier = Modifier,
     repellentEditViewModel: RepellentEditViewModel,
     isLandscape: Boolean,
+    onSaved: () -> Unit,
     onCancel: () -> Unit,
 ) {
     val name by repellentEditViewModel.name.collectAsState()
@@ -228,7 +229,10 @@ fun RepellentEditContent(
                     // TODO: 変更済みの場合は確認ダイアログの表示 
                     onCancel()
                 },
-                onSave = repellentEditViewModel::save,
+                onSave = {
+                    repellentEditViewModel.save()
+                    onSaved()
+                },
                 enabled = canSave,
                 scrollBehavior = scrollBehavior
             )
@@ -392,7 +396,7 @@ private fun SimplePeriodInputField(
     textStyle: TextStyle,
     textColor: Color
 ) {
-    var numberText  = value.number.toString()
+    var numberText = value.number.toString()
     var periodUnit = value.periodUnit
     // TextFieldのwidthを3文字分確保する
     val measurer = rememberTextMeasurer()
@@ -619,6 +623,8 @@ private fun RepellentEditPreview() {
         viewModel(factory = ViewModelProvider.repellentEditViewModel(null, listOf()))
     RepellentEditContent(
         repellentEditViewModel = viewModel,
-        isLandscape = false
-    ) {}
+        isLandscape = false,
+        onSaved = {},
+        onCancel = {},
+    )
 }
