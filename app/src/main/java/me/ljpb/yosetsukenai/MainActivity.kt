@@ -6,10 +6,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.viewmodel.compose.viewModel
 import me.ljpb.yosetsukenai.notification.AppNotificationManager
-import me.ljpb.yosetsukenai.ui.screens.edit.RepellentEditViewModel
 import me.ljpb.yosetsukenai.ui.ViewModelProvider
-import me.ljpb.yosetsukenai.ui.components.edit.RepellentEditContent
+import me.ljpb.yosetsukenai.ui.YosetsukenaiApp
 import me.ljpb.yosetsukenai.ui.theme.YosetsukenaiTheme
+import java.time.LocalDate
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,12 +18,11 @@ class MainActivity : ComponentActivity() {
         AppNotificationManager.createNotificationChannel(this)
         setContent {
             YosetsukenaiTheme {
-                val viewModel: RepellentEditViewModel =
-                    viewModel(factory = ViewModelProvider.repellentEditViewModel(null, listOf()))
-                RepellentEditContent(
-                    repellentEditViewModel = viewModel,
-                    isLandscape = true
-                ){}
+                YosetsukenaiApp(
+                    homeScreenViewModel = viewModel(
+                        factory = ViewModelProvider.homeScreenViewModel(LocalDate.now())
+                    )
+                )
             }
         }
     }
