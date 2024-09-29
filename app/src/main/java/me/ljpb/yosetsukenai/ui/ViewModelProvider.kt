@@ -7,8 +7,22 @@ import me.ljpb.yosetsukenai.MyApplication
 import me.ljpb.yosetsukenai.data.room.NotificationEntity
 import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
 import me.ljpb.yosetsukenai.ui.screens.edit.RepellentEditViewModel
+import me.ljpb.yosetsukenai.ui.screens.home.HomeScreenViewModel
+import java.time.LocalDate
 
 object ViewModelProvider {
+    fun homeScreenViewModel(currentDate: LocalDate) =
+        viewModelFactory {
+            initializer {
+                val app = this[APPLICATION_KEY] as MyApplication
+                val container = app.dbRepositoryContainer
+                HomeScreenViewModel(
+                    repellentAction = container.repellentScheduleRepository,
+                    currentDate = currentDate
+                )
+            }
+        }
+
     fun repellentEditViewModel(repellent: RepellentScheduleEntity?, notifications: List<NotificationEntity>) =
         viewModelFactory {
             initializer {
