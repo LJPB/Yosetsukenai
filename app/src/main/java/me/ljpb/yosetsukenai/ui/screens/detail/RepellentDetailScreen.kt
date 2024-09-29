@@ -1,31 +1,30 @@
 package me.ljpb.yosetsukenai.ui.screens.detail
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import me.ljpb.yosetsukenai.data.room.InsectEntity
-import me.ljpb.yosetsukenai.data.room.NotificationEntity
-import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
 import me.ljpb.yosetsukenai.ui.components.detail.DetailContainer
 import me.ljpb.yosetsukenai.ui.components.detail.RepellentDetailContent
 
 @Composable
 fun RepellentDetailScreen(
     modifier: Modifier = Modifier,
-    repellent: RepellentScheduleEntity,
-    insects: List<InsectEntity>,
-    notifications: List<NotificationEntity>,
+    repellentDetailViewModel: RepellentDetailViewModel,
     insectOnClick: (InsectEntity) -> Unit,
     backButtonOnClick: () -> Unit,
     editButtonOnClick: () -> Unit,
 ) {
-    // TODO: 諸々の処理
+    val insects by repellentDetailViewModel.insects.collectAsState()
+    val notifications by repellentDetailViewModel.notifications.collectAsState()
     DetailContainer(
         backButtonOnClick = backButtonOnClick,
         editButtonOnClick = editButtonOnClick
     ) {
         RepellentDetailContent(
             modifier = modifier,
-            repellent = repellent,
+            repellent = repellentDetailViewModel.repellent,
             insects = insects,
             notifications = notifications,
             insectOnClick = insectOnClick

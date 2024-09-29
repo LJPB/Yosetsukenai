@@ -6,6 +6,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import me.ljpb.yosetsukenai.MyApplication
 import me.ljpb.yosetsukenai.data.room.NotificationEntity
 import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
+import me.ljpb.yosetsukenai.ui.screens.detail.RepellentDetailViewModel
 import me.ljpb.yosetsukenai.ui.screens.edit.RepellentEditViewModel
 import me.ljpb.yosetsukenai.ui.screens.home.HomeScreenViewModel
 import java.time.LocalDate
@@ -33,6 +34,19 @@ object ViewModelProvider {
                     existingNotifications = notifications,
                     repellentAction = container.repellentScheduleRepository,
                     notificationAction = container.notificationRepository
+                )
+            }
+        }
+    
+    fun repellentDetailViewModel(repellent: RepellentScheduleEntity) =
+        viewModelFactory { 
+            initializer {
+                val app = this[APPLICATION_KEY] as MyApplication
+                val container = app.dbRepositoryContainer
+                RepellentDetailViewModel(
+                    repellent = repellent,
+                    notificationAction = container.notificationRepository,
+                    insectAction = container.insectRepository,
                 )
             }
         }
