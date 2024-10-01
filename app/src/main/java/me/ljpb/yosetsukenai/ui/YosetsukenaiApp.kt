@@ -7,10 +7,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import me.ljpb.yosetsukenai.data.room.NotificationEntity
-import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
-import me.ljpb.yosetsukenai.ui.ViewModelProvider.repellentDetailViewModel
-import me.ljpb.yosetsukenai.ui.ViewModelProvider.repellentEditViewModel
 import me.ljpb.yosetsukenai.ui.screens.detail.RepellentDetailScreen
 import me.ljpb.yosetsukenai.ui.screens.detail.RepellentDetailViewModel
 import me.ljpb.yosetsukenai.ui.screens.edit.RepellentEditScreen
@@ -29,15 +25,10 @@ enum class AppScreen {
 @Composable
 fun YosetsukenaiApp(
     modifier: Modifier = Modifier,
+    appViewModel: AppViewModel = viewModel(),
     homeScreenViewModel: HomeScreenViewModel,
 ) {
     val navController = rememberNavController()
-    // 詳細画面で表示する虫除け
-    lateinit var selectedDetailRepellent: RepellentScheduleEntity
-    // 編集画面で編集(表示)する虫除け
-    lateinit var selectedEditRepellent: RepellentScheduleEntity
-    // 編集画面で編集(表示)する通知リスト
-    lateinit var selectedEditNotifications: List<NotificationEntity>
 
     lateinit var repellentDetailViewModel: RepellentDetailViewModel
     lateinit var repellentEditViewModel: RepellentEditViewModel
@@ -51,36 +42,40 @@ fun YosetsukenaiApp(
                 HomeScreen(
                     homeScreenViewModel = homeScreenViewModel,
                     addRepellentOnClick = {
-                        navController.navigate(AppScreen.AddRepellent.name)
+                        appViewModel.navigateToRepellentAddScreen {
+                            navController.navigate(AppScreen.AddRepellent.name)
+                        }
                     },
                     addInsectOnClick = {},
                     cardOnClick = {
-                        selectedDetailRepellent = it
-                        navController.navigate(AppScreen.DetailRepellent.name)
+                        appViewModel.navigateToRepellentDetailScreen(it) {
+                            navController.navigate(AppScreen.DetailRepellent.name)
+                        }
                     }
                 )
             }
+
             composable(route = AppScreen.DetailRepellent.name) { // 詳細画面
                 repellentDetailViewModel =
-                    viewModel(factory = repellentDetailViewModel(selectedDetailRepellent))
+                    viewModel(factory = appViewModel.getFactoryOfRepellentDetailViewModel())
                 RepellentDetailScreen(
                     repellentDetailViewModel = repellentDetailViewModel,
                     insectOnClick = {},
                     backButtonOnClick = { navController.popBackStack(AppScreen.Home.name, false) },
                     editButtonOnClick = { repellent, notifications ->
-                        selectedEditRepellent = repellent
-                        selectedEditNotifications = notifications
-                        navController.navigate(AppScreen.EditRepellent.name)
+                        appViewModel.navigateToRepellentEditScreen(
+                            repellent,
+                            notifications
+                        ) {
+                            navController.navigate(AppScreen.EditRepellent.name)
+                        }
                     }
                 )
             }
+
             composable(route = AppScreen.EditRepellent.name) { // 編集画面
-                repellentEditViewModel = viewModel(
-                    factory = repellentEditViewModel(
-                        selectedEditRepellent,
-                        selectedEditNotifications
-                    )
-                )
+                repellentEditViewModel =
+                    viewModel(factory = appViewModel.getFactoryOfRepellentEditViewModel())
                 RepellentEditScreen(
                     repellentEditViewModel = repellentEditViewModel,
                     isLandscape = true,
@@ -88,13 +83,10 @@ fun YosetsukenaiApp(
                     onCancel = { navController.popBackStack(AppScreen.DetailRepellent.name, false) }
                 )
             }
+
             composable(route = AppScreen.AddRepellent.name) { // 新規追加画面
-                repellentEditViewModel = viewModel(
-                    factory = repellentEditViewModel(
-                        null,
-                        emptyList()
-                    )
-                )
+                repellentEditViewModel =
+                    viewModel(factory = appViewModel.getFactoryOfRepellentAddViewModel())
                 RepellentEditScreen(
                     repellentEditViewModel = repellentEditViewModel,
                     isLandscape = true,
