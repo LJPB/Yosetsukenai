@@ -102,19 +102,33 @@ class RepellentEditViewModel(
         repellent?.name?.isNotEmpty() ?: false
     )
 
+    /**
+     *  編集画面を閉じるときの確認ダイアログが必要かどうかを表すフラグ
+     *  何らかの変更を加えていればtrue, 何もしていなければfalse
+     */
+    var isChanged = false
+        private set
+
     fun setName(string: String) {
+        isChanged = true
         _name.update { string }
     }
 
     fun setStartDate(date: LocalDate) {
+        // 別の日付に変更したら isChanged = true
+        if (date != startDate.value) isChanged = true
         _startDate.update { date }
     }
 
     fun setValidityPeriodUnit(periodUnit: PeriodUnit) {
+        // 別のPeriodUnitに変更したら isChanged = true
+        if (periodUnit != validityPeriodUnit.value) isChanged = true
         _validityPeriodUnit.update { periodUnit }
     }
 
     fun setValidityNumber(number: Int) {
+        // 別のValidityNumberに変更したら isChanged = true
+        if (number != validityNumber.value) isChanged = true
         if (number == 0) return
         _validityNumber.update { number }
     }
@@ -126,6 +140,7 @@ class RepellentEditViewModel(
      */
     fun addPlace(string: String): Boolean {
         if (string in places.value) return false
+        isChanged = true // 場所の追加に成功したら isChanged = true
         _places.update { it.addedList(string) }
         return true
     }
@@ -134,6 +149,7 @@ class RepellentEditViewModel(
      * 場所をリストから削除する
      */
     fun removePlace(string: String) {
+        isChanged = true
         _places.update { it.removedList(string) }
     }
 
@@ -166,6 +182,7 @@ class RepellentEditViewModel(
         val isContain = periodAndTime in newNotificationList.value
         if (isContain) return NotificationState.Exist // すでに新規追加済みの場合は，重複して追加できない
 
+        isChanged = true // 新規通知を追加できる場合 isChanged = true
         _newNotificationList.update { list ->
             // 一度追加して削除した後，再び追加した場合は「削除済みリスト」から取り除く
             deletedNotificationList.remove(periodAndTime)
@@ -178,6 +195,7 @@ class RepellentEditViewModel(
      * UI操作による新規追加した通知の削除
      */
     fun removeNewNotification(periodAndTime: PeriodAndTime) {
+        isChanged = true
         // 新規追加した通知の削除
         _newNotificationList.update {
             it.removedList(periodAndTime)
@@ -189,12 +207,12 @@ class RepellentEditViewModel(
      * UI操作による既存通知の削除
      */
     fun removeExistingNotification(notificationEntity: NotificationEntity) {
+        isChanged = true
         _existingNotificationList.update { it.removedList(notificationEntity) }
         deletedExistingNotificationList.add(notificationEntity)
     }
 
     fun save() = viewModelScope.launch {
-        // TODO: 開始日よりも前に通知を設定できないようにする 
         val repellentEntity = getRepellent() // 新規登録/更新後のRepellentScheduleEntity
         val repellentId =
             if (isUpdate) updateRepellent(repellentEntity) else addRepellent(repellentEntity)

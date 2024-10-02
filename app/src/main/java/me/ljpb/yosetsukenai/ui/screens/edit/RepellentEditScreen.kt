@@ -10,12 +10,14 @@ fun RepellentEditScreen(
     isLandscape: Boolean,
     onSaved: () -> Unit,
     onCancel: () -> Unit,
+    onDelete: () -> Unit,
 ) {
     RepellentEditContent(
         modifier = modifier,
         repellentEditViewModel = repellentEditViewModel,
         isLandscape = isLandscape,
         onSaved = onSaved,
-        onCancel = onCancel
+        onCancel = onCancel,
+        onDelete = onDelete
     )
 }

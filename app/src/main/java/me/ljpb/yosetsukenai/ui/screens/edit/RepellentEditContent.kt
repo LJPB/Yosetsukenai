@@ -66,6 +66,7 @@ import me.ljpb.yosetsukenai.data.PeriodUnit
 import me.ljpb.yosetsukenai.data.SimplePeriod
 import me.ljpb.yosetsukenai.ui.ConstIcon
 import me.ljpb.yosetsukenai.ui.ViewModelProvider
+import me.ljpb.yosetsukenai.ui.components.common.ConfirmDialog
 import me.ljpb.yosetsukenai.ui.components.common.RowItem
 import me.ljpb.yosetsukenai.ui.components.common.RowItemWithOneItem
 import me.ljpb.yosetsukenai.ui.components.common.RowItemWithText
@@ -84,6 +85,8 @@ private enum class DialogType {
     DatePicker,
     Place,
     Notification,
+    CANCEL,
+    DELETE,
     None // 初期値用
 }
 
@@ -95,6 +98,7 @@ fun RepellentEditContent(
     isLandscape: Boolean,
     onSaved: () -> Unit,
     onCancel: () -> Unit,
+    onDelete: () -> Unit,
 ) {
     val name by repellentEditViewModel.name.collectAsState()
     val startDate by repellentEditViewModel.startDate.collectAsState()
@@ -200,6 +204,48 @@ fun RepellentEditContent(
                 )
             }
 
+            // 編集画面を閉じることの確認ダイアログ
+            DialogType.CANCEL -> {
+                val bodyText: String
+                val dismissButtonText: String
+                val confirmButtonText: String
+                if (repellentEditViewModel.isUpdate) {
+                    bodyText = stringResource(R.string.edit_cancel_text)
+                    dismissButtonText = stringResource(R.string.edit_cancel_dismiss_button)
+                    confirmButtonText = stringResource(R.string.edit_cancel_confirm_button)
+                } else {
+                    bodyText = stringResource(R.string.add_cancel_text)
+                    dismissButtonText = stringResource(R.string.add_cancel_dismiss_button)
+                    confirmButtonText = stringResource(R.string.add_cancel_confirm_button)
+                }
+                ConfirmDialog(
+                    title = null,
+                    body = bodyText,
+                    dismissButtonText = dismissButtonText,
+                    confirmButtonText = confirmButtonText,
+                    onDismiss = { hiddenDialog() },
+                    onConfirm = {
+                        hiddenDialog()
+                        onCancel() 
+                    }
+                )
+            }
+
+            // 削除の確認ダイアログ
+            DialogType.DELETE -> {
+                ConfirmDialog(
+                    title = null,
+                    body = stringResource(R.string.edit_delete_text),
+                    dismissButtonText = stringResource(R.string.edit_delete_dismiss_button),
+                    confirmButtonText = stringResource(R.string.edit_delete_confirm_button),
+                    onDismiss = { hiddenDialog() },
+                    onConfirm = {
+                        hiddenDialog()
+                        onDelete() 
+                    }
+                )
+            }
+
             else -> {}
         }
     }
@@ -210,8 +256,11 @@ fun RepellentEditContent(
 
     // 端末の戻るボタンを押した時の処理
     BackHandler {
-        // TODO: 変更済みの場合は確認ダイアログの表示
-        onCancel()
+        if (repellentEditViewModel.isChanged) {
+            showDialogOf(DialogType.CANCEL)
+        } else {
+            onCancel()
+        }
     }
 
     Scaffold(
@@ -226,11 +275,13 @@ fun RepellentEditContent(
         topBar = {
             EditTopBar(
                 onCancel = {
-                    // TODO: 変更済みの場合は確認ダイアログの表示 
-                    onCancel()
+                    if (repellentEditViewModel.isChanged) {
+                        showDialogOf(DialogType.CANCEL)
+                    } else {
+                        onCancel()
+                    }
                 },
                 onSave = {
-                    repellentEditViewModel.save()
                     onSaved()
                 },
                 enabled = canSave,
@@ -240,8 +291,7 @@ fun RepellentEditContent(
         bottomBar = {
             if (repellentEditViewModel.isUpdate) {
                 EditBottomBar {
-                    // TODO: 確認ダイアログの表示 
-                    repellentEditViewModel.delete()
+                    showDialogOf(DialogType.DELETE)
                 }
             }
         }
@@ -626,5 +676,6 @@ private fun RepellentEditPreview() {
         isLandscape = false,
         onSaved = {},
         onCancel = {},
+        onDelete = {}
     )
 }

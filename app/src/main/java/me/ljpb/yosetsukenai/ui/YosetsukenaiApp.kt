@@ -79,19 +79,40 @@ fun YosetsukenaiApp(
                 RepellentEditScreen(
                     repellentEditViewModel = repellentEditViewModel,
                     isLandscape = true,
-                    onSaved = { navController.popBackStack(AppScreen.Home.name, false) },
-                    onCancel = { navController.popBackStack(AppScreen.DetailRepellent.name, false) }
+                    onSaved = {
+                        // 上書き保存のときはホーム画面に戻る
+                        repellentEditViewModel.save()
+                        navController.popBackStack(AppScreen.Home.name, false)
+                    },
+                    onCancel = {
+                        // 編集をキャンセルした場合は，元の詳細画面に戻る
+                        navController.popBackStack(AppScreen.DetailRepellent.name, false)
+                    },
+                    onDelete = {
+                        // 削除した場合はホーム画面に戻る
+                        repellentEditViewModel.delete()
+                        navController.popBackStack(AppScreen.Home.name, false)
+                    }
                 )
             }
 
             composable(route = AppScreen.AddRepellent.name) { // 新規追加画面
                 repellentEditViewModel =
                     viewModel(factory = appViewModel.getFactoryOfRepellentAddViewModel())
+                val closeScreen = { navController.popBackStack(AppScreen.Home.name, false) }
                 RepellentEditScreen(
                     repellentEditViewModel = repellentEditViewModel,
                     isLandscape = true,
-                    onSaved = { navController.popBackStack(AppScreen.Home.name, false) },
-                    onCancel = { navController.popBackStack(AppScreen.Home.name, false) }
+                    onSaved = {
+                        repellentEditViewModel.save()
+                        closeScreen()
+                    },
+                    onCancel = {
+                        closeScreen()
+                    },
+                    onDelete = {
+                        closeScreen()
+                    }
                 )
             }
         }
