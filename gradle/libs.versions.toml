@@ -1,5 +1,5 @@
 [versions]
-agp = "8.6.1"
+agp = "8.7.0"
 androidxJunit = "1.1.5"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
@@ -44,4 +44,3 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-
