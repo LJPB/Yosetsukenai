@@ -34,12 +34,14 @@ fun YosetsukenaiApp(
 
     lateinit var repellentDetailViewModel: RepellentDetailViewModel
     lateinit var repellentEditViewModel: RepellentEditViewModel
+
     Surface {
         NavHost(
             modifier = modifier,
             navController = navController,
             startDestination = AppScreen.Home.name
         ) {
+            // ホーム画面
             composable(route = AppScreen.Home.name) {
                 HomeScreen(
                     homeScreenViewModel = homeScreenViewModel,
@@ -57,9 +59,11 @@ fun YosetsukenaiApp(
                 )
             }
 
-            composable(route = AppScreen.DetailRepellent.name) { // 虫除けの詳細画面
+            // 虫除けの詳細画面
+            composable(route = AppScreen.DetailRepellent.name) {
                 repellentDetailViewModel =
                     viewModel(factory = appViewModel.getFactoryOfRepellentDetailViewModel())
+
                 RepellentDetailScreen(
                     repellentDetailViewModel = repellentDetailViewModel,
                     insectOnClick = {
@@ -79,7 +83,8 @@ fun YosetsukenaiApp(
                 )
             }
 
-            composable(route = AppScreen.DetailInsect.name) { // 虫の詳細画面
+            // 発見した虫の詳細画面
+            composable(route = AppScreen.DetailInsect.name) {
                 InsectDetailScreen(
                     insect = appViewModel.selectedDetailInsect,
                     backButtonOnClick = { navController.popBackStack() },
@@ -87,32 +92,34 @@ fun YosetsukenaiApp(
                 )
             }
 
-            composable(route = AppScreen.EditRepellent.name) { // 編集画面
+            // 虫除けの編集画面
+            composable(route = AppScreen.EditRepellent.name) {
                 repellentEditViewModel =
                     viewModel(factory = appViewModel.getFactoryOfRepellentEditViewModel())
+
                 RepellentEditScreen(
                     repellentEditViewModel = repellentEditViewModel,
                     isLandscape = true,
-                    onSaved = {
-                        // 上書き保存のときはホーム画面に戻る
+                    onSaved = { // 上書き保存のときはホーム画面に戻る
                         repellentEditViewModel.save()
                         navController.popBackStack(AppScreen.Home.name, false)
                     },
-                    onCancel = {
-                        // 編集をキャンセルした場合は，元の詳細画面に戻る
+                    onCancel = { // 編集をキャンセルした場合は，元の詳細画面に戻る
                         navController.popBackStack(AppScreen.DetailRepellent.name, false)
                     },
-                    onDelete = {
-                        // 削除した場合はホーム画面に戻る
+                    onDelete = { // 削除した場合はホーム画面に戻る
                         repellentEditViewModel.delete()
                         navController.popBackStack(AppScreen.Home.name, false)
                     }
                 )
             }
 
-            composable(route = AppScreen.AddRepellent.name) { // 新規追加画面
+            // 虫除けの新規追加画面
+            composable(route = AppScreen.AddRepellent.name) {
                 repellentEditViewModel =
                     viewModel(factory = appViewModel.getFactoryOfRepellentAddViewModel())
+
+                // 虫除け新規追加後はホーム画面に戻る
                 val closeScreen = { navController.popBackStack(AppScreen.Home.name, false) }
                 RepellentEditScreen(
                     repellentEditViewModel = repellentEditViewModel,
@@ -121,12 +128,8 @@ fun YosetsukenaiApp(
                         repellentEditViewModel.save()
                         closeScreen()
                     },
-                    onCancel = {
-                        closeScreen()
-                    },
-                    onDelete = {
-                        closeScreen()
-                    }
+                    onCancel = { closeScreen() },
+                    onDelete = { closeScreen() }
                 )
             }
         }
