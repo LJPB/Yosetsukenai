@@ -314,7 +314,7 @@ private fun ValidRepellentCardPreview() {
             zoneId = ZoneId.of("UTC")
         ),
         currentDate = LocalDate.of(2024, 9, 10),
-        resetOnClick = { /*TODO*/ }
+        resetOnClick = {}
     ) {}
 }
 
@@ -332,7 +332,7 @@ private fun ExpiredRepellentCardPreview() {
             zoneId = ZoneId.of("UTC")
         ),
         skipOnClick = {},
-        resetOnClick = { /*TODO*/ }
+        resetOnClick = {}
     ) {}
 }
 
