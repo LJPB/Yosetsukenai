@@ -48,10 +48,20 @@ proguard/
 *.DS_Store
 
 # Intellij IDEA (see https://intellij-support.jetbrains.com/entries/23393067)
+# https://github.com/google/accompanist/blob/main/.gitignore
 .idea/workspace.xml
 .idea/tasks.xml
 .idea/datasources.xml
 .idea/dataSources.ids
+.idea/libraries
+.idea/caches
+.idea/navEditor.xml
+.idea/modules.xml
+.idea/compiler.xml
+.idea/jarRepositories.xml
+.idea/deploymentTargetDropDown.xml
+.idea/misc.xml
+.idea/androidTestResultsUserPreferences.xml
 
 # 追加
 *.jks
