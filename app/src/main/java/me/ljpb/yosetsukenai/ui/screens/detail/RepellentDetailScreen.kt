@@ -22,11 +22,11 @@ fun RepellentDetailScreen(
     val notifications by repellentDetailViewModel.notifications.collectAsState()
     val repellent = repellentDetailViewModel.repellent
     DetailContainer(
+        modifier = modifier,
         backButtonOnClick = backButtonOnClick,
         editButtonOnClick = { editButtonOnClick(repellent, notifications) }
     ) {
         RepellentDetailContent(
-            modifier = modifier,
             repellent = repellent,
             insects = insects,
             notifications = notifications,
