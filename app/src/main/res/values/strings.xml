@@ -26,6 +26,12 @@
     <string name="repellent_insect">有効期間内に発見した虫</string>
     <string name="repellent_notification">通知</string>
 
+    <string name="insect_name">種類</string>
+    <string name="insect_date">発見日</string>
+    <string name="insect_size">大きさ</string>
+    <string name="insect_condition">状態</string>
+    <string name="insect_place">場所</string>
+
     <string name="back">戻る</string>
     <string name="edit">編集</string>
     <string name="delete">削除</string>
