@@ -2,14 +2,19 @@ package me.ljpb.yosetsukenai.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import me.ljpb.yosetsukenai.data.room.InsectEntity
 import me.ljpb.yosetsukenai.data.room.NotificationEntity
 import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
 
 class AppViewModel : ViewModel() {
     private val mViewModelProvider = me.ljpb.yosetsukenai.ui.ViewModelProvider
 
-    // 詳細画面で表示する虫除け
+    // 虫除けの詳細画面で表示する虫除け
     private lateinit var selectedDetailRepellent: RepellentScheduleEntity
+
+    // 発見した虫の詳細画面で表示する虫
+    lateinit var selectedDetailInsect: InsectEntity
+        private set
 
     // 編集画面で編集(表示)する虫除け
     private lateinit var selectedEditRepellent: RepellentScheduleEntity
@@ -49,7 +54,7 @@ class AppViewModel : ViewModel() {
      */
     fun getFactoryOfRepellentEditViewModel(): ViewModelProvider.Factory =
         mViewModelProvider.repellentEditViewModel(selectedEditRepellent, selectedEditNotifications)
-    
+
     /**
      * 虫除け追加画面へ遷移するときに呼び出すメソッド
      */
@@ -60,5 +65,12 @@ class AppViewModel : ViewModel() {
      */
     fun getFactoryOfRepellentAddViewModel(): ViewModelProvider.Factory =
         mViewModelProvider.repellentEditViewModel(null, listOf())
-    
+
+    /**
+     * 発見した虫の詳細画面へ遷移するときに呼び出すメソッド
+     */
+    fun navigateToInsectDetailScreen(insect: InsectEntity, navigate: () -> Unit) {
+        selectedDetailInsect = insect
+        navigate()
+    }
 }

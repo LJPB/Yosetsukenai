@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import me.ljpb.yosetsukenai.ui.screens.detail.InsectDetailScreen
 import me.ljpb.yosetsukenai.ui.screens.detail.RepellentDetailScreen
 import me.ljpb.yosetsukenai.ui.screens.detail.RepellentDetailViewModel
 import me.ljpb.yosetsukenai.ui.screens.edit.RepellentEditScreen
@@ -17,6 +18,7 @@ import me.ljpb.yosetsukenai.ui.screens.home.HomeScreenViewModel
 enum class AppScreen {
     Home,
     DetailRepellent,
+    DetailInsect,
     EditRepellent,
     AddRepellent,
     AddInsect
@@ -55,12 +57,16 @@ fun YosetsukenaiApp(
                 )
             }
 
-            composable(route = AppScreen.DetailRepellent.name) { // 詳細画面
+            composable(route = AppScreen.DetailRepellent.name) { // 虫除けの詳細画面
                 repellentDetailViewModel =
                     viewModel(factory = appViewModel.getFactoryOfRepellentDetailViewModel())
                 RepellentDetailScreen(
                     repellentDetailViewModel = repellentDetailViewModel,
-                    insectOnClick = {},
+                    insectOnClick = {
+                        appViewModel.navigateToInsectDetailScreen(it) {
+                            navController.navigate(AppScreen.DetailInsect.name)
+                        }
+                    },
                     backButtonOnClick = { navController.popBackStack(AppScreen.Home.name, false) },
                     editButtonOnClick = { repellent, notifications ->
                         appViewModel.navigateToRepellentEditScreen(
@@ -70,6 +76,14 @@ fun YosetsukenaiApp(
                             navController.navigate(AppScreen.EditRepellent.name)
                         }
                     }
+                )
+            }
+
+            composable(route = AppScreen.DetailInsect.name) { // 虫の詳細画面
+                InsectDetailScreen(
+                    insect = appViewModel.selectedDetailInsect,
+                    backButtonOnClick = { navController.popBackStack() },
+                    editButtonOnClick = {}
                 )
             }
 
