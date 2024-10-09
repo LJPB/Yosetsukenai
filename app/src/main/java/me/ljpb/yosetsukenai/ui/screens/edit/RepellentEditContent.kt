@@ -81,12 +81,12 @@ import me.ljpb.yosetsukenai.ui.getNotificationText
 import me.ljpb.yosetsukenai.ui.getTextOfLocalDate
 import me.ljpb.yosetsukenai.ui.localDateToEpochSecond
 
-private enum class DialogType {
+private enum class RepellentEditDialogType {
     DatePicker,
     Place,
     Notification,
-    CANCEL,
-    DELETE,
+    Cancel,
+    Delete,
     None // 初期値用
 }
 
@@ -118,12 +118,12 @@ fun RepellentEditContent(
 
     // ============ ダイアログ関連 ============
     var showDialog by rememberSaveable { mutableStateOf(false) }
-    var dialogType by rememberSaveable { mutableStateOf(DialogType.None) }
+    var dialogType by rememberSaveable { mutableStateOf(RepellentEditDialogType.None) }
     var isErrorPlace by rememberSaveable { mutableStateOf(false) }
     var isErrorNotification by rememberSaveable { mutableStateOf(false) }
     var notificationErrorType by rememberSaveable { mutableStateOf(NotificationState.Success) }
 
-    val showDialogOf = { type: DialogType ->
+    val showDialogOf = { type: RepellentEditDialogType ->
         showDialog = true
         dialogType = type
         isErrorPlace = false
@@ -139,7 +139,7 @@ fun RepellentEditContent(
     if (showDialog) {
         when (dialogType) {
             // 開始日の選択
-            DialogType.DatePicker -> DatePickerModal(
+            RepellentEditDialogType.DatePicker -> DatePickerModal(
                 datePickerState = datePickerState,
                 onDismiss = hiddenDialog,
                 onConfirm = { epochMillis ->
@@ -155,7 +155,7 @@ fun RepellentEditContent(
             )
 
             // 場所の追加
-            DialogType.Place -> TextInputDialog(
+            RepellentEditDialogType.Place -> TextInputDialog(
                 defaultValue = "",
                 label = stringResource(id = R.string.edit_place),
                 onSave = { text ->
@@ -176,7 +176,7 @@ fun RepellentEditContent(
             )
 
             // 通知の追加
-            DialogType.Notification -> {
+            RepellentEditDialogType.Notification -> {
                 NotificationInputDialog(
                     onSave = { simplePeriod, simpleTime ->
                         val pair = PeriodAndTime(simplePeriod, simpleTime)
@@ -205,7 +205,7 @@ fun RepellentEditContent(
             }
 
             // 編集画面を閉じることの確認ダイアログ
-            DialogType.CANCEL -> {
+            RepellentEditDialogType.Cancel -> {
                 val bodyText: String
                 val dismissButtonText: String
                 val confirmButtonText: String
@@ -232,7 +232,7 @@ fun RepellentEditContent(
             }
 
             // 削除の確認ダイアログ
-            DialogType.DELETE -> {
+            RepellentEditDialogType.Delete -> {
                 ConfirmDialog(
                     title = null,
                     body = stringResource(R.string.edit_delete_text),
@@ -257,7 +257,7 @@ fun RepellentEditContent(
     // 端末の戻るボタンを押した時の処理
     BackHandler {
         if (repellentEditViewModel.isChanged) {
-            showDialogOf(DialogType.CANCEL)
+            showDialogOf(RepellentEditDialogType.Cancel)
         } else {
             onCancel()
         }
@@ -276,7 +276,7 @@ fun RepellentEditContent(
             EditTopBar(
                 onCancel = {
                     if (repellentEditViewModel.isChanged) {
-                        showDialogOf(DialogType.CANCEL)
+                        showDialogOf(RepellentEditDialogType.Cancel)
                     } else {
                         onCancel()
                     }
@@ -291,7 +291,7 @@ fun RepellentEditContent(
         bottomBar = {
             if (repellentEditViewModel.isUpdate) {
                 EditBottomBar {
-                    showDialogOf(DialogType.DELETE)
+                    showDialogOf(RepellentEditDialogType.Delete)
                 }
             }
         }
@@ -334,7 +334,7 @@ fun RepellentEditContent(
                 leadingIcon = ConstIcon.START_DATE,
                 itemName = stringResource(id = R.string.repellent_start_date),
                 text = getTextOfLocalDate(startDate, context)
-            ) { showDialogOf(DialogType.DatePicker) }
+            ) { showDialogOf(RepellentEditDialogType.DatePicker) }
 
             // 有効期間
             HorizontalDivider()
@@ -371,7 +371,7 @@ fun RepellentEditContent(
                         // 追加ボタン
                         TextButton(
                             modifier = Modifier.height(dimensionResource(id = R.dimen.row_item_height)),
-                            onClick = { showDialogOf(DialogType.Place) }
+                            onClick = { showDialogOf(RepellentEditDialogType.Place) }
                         ) {
                             Text(
                                 text = stringResource(id = R.string.add),
@@ -423,7 +423,7 @@ fun RepellentEditContent(
                         // 追加ボタン
                         TextButton(
                             modifier = Modifier.height(dimensionResource(id = R.dimen.row_item_height)),
-                            onClick = { showDialogOf(DialogType.Notification) }
+                            onClick = { showDialogOf(RepellentEditDialogType.Notification) }
                         ) {
                             Text(
                                 text = stringResource(id = R.string.add),
