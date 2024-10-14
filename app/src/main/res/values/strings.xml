@@ -31,6 +31,12 @@
     <string name="insect_size">大きさ</string>
     <string name="insect_condition">状態</string>
     <string name="insect_place">場所</string>
+    
+    <string name="edit_insect_name">虫の種類</string>
+    <string name="edit_insect_date">発見日</string>
+    <string name="edit_insect_size">虫の大きさ(オプション)</string>
+    <string name="edit_insect_condition">虫の状態(オプション)</string>
+    <string name="edit_insect_place">発見した場所(オプション)</string>
 
     <string name="back">戻る</string>
     <string name="edit">編集</string>

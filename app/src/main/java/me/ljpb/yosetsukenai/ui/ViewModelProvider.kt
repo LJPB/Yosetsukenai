@@ -4,9 +4,11 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import me.ljpb.yosetsukenai.MyApplication
+import me.ljpb.yosetsukenai.data.room.InsectEntity
 import me.ljpb.yosetsukenai.data.room.NotificationEntity
 import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
 import me.ljpb.yosetsukenai.ui.screens.detail.RepellentDetailViewModel
+import me.ljpb.yosetsukenai.ui.screens.edit.InsectEditViewModel
 import me.ljpb.yosetsukenai.ui.screens.edit.RepellentEditViewModel
 import me.ljpb.yosetsukenai.ui.screens.home.HomeScreenViewModel
 import java.time.LocalDate
@@ -24,7 +26,10 @@ object ViewModelProvider {
             }
         }
 
-    fun repellentEditViewModel(repellent: RepellentScheduleEntity?, notifications: List<NotificationEntity>) =
+    fun repellentEditViewModel(
+        repellent: RepellentScheduleEntity?,
+        notifications: List<NotificationEntity>
+    ) =
         viewModelFactory {
             initializer {
                 val app = this[APPLICATION_KEY] as MyApplication
@@ -37,9 +42,9 @@ object ViewModelProvider {
                 )
             }
         }
-    
+
     fun repellentDetailViewModel(repellent: RepellentScheduleEntity) =
-        viewModelFactory { 
+        viewModelFactory {
             initializer {
                 val app = this[APPLICATION_KEY] as MyApplication
                 val container = app.dbRepositoryContainer
@@ -47,6 +52,18 @@ object ViewModelProvider {
                     repellent = repellent,
                     notificationAction = container.notificationRepository,
                     insectAction = container.insectRepository,
+                )
+            }
+        }
+
+    fun insectEditViewModel(insect: InsectEntity?) =
+        viewModelFactory {
+            initializer {
+                val app = this[APPLICATION_KEY] as MyApplication
+                val container = app.dbRepositoryContainer
+                InsectEditViewModel(
+                    insect = insect,
+                    insectAction = container.insectRepository
                 )
             }
         }
