@@ -22,6 +22,9 @@ class AppViewModel : ViewModel() {
     // 編集画面で編集(表示)する通知リスト
     private lateinit var selectedEditNotifications: List<NotificationEntity>
 
+    // 戻るべき場所
+    var backRoute = AppScreen.Home
+
     /**
      * 虫除けの詳細画面へ遷移するときに呼び出すメソッド
      */
@@ -73,4 +76,33 @@ class AppViewModel : ViewModel() {
         selectedDetailInsect = insect
         navigate()
     }
+
+    /**
+     * 発見した虫の編集画面へ遷移するときに呼び出すメソッド
+     */
+    fun navigateToInsectEditScreen(insect: InsectEntity, navigate: () -> Unit) {
+        selectedDetailInsect = insect
+        navigate()
+    }
+
+    /**
+     * 発見した虫の追加画面へ遷移するときに呼び出すメソッド
+     */
+    fun navigateToInsectAddScreen(insect: InsectEntity, navigate: () -> Unit) {
+        selectedDetailInsect = insect
+        navigate()
+    }
+
+    /**
+     * InsectEditViewModelのFactoryを取得
+     */
+    fun getFactoryOfInsectAddViewModel(): ViewModelProvider.Factory =
+        mViewModelProvider.insectEditViewModel(null)
+
+    /**
+     * InsectEditViewModelのFactoryを取得
+     */
+    fun getFactoryOfInsectEditViewModel(): ViewModelProvider.Factory =
+        mViewModelProvider.insectEditViewModel(selectedDetailInsect)
+
 }
