@@ -48,10 +48,8 @@ class HomeScreenViewModel(
         )
 
     fun reset(repellent: RepellentScheduleEntity) = viewModelScope.launch {
-        /*
-        // 既存の通知はスキップ
+        // 既存の虫除けはスキップ
         skip(repellent)
-         */
 
         // 日付を更新して同じデータの虫除けを追加する
         val startDate = LocalDate.now()

@@ -73,7 +73,8 @@ fun ValidRepellentCard(
                 endText = getTextOfLocalDate(repellent.finishDate, context)
             )
         },
-        footerEndOnClick = resetOnClick
+        footerEndOnClick = null
+        //        footerEndOnClick = resetOnClick
     ) {
         cardOnClick()
     }
@@ -121,7 +122,7 @@ private fun RepellentCardContent(
     places: List<String>,
     progress: @Composable () -> Unit,
     footerStartOnClick: (() -> Unit)? = null,
-    footerEndOnClick: () -> Unit,
+    footerEndOnClick: (() -> Unit)? = null,
     onClick: () -> Unit,
 ) {
     val cardHorizontalPadding =
@@ -201,12 +202,14 @@ private fun RepellentCardContent(
                     }
                 }
                 Spacer(modifier = Modifier.weight(1f))
-                TextButton(onClick = footerEndOnClick) {
-                    Text(
-                        text = stringResource(id = R.string.reset_repellent),
-                        color = MaterialTheme.colorScheme.primary,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+                if (footerEndOnClick != null) {
+                    TextButton(onClick = footerEndOnClick) {
+                        Text(
+                            text = stringResource(id = R.string.reset_repellent),
+                            color = MaterialTheme.colorScheme.primary,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
                 }
             }
         }
