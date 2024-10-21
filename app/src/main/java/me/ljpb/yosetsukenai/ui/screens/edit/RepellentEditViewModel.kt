@@ -19,6 +19,7 @@ import me.ljpb.yosetsukenai.data.SimplePeriod
 import me.ljpb.yosetsukenai.data.room.NotificationEntity
 import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
 import me.ljpb.yosetsukenai.notification.AppNotificationManager
+import me.ljpb.yosetsukenai.ui.localDateAddPeriod
 import java.time.LocalDate
 import java.time.ZoneId
 
@@ -168,7 +169,8 @@ class RepellentEditViewModel(
 
         /*********** 追加する通知の日時が開始日以前に設定されているかをチェックする処理 ***********/
         // 虫除けの終了日(通知がなる日を求めるためのもの)
-        val tmpFinishDate = startDate.value.addPeriod(
+        val tmpFinishDate = localDateAddPeriod(
+            startDate.value,
             SimplePeriod.of(
                 validityNumber.value,
                 validityPeriodUnit.value
@@ -323,7 +325,7 @@ class RepellentEditViewModel(
         val entityName = name.value
         val entityPeriod = SimplePeriod.of(validityNumber.value, validityPeriodUnit.value)
         val entityStartDate = startDate.value
-        val entityFinishDate = entityStartDate.addPeriod(entityPeriod)
+        val entityFinishDate = localDateAddPeriod(entityStartDate, entityPeriod)
         val entityPlaces = places.value
         val entityIgnore = false
         val entityZoneId = zoneId.value
@@ -355,17 +357,6 @@ private fun RepellentScheduleEntity.updateValue(repellent: RepellentScheduleEnti
         ignore = repellent.ignore,
         zoneId = repellent.zoneId
     )
-
-/**
- * 渡された期間を追加したLocalDateを返す
- */
-private fun LocalDate.addPeriod(simplePeriod: SimplePeriod): LocalDate =
-    when (simplePeriod.periodUnit) {
-        PeriodUnit.Day -> this.plusDays(simplePeriod.number.toLong())
-        PeriodUnit.Week -> this.plusWeeks(simplePeriod.number.toLong())
-        PeriodUnit.Month -> this.plusMonths(simplePeriod.number.toLong())
-        PeriodUnit.Year -> this.plusYears(simplePeriod.number.toLong())
-    }
 
 /**
  * 渡された期間を引いたLocalDateを返す

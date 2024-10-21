@@ -85,3 +85,14 @@ fun epochSecondToLocalDate(epochSecond: Long, zoneId: ZoneId): LocalDate {
     )
     return localDateTime.toLocalDate()
 }
+
+/**
+ * 渡された期間を追加したLocalDateを返す
+ */
+fun localDateAddPeriod(localDate: LocalDate, simplePeriod: SimplePeriod): LocalDate =
+    when (simplePeriod.periodUnit) {
+        PeriodUnit.Day -> localDate.plusDays(simplePeriod.number.toLong())
+        PeriodUnit.Week -> localDate.plusWeeks(simplePeriod.number.toLong())
+        PeriodUnit.Month -> localDate.plusMonths(simplePeriod.number.toLong())
+        PeriodUnit.Year -> localDate.plusYears(simplePeriod.number.toLong())
+    }
