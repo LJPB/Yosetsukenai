@@ -21,6 +21,7 @@ object ViewModelProvider {
                 val container = app.dbRepositoryContainer
                 HomeScreenViewModel(
                     repellentAction = container.repellentScheduleRepository,
+                    notificationAction = container.notificationRepository,
                     currentDate = currentDate
                 )
             }
