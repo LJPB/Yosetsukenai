@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import me.ljpb.yosetsukenai.data.RepellentScheduleAction
 import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
 import java.time.LocalDate
@@ -41,10 +42,10 @@ class HomeScreenViewModel(
         )
 
     fun reset(repellent: RepellentScheduleEntity) {
-        
+
     }
-    
-    fun skip(repellent: RepellentScheduleEntity) {
-        
+
+    fun skip(repellent: RepellentScheduleEntity) = viewModelScope.launch {
+        repellentAction.update(repellent.copy(ignore = true))
     }
 }
