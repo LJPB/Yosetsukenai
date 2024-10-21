@@ -29,4 +29,15 @@ class RepellentScheduleRepository(
     override fun getPagedRepellents(limit: Int, offset: Int): Flow<List<RepellentScheduleEntity>> =
         dao.getPagedItems(limit = limit, offset = offset)
 
+    override fun getRepellentsByStartDate(
+        from: String,
+        to: String
+    ): Flow<List<RepellentScheduleEntity>> =
+        dao.getItemsByStartDate(from, to)
+
+    override fun getRepellentsByFinishDate(
+        from: String,
+        to: String
+    ): Flow<List<RepellentScheduleEntity>> =
+        dao.getItemsByFinishDate(from, to)
 }

@@ -20,4 +20,8 @@ interface RepellentScheduleAction {
     fun getExpiredRepellents(currentDate: LocalDate): Flow<List<RepellentScheduleEntity>>
 
     fun getPagedRepellents(limit: Int, offset: Int): Flow<List<RepellentScheduleEntity>>
+
+    fun getRepellentsByStartDate(from: String, to: String): Flow<List<RepellentScheduleEntity>>
+
+    fun getRepellentsByFinishDate(from: String, to: String): Flow<List<RepellentScheduleEntity>>
 }

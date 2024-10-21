@@ -36,4 +36,12 @@ interface RepellentScheduleDao {
 
     @Query("select * from repellent_schedule order by startDate asc, finishDate asc limit :limit offset :offset")
     fun getPagedItems(limit: Int, offset: Int): Flow<List<RepellentScheduleEntity>>
+
+    // 指定した期間内に登録したすべての虫除けの一覧を取得
+    @Query("select * from repellent_schedule where startDate between :from and :to order by startDate asc, finishDate asc")
+    fun getItemsByStartDate(from: String, to: String): Flow<List<RepellentScheduleEntity>>
+  
+    // 指定した期間内に終了するすべての虫除けの一覧を取得
+    @Query("select * from repellent_schedule where finishDate between :from and :to order by finishDate asc, finishDate asc")
+    fun getItemsByFinishDate(from: String, to: String): Flow<List<RepellentScheduleEntity>>
 }
