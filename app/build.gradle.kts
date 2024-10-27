@@ -71,11 +71,14 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
-    
+
     // WorkManager
     implementation(libs.androidx.work.runtime.ktx)
 
     implementation(libs.kotlinx.serialization.json)
+
+    // カレンダー表示
+    implementation(libs.kizitonwose.calendar)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
