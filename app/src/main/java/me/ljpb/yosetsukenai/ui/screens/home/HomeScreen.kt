@@ -26,14 +26,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.kizitonwose.calendar.compose.rememberCalendarState
+import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import me.ljpb.yosetsukenai.R
 import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
 import me.ljpb.yosetsukenai.ui.ConstIcon
+import me.ljpb.yosetsukenai.ui.components.history.Calendar
 import me.ljpb.yosetsukenai.ui.components.home.ExpiredRepellentTabContent
 import me.ljpb.yosetsukenai.ui.components.home.FloatingActionMenuItem
 import me.ljpb.yosetsukenai.ui.components.home.TabContainer
 import me.ljpb.yosetsukenai.ui.components.home.TabContent
 import me.ljpb.yosetsukenai.ui.components.home.ValidRepellentTabContent
+import java.time.YearMonth
 
 @Composable
 fun HomeScreen(
@@ -73,9 +77,22 @@ fun HomeScreen(
             cardOnClick = cardOnClick
         )
     }
+    val currentMonth = remember { YearMonth.now() }
+    val startMonth = remember { currentMonth.minusMonths(12 * 10) }
+    val endMonth = remember { currentMonth.plusMonths(12 * 10) }
+    val firstDayOfWeek = remember { firstDayOfWeekFromLocale() }
 
+    val state = rememberCalendarState(
+        startMonth = startMonth,
+        endMonth = endMonth,
+        firstVisibleMonth = currentMonth,
+        firstDayOfWeek = firstDayOfWeek
+    )
     val historyTabContent = TabContent(stringResource(R.string.history_tab_title_text)) {
-        Text(text = "未実装") // TODO 
+        Calendar(
+            modifier = Modifier.fillMaxSize(),
+            calendarState = state
+        )
     }
 
     val othersTabContent = TabContent(stringResource(R.string.others_tab_title_text)) {

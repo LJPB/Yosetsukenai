@@ -92,4 +92,7 @@
     
     <string name="fab_label_add_repellent">虫除けを記録</string>
     <string name="fab_label_add_insect">虫を発見</string>
+    
+    <string name="month_title">%1$02d月</string>
+    <string name="year_and_month_title">%1$d年%2$02d月</string>
 </resources>
