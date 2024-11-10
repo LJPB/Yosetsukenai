@@ -99,4 +99,9 @@
     <string name="bottom_sheet_title">%1$sの記録</string>
     <string name="bottom_sheet_repellent_list_title">虫除け</string>
     <string name="bottom_sheet_insect_list_title">発見した虫</string>
+    
+    <string name="notification_permission_title">通知権限の取得</string>
+    <string name="notification_permission_body">アプリの一部機能のために通知権限の許可が必要です。</string>
+    <string name="notification_permission_positive">許可</string>
+    <string name="notification_permission_negative">許可しない</string>
 </resources>
