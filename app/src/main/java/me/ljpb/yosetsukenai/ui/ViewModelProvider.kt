@@ -10,6 +10,7 @@ import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
 import me.ljpb.yosetsukenai.ui.screens.detail.RepellentDetailViewModel
 import me.ljpb.yosetsukenai.ui.screens.edit.InsectEditViewModel
 import me.ljpb.yosetsukenai.ui.screens.edit.RepellentEditViewModel
+import me.ljpb.yosetsukenai.ui.screens.history.HistoryScreenViewModel
 import me.ljpb.yosetsukenai.ui.screens.home.HomeScreenViewModel
 import java.time.LocalDate
 
@@ -68,4 +69,15 @@ object ViewModelProvider {
                 )
             }
         }
+
+    fun historyViewModel() = viewModelFactory {
+        initializer {
+            val app = this[APPLICATION_KEY] as MyApplication
+            val container = app.dbRepositoryContainer
+            HistoryScreenViewModel(
+                repellentAction = container.repellentScheduleRepository,
+                insectAction = container.insectRepository
+            )
+        }
+    }
 }
