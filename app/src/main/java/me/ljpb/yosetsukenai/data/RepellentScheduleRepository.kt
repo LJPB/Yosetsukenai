@@ -43,7 +43,7 @@ class RepellentScheduleRepository(
 
     override fun getItems(date: LocalDate): Flow<List<RepellentScheduleEntity>> = dao.getItems(converter.fromLocalDateToString(date))
 
-    override fun getMaxDate(): Flow<LocalDate?> = dao.getMaxFinishDate()
+    override fun getMaxDate(): Flow<LocalDate?> = dao.getMaxStartDate()
 
     override fun getMinDate(): Flow<LocalDate?> = dao.getMinStartDate()
 

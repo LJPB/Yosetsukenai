@@ -50,8 +50,8 @@ interface RepellentScheduleDao {
     @Query("select * from repellent_schedule where startDate = :date order by finishDate asc")
     fun getItems(date: String): Flow<List<RepellentScheduleEntity>>
 
-    @Query("select max(finishDate) from repellent_schedule")
-    fun getMaxFinishDate(): Flow<LocalDate?>
+    @Query("select max(startDate) from repellent_schedule")
+    fun getMaxStartDate(): Flow<LocalDate?>
 
     @Query("select min(startDate) from repellent_schedule")
     fun getMinStartDate(): Flow<LocalDate?>
