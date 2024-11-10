@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.update
 import me.ljpb.yosetsukenai.data.InsectAction
 import me.ljpb.yosetsukenai.data.RepellentScheduleAction
 import java.time.LocalDate
+import java.time.YearMonth
+import java.time.temporal.ChronoUnit
 
 class HistoryScreenViewModel(
     private val repellentAction: RepellentScheduleAction,
@@ -22,27 +24,37 @@ class HistoryScreenViewModel(
     private val repellentMinDate = repellentAction.getMinDate()
     private val repellentMaxDate = repellentAction.getMaxDate()
 
+    val currentMonth = YearMonth.now()
+
     // 虫除けの開始日、虫の発見日のうち最小のもの
-    val minDate = combine(insectMinDate, repellentMinDate) { _insectMinDate, _repellentMinDate ->
-        val insectMin = _insectMinDate ?: LocalDate.now()
-        val repellentMin = _repellentMinDate ?: LocalDate.now()
-        getMinLocalDate(insectMin, repellentMin)
-    }.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(),
-        LocalDate.now()
-    )
+    val startMonth =
+        combine(insectMinDate, repellentMinDate) { _insectMinDate, _repellentMinDate ->
+            val insectMin = _insectMinDate ?: LocalDate.now()
+            val repellentMin = _repellentMinDate ?: LocalDate.now()
+            val minDate = getMinLocalDate(insectMin, repellentMin)
+            currentMonth.minusMonths(
+                ChronoUnit.MONTHS.between(minDate, LocalDate.now())
+            )
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(),
+            currentMonth
+        )
 
     // 虫除けの開始日、虫の発見日のうち最大のもの
-    val maxDate = combine(insectMaxDate, repellentMaxDate) { _insectMaxDate, _repellentMaxDate ->
-        val insectMax = _insectMaxDate ?: LocalDate.now()
-        val repellentMax = _repellentMaxDate ?: LocalDate.now()
-        getMaxLocalDate(insectMax, repellentMax)
-    }.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(),
-        LocalDate.now()
-    )
+    val endMonth =
+        combine(insectMaxDate, repellentMaxDate) { _insectMaxDate, _repellentMaxDate ->
+            val insectMax = _insectMaxDate ?: LocalDate.now()
+            val repellentMax = _repellentMaxDate ?: LocalDate.now()
+            val maxDate = getMaxLocalDate(insectMax, repellentMax)
+            currentMonth.minusMonths(
+                ChronoUnit.MONTHS.between(maxDate, LocalDate.now())
+            )
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(),
+            currentMonth
+        )
 
     // LocalDateの日付に登録された記録があればtrueなければfalseを格納するマップ
     private val _days: MutableStateFlow<HashMap<LocalDate, StateFlow<Boolean>>> =
@@ -61,7 +73,7 @@ class HistoryScreenViewModel(
             val state = combine(repellentCount, insectCount) { _repellentCount, _insectCount ->
                 // @@@Countは渡されたdateの日付に記録した@@@の個数
                 // これらの少なくとも一方が0でなければ、つまりこれらの和が0でなければ渡されたdateの日付に何らかの記録をしたことになる
-                _repellentCount + _insectCount != 0 
+                _repellentCount + _insectCount != 0
             }.stateIn(
                 viewModelScope,
                 SharingStarted.WhileSubscribed(),
