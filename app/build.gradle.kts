@@ -80,6 +80,9 @@ dependencies {
     // カレンダー表示
     implementation(libs.kizitonwose.calendar)
 
+    // パーミッション用のライブラリ
+    implementation(libs.accompanist.permissions)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
