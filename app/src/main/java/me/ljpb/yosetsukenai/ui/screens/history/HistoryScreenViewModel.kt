@@ -7,10 +7,14 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import me.ljpb.yosetsukenai.data.InsectAction
 import me.ljpb.yosetsukenai.data.RepellentScheduleAction
+import me.ljpb.yosetsukenai.data.room.InsectEntity
+import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.temporal.ChronoUnit
@@ -62,6 +66,12 @@ class HistoryScreenViewModel(
 
     val days: StateFlow<HashMap<LocalDate, StateFlow<Boolean>>> = _days.asStateFlow()
 
+    private val _repellentList = MutableStateFlow<List<RepellentScheduleEntity>>(listOf())
+    val repellentList = _repellentList.asStateFlow()
+
+    private val _insectList = MutableStateFlow<List<InsectEntity>>(listOf())
+    val insectList = _insectList.asStateFlow()
+
     /**
      * 渡されたdateの日付に虫除け/発見した虫が記録されているかを表すフラグをマップ(days)に格納するためのメソッド
      */
@@ -84,6 +94,18 @@ class HistoryScreenViewModel(
                     it[date] = state
                 }
             }
+        }
+    }
+
+    /**
+     * 渡されたdateの日付に登録した虫除け/虫の記録を読み込む
+     */
+    fun loadList(date: LocalDate) = viewModelScope.launch {
+        _repellentList.update {
+            repellentAction.getItems(date).first()
+        }
+        _insectList.update {
+            insectAction.getInsects(date, date).first()
         }
     }
 }
