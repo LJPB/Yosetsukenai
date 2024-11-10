@@ -28,14 +28,22 @@ class HistoryScreenViewModel(
     private val repellentMinDate = repellentAction.getMinDate()
     private val repellentMaxDate = repellentAction.getMaxDate()
 
-    val currentMonth = YearMonth.now()
+    private val _startMonthLoading = MutableStateFlow(true)
+    val startMonthLoading = _startMonthLoading.asStateFlow()
+    private val _endMonthLoading = MutableStateFlow(true)
+    val endMonthLoading = _endMonthLoading.asStateFlow()
+
+    val currentMonth: YearMonth = YearMonth.now()
+    var bottomSheetDate: LocalDate = LocalDate.now()
 
     // 虫除けの開始日、虫の発見日のうち最小のもの
     val startMonth =
         combine(insectMinDate, repellentMinDate) { _insectMinDate, _repellentMinDate ->
+            _startMonthLoading.update { true }
             val insectMin = _insectMinDate ?: LocalDate.now()
             val repellentMin = _repellentMinDate ?: LocalDate.now()
             val minDate = getMinLocalDate(insectMin, repellentMin)
+            _startMonthLoading.update { false }
             currentMonth.minusMonths(
                 ChronoUnit.MONTHS.between(minDate, LocalDate.now())
             )
@@ -48,9 +56,11 @@ class HistoryScreenViewModel(
     // 虫除けの開始日、虫の発見日のうち最大のもの
     val endMonth =
         combine(insectMaxDate, repellentMaxDate) { _insectMaxDate, _repellentMaxDate ->
+            _endMonthLoading.update { true }
             val insectMax = _insectMaxDate ?: LocalDate.now()
             val repellentMax = _repellentMaxDate ?: LocalDate.now()
             val maxDate = getMaxLocalDate(insectMax, repellentMax)
+            _endMonthLoading.update { false }
             currentMonth.minusMonths(
                 ChronoUnit.MONTHS.between(maxDate, LocalDate.now())
             )
@@ -101,6 +111,7 @@ class HistoryScreenViewModel(
      * 渡されたdateの日付に登録した虫除け/虫の記録を読み込む
      */
     fun loadList(date: LocalDate) = viewModelScope.launch {
+        bottomSheetDate = date
         _repellentList.update {
             repellentAction.getItems(date).first()
         }
