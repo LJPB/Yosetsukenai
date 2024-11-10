@@ -26,24 +26,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.kizitonwose.calendar.compose.rememberCalendarState
-import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import me.ljpb.yosetsukenai.R
+import me.ljpb.yosetsukenai.data.room.InsectEntity
 import me.ljpb.yosetsukenai.data.room.RepellentScheduleEntity
 import me.ljpb.yosetsukenai.ui.ConstIcon
-import me.ljpb.yosetsukenai.ui.components.history.Calendar
 import me.ljpb.yosetsukenai.ui.components.home.ExpiredRepellentTabContent
 import me.ljpb.yosetsukenai.ui.components.home.FloatingActionMenuItem
 import me.ljpb.yosetsukenai.ui.components.home.TabContainer
 import me.ljpb.yosetsukenai.ui.components.home.TabContent
 import me.ljpb.yosetsukenai.ui.components.home.ValidRepellentTabContent
-import java.time.YearMonth
+import me.ljpb.yosetsukenai.ui.screens.history.HistoryScreen
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
     homeScreenViewModel: HomeScreenViewModel,
     cardOnClick: (RepellentScheduleEntity) -> Unit,
+    historyInsectOnClick: (InsectEntity) -> Unit,
     addInsectOnClick: () -> Unit,
     addRepellentOnClick: () -> Unit,
 ) {
@@ -77,21 +76,12 @@ fun HomeScreen(
             cardOnClick = cardOnClick
         )
     }
-    val currentMonth = remember { YearMonth.now() }
-    val startMonth = remember { currentMonth.minusMonths(12 * 10) }
-    val endMonth = remember { currentMonth.plusMonths(12 * 10) }
-    val firstDayOfWeek = remember { firstDayOfWeekFromLocale() }
 
-    val state = rememberCalendarState(
-        startMonth = startMonth,
-        endMonth = endMonth,
-        firstVisibleMonth = currentMonth,
-        firstDayOfWeek = firstDayOfWeek
-    )
     val historyTabContent = TabContent(stringResource(R.string.history_tab_title_text)) {
-        Calendar(
+        HistoryScreen(
             modifier = Modifier.fillMaxSize(),
-            calendarState = state
+            repellentOnClick = cardOnClick,
+            insectOnClick = historyInsectOnClick
         )
     }
 
@@ -114,7 +104,7 @@ fun HomeScreen(
             defaultIndex = if (expiredRepellentList?.isNotEmpty() == true) 1 else 0,
             // 対応が必要な虫除けがある場合は，わかりやすくエラーにする
             errorIndex = if (expiredRepellentList?.isNotEmpty() == true) 1 else -1,
-            onSelected = { /* タブ切り替え時の動作。何もしない。 */},
+            onSelected = { /* タブ切り替え時の動作。何もしない。 */ },
             tabContent = listOf(
                 validTabContent,
                 expiredTabContent,
@@ -154,7 +144,8 @@ private fun FloatingActionMenu(
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.End
     ) {
-        AnimatedVisibility( // FABの展開/縮小に応じてアニメーションで表示/非表示する
+        AnimatedVisibility(
+            // FABの展開/縮小に応じてアニメーションで表示/非表示する
             visible = expanded,
             enter = fadeIn(),
             exit = fadeOut(),

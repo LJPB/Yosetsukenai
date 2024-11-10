@@ -62,6 +62,13 @@ fun YosetsukenaiApp(
                         appViewModel.navigateToRepellentDetailScreen(it) {
                             navController.navigate(AppScreen.DetailRepellent.name)
                         }
+                    },
+                    historyInsectOnClick = {
+                        // 虫の詳細画面へ遷移
+                        appViewModel.navigateToInsectDetailScreen(it) {
+                            appViewModel.backRoute = AppScreen.Home
+                            navController.navigate(AppScreen.DetailInsect.name)
+                        }
                     }
                 )
             }
