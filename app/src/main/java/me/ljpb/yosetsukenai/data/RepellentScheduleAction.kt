@@ -12,7 +12,7 @@ interface RepellentScheduleAction {
     suspend fun delete(entity: RepellentScheduleEntity)
 
     fun getSize(): Long
-    
+
     fun getRepellentById(id: Long): Flow<RepellentScheduleEntity?>
 
     fun getEnabledRepellents(currentDate: LocalDate): Flow<List<RepellentScheduleEntity>>
@@ -24,4 +24,12 @@ interface RepellentScheduleAction {
     fun getRepellentsByStartDate(from: String, to: String): Flow<List<RepellentScheduleEntity>>
 
     fun getRepellentsByFinishDate(from: String, to: String): Flow<List<RepellentScheduleEntity>>
+
+    fun getItems(date: LocalDate): Flow<List<RepellentScheduleEntity>>
+
+    fun getMaxDate(): Flow<LocalDate?>
+
+    fun getMinDate(): Flow<LocalDate?>
+    
+    fun countByDate(date: LocalDate): Flow<Int>
 }

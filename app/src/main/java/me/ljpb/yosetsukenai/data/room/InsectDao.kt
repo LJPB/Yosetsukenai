@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 
 @Dao
 interface InsectDao {
@@ -29,4 +30,14 @@ interface InsectDao {
     // 発見したすべての虫を日付順でページングして取得 
     @Query("select * from insect order by date asc limit :limit offset :offset")
     fun getPagedItems(limit: Int, offset: Int): Flow<List<InsectEntity>>
+
+    @Query("select max(date) from insect")
+    fun getMaxDate(): Flow<LocalDate?>
+
+    @Query("select min(date) from insect")
+    fun getMinDate(): Flow<LocalDate?>
+    
+    // 指定の日付に発見した虫の個数を取得
+    @Query("select count(*) from insect where date = :date")
+    fun countByDate(date: String): Flow<Int>
 }

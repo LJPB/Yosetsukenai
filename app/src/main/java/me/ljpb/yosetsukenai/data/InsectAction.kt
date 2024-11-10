@@ -16,4 +16,10 @@ interface InsectAction {
     fun getInsects(from: LocalDate, to: LocalDate): Flow<List<InsectEntity>>
 
     fun getPagedInsects(limit: Int, offset: Int): Flow<List<InsectEntity>>
+
+    fun getMaxDate(): Flow<LocalDate?>
+
+    fun getMinDate(): Flow<LocalDate?>
+    
+    fun countByDate(date: LocalDate): Flow<Int>
 }

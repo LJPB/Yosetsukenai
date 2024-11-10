@@ -56,6 +56,18 @@ fun InsectEditScreenPreview() {
             override fun getPagedInsects(limit: Int, offset: Int): Flow<List<InsectEntity>> {
                 TODO("Not yet implemented")
             }
+
+            override fun getMaxDate(): Flow<LocalDate?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun getMinDate(): Flow<LocalDate?> {
+                TODO("Not yet implemented")
+            }
+
+            override fun countByDate(date: LocalDate): Flow<Int> {
+                TODO("Not yet implemented")
+            }
         }
     )
     InsectEditScreen(

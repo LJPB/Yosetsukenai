@@ -25,5 +25,12 @@ class InsectRepository(
         )
 
 
-    override fun getPagedInsects(limit: Int, offset: Int): Flow<List<InsectEntity>> = dao.getPagedItems(limit = limit, offset = offset)
+    override fun getPagedInsects(limit: Int, offset: Int): Flow<List<InsectEntity>> =
+        dao.getPagedItems(limit = limit, offset = offset)
+
+    override fun getMaxDate(): Flow<LocalDate?> = dao.getMaxDate()
+
+    override fun getMinDate(): Flow<LocalDate?> = dao.getMinDate()
+
+    override fun countByDate(date: LocalDate): Flow<Int> = dao.countByDate(converter.fromLocalDateToString(date))
 }
