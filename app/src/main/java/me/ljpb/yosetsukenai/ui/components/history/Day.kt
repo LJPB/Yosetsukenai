@@ -25,7 +25,8 @@ fun Day(
     modifier: Modifier = Modifier,
     day: CalendarDay,
     textStyle: TextStyle,
-    onClick: ((CalendarDay) -> Unit)? = null
+    clickState: Boolean,
+    onClick: (CalendarDay) -> Unit = {}
 ) {
     val containerColor: Color
     val textColor: Color
@@ -36,7 +37,7 @@ fun Day(
         containerColor = Color.Transparent
         textColor = MaterialTheme.colorScheme.outline
     } else {
-        if (onClick != null) {
+        if (clickState) {
             containerColor = MaterialTheme.colorScheme.primaryContainer
             textColor = MaterialTheme.colorScheme.onPrimaryContainer
         } else {
@@ -52,7 +53,7 @@ fun Day(
         ) {
         Button(
             modifier = Modifier.fillMaxSize(),
-            onClick = { if (isMonthDate && onClick != null) onClick(day) },
+            onClick = { if (isMonthDate && clickState) onClick(day) },
             shape = CircleShape,
             contentPadding = PaddingValues(0.dp),
             colors = ButtonDefaults.buttonColors(containerColor = containerColor)
@@ -71,6 +72,7 @@ fun Day(
 fun DayPreview() {
     Day(
         day = CalendarDay(LocalDate.now(), DayPosition.InDate),
-        textStyle = MaterialTheme.typography.bodyLarge
+        textStyle = MaterialTheme.typography.bodyLarge,
+        clickState = true
     ) {}
 }
