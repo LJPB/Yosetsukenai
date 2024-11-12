@@ -3,8 +3,10 @@ package me.ljpb.yosetsukenai.notification
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
+import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
@@ -13,6 +15,7 @@ import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import me.ljpb.yosetsukenai.MainActivity
 import me.ljpb.yosetsukenai.R
 import me.ljpb.yosetsukenai.data.PeriodAndTime
 import me.ljpb.yosetsukenai.data.PeriodUnit
@@ -65,7 +68,7 @@ object AppNotificationManager {
             schedule = PeriodAndTime(before, time)
         )
     }
-    
+
     /**
      * 通知時間を更新したNotificationEntityを取得する
      * @param original 更新対象となるNotificationEntity
@@ -140,14 +143,20 @@ object AppNotificationManager {
         title: String,
         text: String
     ) {
-        // TODO: 通知アイコンの変更 
-        // TODO: 通知アクションの追加
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val pendingIntent: PendingIntent =
+            PendingIntent.getActivity(context, notification.notificationId, intent, PendingIntent.FLAG_IMMUTABLE)
+
         val channelId = context.getString(R.string.notification_channel_id)
         val builder = NotificationCompat
             .Builder(context, channelId)
-            .setSmallIcon(R.drawable.ic_launcher_background)
+            .setSmallIcon(R.drawable.appicon)
             .setContentTitle(title)
             .setContentText(text)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
 
         with(NotificationManagerCompat.from(context)) {
             if (
