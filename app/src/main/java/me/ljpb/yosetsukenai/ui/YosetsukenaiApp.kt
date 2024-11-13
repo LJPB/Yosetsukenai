@@ -1,9 +1,11 @@
 package me.ljpb.yosetsukenai.ui
 
+import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -35,6 +37,7 @@ fun YosetsukenaiApp(
     homeScreenViewModel: HomeScreenViewModel,
 ) {
     val navController = rememberNavController()
+    val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     lateinit var repellentDetailViewModel: RepellentDetailViewModel
     lateinit var repellentEditViewModel: RepellentEditViewModel
@@ -120,7 +123,7 @@ fun YosetsukenaiApp(
                     viewModel(factory = appViewModel.getFactoryOfInsectEditViewModel())
                 InsectEditScreen(
                     insectEditViewModel = insectEditViewModel,
-                    isLandscape = true,
+                    isLandscape = isLandscape,
                     onSaved = { // 更新後に前の画面に戻る
                         insectEditViewModel.save()
                         navController.popBackStack(appViewModel.backRoute.name, false)
@@ -143,7 +146,7 @@ fun YosetsukenaiApp(
                     { navController.popBackStack(AppScreen.Home.name, false) } // ホーム画面に戻る
                 InsectEditScreen(
                     insectEditViewModel = insectEditViewModel,
-                    isLandscape = true,
+                    isLandscape = isLandscape,
                     onSaved = { // 追加後はホーム画面に戻る
                         insectEditViewModel.save()
                         closeScreen()
@@ -160,7 +163,7 @@ fun YosetsukenaiApp(
 
                 RepellentEditScreen(
                     repellentEditViewModel = repellentEditViewModel,
-                    isLandscape = true,
+                    isLandscape = isLandscape,
                     onSaved = { // 上書き保存のときはホーム画面に戻る
                         repellentEditViewModel.save()
                         navController.popBackStack(AppScreen.Home.name, false)
@@ -184,7 +187,7 @@ fun YosetsukenaiApp(
                 val closeScreen = { navController.popBackStack(AppScreen.Home.name, false) }
                 RepellentEditScreen(
                     repellentEditViewModel = repellentEditViewModel,
-                    isLandscape = true,
+                    isLandscape = isLandscape,
                     onSaved = {
                         repellentEditViewModel.save()
                         closeScreen()
