@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -36,6 +35,7 @@ import me.ljpb.yosetsukenai.ui.components.home.TabContainer
 import me.ljpb.yosetsukenai.ui.components.home.TabContent
 import me.ljpb.yosetsukenai.ui.components.home.ValidRepellentTabContent
 import me.ljpb.yosetsukenai.ui.screens.history.HistoryScreen
+import me.ljpb.yosetsukenai.ui.screens.other.OtherScreen
 
 @Composable
 fun HomeScreen(
@@ -86,7 +86,7 @@ fun HomeScreen(
     }
 
     val othersTabContent = TabContent(stringResource(R.string.others_tab_title_text)) {
-        Text(text = "未実装") // TODO
+        OtherScreen()
     }
 
     Scaffold(

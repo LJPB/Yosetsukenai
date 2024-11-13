@@ -5,6 +5,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.EscalatorWarning
+import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material.icons.outlined.BugReport
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.HeartBroken
@@ -34,4 +35,6 @@ object ConstIcon {
     
     val FAB_ADD_REPELLENT = Icons.Default.Add
     val FAB_ADD_INSECT = Icons.Outlined.BugReport
+    
+    val PRIVACY = Icons.Default.PrivacyTip
 }

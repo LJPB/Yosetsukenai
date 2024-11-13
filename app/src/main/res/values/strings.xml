@@ -104,4 +104,7 @@
     <string name="notification_permission_body">アプリの一部機能のために通知権限の許可が必要です。</string>
     <string name="notification_permission_positive">許可</string>
     <string name="notification_permission_negative">許可しない</string>
+    
+    <string name="privacy_policy_text">プライバシーポリシー</string>
+    <string name="privacy_policy_url">https://ljpb.me/Yosetsukenai/PrivacyAndTerms</string>
 </resources>
