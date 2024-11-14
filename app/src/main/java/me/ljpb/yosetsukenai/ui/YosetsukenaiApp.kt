@@ -1,7 +1,6 @@
 package me.ljpb.yosetsukenai.ui
 
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -118,7 +117,6 @@ fun YosetsukenaiApp(
             // 虫の編集画面は詳細画面からしか遷移できないから、前の画面は常に詳細画面
             // 一方、前の前の画面は虫除けの詳細画面かもしれないし、記録の一覧画面かもしれない
             composable(route = AppScreen.EditInsect.name) {
-                Log.d("backRoute", appViewModel.backRoute.name)
                 insectEditViewModel =
                     viewModel(factory = appViewModel.getFactoryOfInsectEditViewModel())
                 InsectEditScreen(
@@ -169,7 +167,7 @@ fun YosetsukenaiApp(
                         navController.popBackStack(AppScreen.Home.name, false)
                     },
                     onCancel = { // 編集をキャンセルした場合は，元の詳細画面に戻る
-                        navController.popBackStack(AppScreen.DetailRepellent.name, false)
+                        navController.popBackStack()
                     },
                     onDelete = { // 削除した場合はホーム画面に戻る
                         repellentEditViewModel.delete()
