@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ヨセツケナイ</string>
+    <string name="app_name">ムシヨケ キロク</string>
     <string name="notification_channel_id">REPELLENT_NOTIFICATION</string>
     <string name="notification_channel_name">RepellentNotification</string>
 
