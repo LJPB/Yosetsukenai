@@ -66,7 +66,7 @@ private fun ValidRepellentTabBody(
     } else {
         RepellentEmpty(
             modifier = Modifier.fillMaxSize(),
-            text = stringResource(R.string.expired_not_found),
+            text = stringResource(R.string.valid_not_found),
             bottomPadding = dimensionResource(R.dimen.tab_item_height)
         )
     }
