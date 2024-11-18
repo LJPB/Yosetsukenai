@@ -1,4 +1,4 @@
-[Google Play Store](https://play.google.com/store/apps/details?id=me.ljpb.yosetsukenai) (11/16 審査中)
+[Google Play Store](https://play.google.com/store/apps/details?id=me.ljpb.yosetsukenai)
 
 アプリの機能：害虫忌避剤の使用を記録して，効果が切れる頃に通知を送ることで安心できるアプリ。
 
